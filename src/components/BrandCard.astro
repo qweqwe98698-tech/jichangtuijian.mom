@@ -1,0 +1,119 @@
+---
+import type { Brand } from '@data/brands';
+import { scoreBrand } from '@lib/scoring';
+import RouteMark from './RouteMark.astro';
+
+interface Props {
+  brand: Brand;
+  /** 卡片右上角角标,如「15 元档」「编辑推荐」;不传则不显示 */
+  badge?: string;
+  /** 展示哪两个评分维度,默认取该品牌的强项组合 */
+  dimensions?: [keyof ReturnType<typeof scoreBrand>, keyof ReturnType<typeof scoreBrand>];
+}
+
+const { brand, badge, dimensions = ['value', 'line'] } = Astro.props;
+const score = scoreBrand(brand);
+const { pricing, lines, protocols, claims, since } = brand.vendor;
+
+const DIM_LABELS: Record<string, string> = {
+  value: '流量性价比',
+  line: '线路等级',
+  track: '运营时长',
+  client: '客户端友好度',
+  coverage: '场景覆盖',
+};
+
+/** 刻度条:10 格,按分数点亮。纯静态,不依赖 JS */
+const ticks = (v: number) => Array.from({ length: 10 }, (_, i) => i < Math.round(v));
+
+const lineChip = lines.includes('IEPL')
+  ? { text: 'IEPL 企业专线', cls: 'route iepl' }
+  : lines.includes('IPLC')
+    ? { text: 'IPLC 专线', cls: 'route iplc' }
+    : lines.includes('内网专线')
+      ? { text: '内网专线', cls: 'route relay' }
+      : lines.length
+        ? { text: lines.join(' / '), cls: 'route direct' }
+        : { text: '线路未标明', cls: 'route direct is-unstated' };
+
+const sinceLabel = [since ? `SINCE ${since}` : null, lines[0]].filter(Boolean).join(' · ');
+const reviewHref = `/reviews/${brand.slug}/`;
+---
+
+<article class="bcard panel notch">
+  {badge && <span class="rank-badge">{badge}</span>}
+  <div class="panel-in">
+    <div class="bc-top">
+      <RouteMark lines={lines} />
+      <span>
+        <span class="bc-name">{brand.name}</span>
+        <span class="bc-since">{sinceLabel}</span>
+      </span>
+      <span class="bc-score">
+        <b>{score.overall.toFixed(1)}</b>
+        <small>编辑评分</small>
+      </span>
+    </div>
+
+    <div class="chips">
+      <span class={`chip ${lineChip.cls}`}>{lineChip.text}</span>
+      {
+        protocols.length ? (
+          protocols.map((p) => <span class="chip">{p}</span>)
+        ) : (
+          <span class="chip is-unstated">协议未标明</span>
+        )
+      }
+      {claims.ownClient && <span class="chip">自研客户端</span>}
+    </div>
+
+    <div class="price-row">
+      <span class="price">
+        {pricing.entryPriceCNY.toFixed(1)}<i
+          >{pricing.basis === 'annual-equivalent' ? ' 元/月(年付)' : ' 元/月'}</i
+        >
+      </span>
+      <span class="quota"><b>{pricing.trafficGB} GB</b>月流量</span>
+    </div>
+
+    <div class="meters">
+      {
+        dimensions.map((dim) => (
+          <div>
+            <div class="meter-l">
+              {DIM_LABELS[dim]}
+              <b>{score[dim].toFixed(1)}</b>
+            </div>
+            <div class="ticks" aria-hidden="true">
+              {ticks(score[dim]).map((on) => (on ? <i class="on" /> : <i />))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="bc-fit">{brand.editorial.positioning}</p>
+
+    <div class="bc-foot">
+      <a class="btn btn-primary" href={reviewHref}>查看详细评测</a>
+      {brand.commercial.promoCode && <span class="coupon">{brand.commercial.promoCode}</span>}
+    </div>
+  </div>
+</article>
+
+<style>
+  /* 「未标明」是信息缺口,不是卖点也不是缺陷,视觉上要与真实标注区分开 */
+  .chip.is-unstated {
+    border-style: dashed;
+    color: var(--text-faint);
+    background: transparent;
+  }
+  .bc-fit {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--hairline);
+  }
+</style>

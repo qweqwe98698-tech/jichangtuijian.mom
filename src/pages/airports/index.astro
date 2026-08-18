@@ -1,0 +1,195 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import AirportDirectory from '@components/AirportDirectory.astro';
+import Disclosure from '@components/Disclosure.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import RiskNotice from '@components/RiskNotice.astro';
+import { BRANDS } from '@data/brands';
+import { BATCH_DOCS } from '@data/evidence';
+import { itemListSchema, faqSchema } from '@lib/schema';
+
+/**
+ * 机场导航 / 机场大全。三大核心主题之一,此前全站完全没有承接页面。
+ * 同时也是第三阶段 T4 要求的「机场品牌库」——不另建 /brands/,避免与 /reviews/ 竞争同一批词。
+ */
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '机场导航', href: '/airports/' },
+];
+
+const faq = [
+  {
+    question: '这个机场导航收录标准是什么?',
+    answer:
+      '本站收录的 16 家均为推广合作品牌,这一点必须先说清楚。收录不代表推荐,页面上每一家的价格、流量、协议与线路都来自厂商公开资料并逐项列出,你可以自己比较。我们不收录无法获取完整公开规格的服务,也不会因为佣金高低调整排列顺序——排序规则完全由你选择的那个字段决定。',
+  },
+  {
+    question: '为什么这个目录不提供「最快机场」「最稳定机场」排序?',
+    answer:
+      '因为支撑不了。本站保留的 16 张测速截图分别用了两套测试工具、两种协议,测试时间从凌晨 0 点横跨到晚上 22 点,不同品牌不在同一条件下测试。用这样的数据排出来的「最快榜」是假的。要做真正的性能排名,必须先统一工具、后端、地点、协议、时段并多次重复测试。',
+  },
+  {
+    question: '怎么确认一个机场的官网是真的?',
+    answer:
+      '最可靠的方式是从你已有的可信入口进入,而不是搜索引擎结果或聊天群里的链接。仿冒站通常会复刻整个页面并只替换支付渠道。本站列出的每一个跳转链接都指向品牌提供给我们的推广地址,并标注了推广关系;如果你在别处看到域名不同但页面一样的站点,应当优先怀疑。',
+  },
+  {
+    question: '导航站的推荐能信吗?',
+    answer:
+      '任何导航站都应该先回答两个问题:收录标准是什么、有没有商业关系。本站的答案是:16 家全部是推广合作,评分算法与筛选口径完全公开在编辑与评测规范页,任何人拿同一份数据都能复算出同一结果。你不需要相信我们,你只需要能验证我们。',
+  },
+];
+
+const listSchema = itemListSchema(
+  '机场导航:本站收录的全部机场',
+  BRANDS.map((b) => ({
+    name: b.name,
+    href: `/reviews/${b.slug}/`,
+    description: `${b.editorial.positioning} · ${b.vendor.pricing.entryPriceCNY} 元 / ${b.vendor.pricing.trafficGB}GB`,
+  }))
+);
+
+const description =
+  '按价格、流量、线路类型、协议与开业年份索引本站收录的 16 家机场,公开收录标准与数据来源。不提供「最快」「最稳」这类当前证据支撑不了的排序,只给你可以自己核对的客观字段。';
+---
+
+<BaseLayout
+  title="机场导航与机场大全"
+  description={description}
+  crumbs={crumbs}
+  schemas={[listSchema, faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Airport Directory · {BRANDS.length} Listed</span>
+          <h1>机场导航:{BRANDS.length} 家收录机场的完整索引</h1>
+          <p class="post-meta">最近更新 2026-08-18 · 价格与套餐每月复查 · 测速证据待复核</p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            这是本站收录的全部 {BRANDS.length} 家机场的索引,可以按入门价格、月流量、单位流量成本、 线路类型、协议与开业年份筛选和排序。**所有
+            16 家均为推广合作品牌**,收录不等于推荐。 页面上不提供「最快」「最稳定」这类排序——本站现有的测速证据来自两套不同工具、
+            两种协议、横跨全天的测试,支撑不了任何形式的性能排名。
+          </p>
+        </AnswerBox>
+
+        <Disclosure />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="rail-section">
+        <AirportDirectory />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="rail-section">
+        <h2 id="how-to-read">这份索引该怎么用</h2>
+        <p>
+          导航站最容易出的问题是把「收录」包装成「推荐」,再用一个看不懂来源的总分排序,
+          让读者以为自己看到的是客观结论。本站的做法是把判断权还给你:
+        </p>
+        <ol class="how-list">
+          <li>
+            <strong>先确定计价口径。</strong>年付折算价看起来最便宜,但前提是一次性支付一整年。
+            把它和月付价放在同一个排行里比较,是这个行业最常见的误导手法。
+          </li>
+          <li>
+            <strong>再确定流量档位。</strong>单位流量成本最低的方案不一定适合你—— 如果你每月只用
+            40GB,买 150GB 的套餐等于每月都在浪费。
+          </li>
+          <li>
+            <strong>最后才看线路类型。</strong>IEPL / IPLC 是线路的技术定位,不是性能保证。 同样标注
+            IEPL,不同服务方采购的带宽规格可以差好几倍,而这一点从规格表上看不出来。
+          </li>
+          <li>
+            <strong>把候选缩小到 2–3 家再看详情。</strong>目录的作用是排除,不是选择。
+            真正的决定应该在读完单家评测和两两对比之后做。
+          </li>
+        </ol>
+
+        <h2 id="evidence">关于测速证据的当前状态</h2>
+        <p>
+          本站为这 16 家各保留了一张 2026-08-11 的节点测速截图,已逐张登记 SHA-256 并只读保存。 但<strong
+            >整批证据目前是待复核状态,页面上暂不展示</strong
+          >。
+        </p>
+        <RiskNotice
+          title="为什么现在不展示测速图"
+          badge="REVIEW REQUIRED"
+          items={[
+            `这批截图使用了两套测试工具、两种协议,测试时间从 00:21 横跨到 22:46,不同品牌不在同一条件下测试。`,
+            '其中一家的完整测试日期无法从图中确认,需要核对原始记录后才能发布。',
+            '截图只能证明"某品牌在某个时间点做过一次节点测速",不能证明长期稳定、AI 或流媒体解锁、线路类型或运营安全。',
+            '在补齐测试执行主体、测试地点与带宽、单位定义与复测计划之前,整批维持待复核。',
+          ]}
+          fine={`批次说明与机读 manifest 已公开,可自行核对:${BATCH_DOCS.readme} 与 ${BATCH_DOCS.manifest}。复核通过后,每家的评测页会展示原图、测试时间、工具、协议与完整的能证明/不能证明清单。`}
+        />
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="按你的使用场景直接进对应榜单"
+          href="/rankings/"
+          reason="目录适合横向浏览,但如果你已经知道自己的主要用途——预算优先、在意晚高峰、主要用 AI 工具——直接进对应场景的榜单更快,每份榜单都写明了筛选口径与这个选择的代价。"
+          alt={{ label: '先搞懂机场代理是什么', href: '/basics/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .how-list {
+    list-style: none;
+    counter-reset: how;
+    display: grid;
+    gap: 12px;
+    margin: var(--s4) 0;
+  }
+  .how-list li {
+    counter-increment: how;
+    position: relative;
+    padding-left: 32px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .how-list li::before {
+    content: counter(how);
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 21px;
+    height: 21px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-node);
+    font: 600 11px/1 var(--font-mono);
+    color: var(--accent);
+  }
+  .how-list strong {
+    color: var(--text);
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+import type { ClaimLevel } from '@data/brands';
+
+/**
+ * 数据来源标注。E-E-A-T 的核心机制:让读者一眼看出某条信息是厂商声明还是本站实测。
+ * 全站凡是展示能力类信息(流媒体、AI、速度)的地方都必须带上,不允许含糊表述。
+ */
+interface Props {
+  level: ClaimLevel;
+  /** 简短模式只显示圆点与文字,用于表格单元格 */
+  compact?: boolean;
+}
+const { level, compact = false } = Astro.props;
+
+const MAP: Record<ClaimLevel, { text: string; title: string; kind: string }> = {
+  measured: {
+    text: '本站实测',
+    title: '本站在真实网络环境中测试并可复现的结果',
+    kind: 'measured',
+  },
+  'vendor-claim': {
+    text: '厂商声明',
+    title: '来自品牌公开资料的说法,本站尚未验证',
+    kind: 'claim',
+  },
+  unknown: {
+    text: '未说明',
+    title: '品牌公开资料未提及,且本站尚未实测,不代表不支持',
+    kind: 'unknown',
+  },
+};
+
+const m = MAP[level];
+---
+
+<span class={`prov prov-${m.kind}${compact ? ' is-compact' : ''}`} title={m.title}>
+  <i aria-hidden="true"></i>{m.text}
+</span>
+
+<style>
+  .prov {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: var(--r-chip);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    cursor: help;
+  }
+  .prov i {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--r-node);
+    background: var(--text-faint);
+  }
+  .prov-measured {
+    color: var(--success);
+    border-color: var(--success-soft);
+    background: var(--success-soft);
+  }
+  .prov-measured i {
+    background: var(--success);
+  }
+  .prov-claim {
+    color: var(--warn);
+    border-color: var(--warn-soft);
+    background: var(--warn-soft);
+  }
+  .prov-claim i {
+    background: var(--warn);
+  }
+  .is-compact {
+    padding: 2px 6px;
+    font-size: 11.5px;
+  }
+</style>

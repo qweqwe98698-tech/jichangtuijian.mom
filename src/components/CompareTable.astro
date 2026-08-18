@@ -1,0 +1,156 @@
+---
+import { BRANDS, costPerGB, protocolLabel, lineLabel } from '@data/brands';
+import { scoreBrand } from '@lib/scoring';
+
+/**
+ * 16 家横向对照表。排序是全站 4 个允许水合的交互之一。
+ * 未执行 JS 时表格仍是完整、可读、可横向滚动的静态 HTML,只是不能点击排序,
+ * 因此搜索引擎与生成式系统拿到的是全量数据而非空壳。
+ *
+ * 默认按单位流量成本升序:这是唯一在两种计价口径下都有意义的指标。
+ */
+
+const rows = BRANDS.map((b) => ({
+  brand: b,
+  score: scoreBrand(b),
+  // 排序键截到 6 位小数:足以区分本站所有品牌,又不会把浮点尾巴写进 HTML
+  perGB: Number(costPerGB(b).toFixed(6)),
+})).sort((a, b) => a.perGB - b.perGB);
+---
+
+<div class="table-shell panel notch">
+  <div class="panel-in">
+    <div class="table-scroll">
+      <table data-compare-table>
+        <caption class="sr">16 家机场的价格、流量、单位成本、线路与协议横向对照</caption>
+        <thead>
+          <tr>
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="name" data-type="text">品牌</button
+              ></th
+            >
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="price" data-type="num"
+                >入门价</button
+              ></th
+            >
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="traffic" data-type="num"
+                >月流量</button
+              ></th
+            >
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="pergb" data-type="num"
+                >元 / GB</button
+              ></th
+            >
+            <th scope="col">计价口径</th>
+            <th scope="col">线路</th>
+            <th scope="col">协议</th>
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="since" data-type="num">开业</button
+              ></th
+            >
+            <th scope="col"
+              ><button class="sortable" type="button" data-sort="score" data-type="num"
+                >编辑评分</button
+              ></th
+            >
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map(({ brand, score, perGB }) => (
+              <tr
+                data-name={brand.name}
+                data-price={brand.vendor.pricing.entryPriceCNY}
+                data-traffic={brand.vendor.pricing.trafficGB}
+                data-pergb={perGB}
+                data-since={brand.vendor.since ?? 0}
+                data-score={score.overall}
+              >
+                <th scope="row">
+                  <a href={`/reviews/${brand.slug}/`}>{brand.name}</a>
+                </th>
+                <td>
+                  <span class="num">{brand.vendor.pricing.entryPriceCNY}</span> 元
+                </td>
+                <td>
+                  <span class="num">{brand.vendor.pricing.trafficGB}</span> GB
+                </td>
+                <td>
+                  <span class="num">{perGB.toFixed(3)}</span>
+                </td>
+                <td>{brand.vendor.pricing.basis === 'annual-equivalent' ? '年付折算' : '月付'}</td>
+                <td>{lineLabel(brand)}</td>
+                <td>{protocolLabel(brand)}</td>
+                <td>{brand.vendor.since ?? '—'}</td>
+                <td>
+                  <span class="num">{score.overall.toFixed(1)}</span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint">
+      <span class="line"></span>
+      小屏可左右滑动查看完整字段 · 点击表头排序 · 默认按单位流量成本升序
+      <span class="line"></span>
+    </p>
+  </div>
+</div>
+
+<script>
+  const table = document.querySelector<HTMLTableElement>('[data-compare-table]');
+  if (table) {
+    const tbody = table.tBodies[0];
+    let activeKey = 'pergb';
+    let ascending = true;
+
+    for (const btn of table.querySelectorAll<HTMLButtonElement>('button[data-sort]')) {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.sort!;
+        const numeric = btn.dataset.type === 'num';
+        ascending = key === activeKey ? !ascending : true;
+        activeKey = key;
+
+        const rows = [...tbody.rows].sort((a, b) => {
+          const x = a.dataset[key] ?? '';
+          const y = b.dataset[key] ?? '';
+          const cmp = numeric ? Number(x) - Number(y) : x.localeCompare(y, 'zh-Hans-CN');
+          return ascending ? cmp : -cmp;
+        });
+        for (const row of rows) tbody.appendChild(row);
+
+        for (const other of table.querySelectorAll<HTMLButtonElement>('button[data-sort]')) {
+          other.closest('th')?.removeAttribute('aria-sort');
+        }
+        btn.closest('th')?.setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
+      });
+    }
+  }
+</script>
+
+<style>
+  .sortable {
+    border: 0;
+    background: none;
+    font: inherit;
+    padding: 0;
+  }
+  th[aria-sort] .sortable::after {
+    content: '↑';
+    color: var(--accent);
+  }
+  th[aria-sort='descending'] .sortable::after {
+    content: '↓';
+  }
+  tbody th a {
+    color: var(--text);
+  }
+  tbody th a:hover {
+    color: var(--accent);
+  }
+</style>

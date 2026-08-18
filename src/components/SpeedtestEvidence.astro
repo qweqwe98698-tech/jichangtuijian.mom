@@ -1,0 +1,353 @@
+---
+import { Image } from 'astro:assets';
+import type { Brand } from '@data/brands';
+import {
+  assetForBrand,
+  isApproved,
+  originalPath,
+  captionFor,
+  altFor,
+  ALLOWED_CLAIMS,
+  PROHIBITED_CLAIMS,
+  REVIEW_DECISIONS,
+  SPEEDTEST_BATCH,
+  BATCH_DOCS,
+} from '@data/evidence';
+
+/**
+ * 测速证据展示区块。
+ *
+ * 未放行时渲染的不是空白,而是一段说明「素材已采集、为什么还不发布」——
+ * 藏起来不说,和把待复核数据当结论发布一样都是不诚实的。
+ *
+ * 放行后展示的是响应式衍生图(Derived View),原图另附下载链接与 SHA-256,
+ * 读者可以自己下载核验哈希。原图不裁剪、不覆盖、不改写图内数值。
+ */
+interface Props {
+  brand: Brand;
+}
+const { brand } = Astro.props;
+
+const asset = assetForBrand(brand.slug);
+const decision = REVIEW_DECISIONS[brand.slug];
+const approved = asset ? isApproved(asset) : false;
+
+/* astro:assets 只能处理 src 下的图片,用 glob 拿到构建期可优化的引用。
+   ImageMetadata 是 astro 的全局类型,ESLint 看不到它的声明,这里显式导入 */
+const sources = import.meta.glob<{ default: import('astro').ImageMetadata }>(
+  '/src/assets/evidence/speedtest/*.png'
+);
+const sourceKey = asset ? `/src/assets/evidence/speedtest/${asset.file}` : null;
+const derived = sourceKey && sources[sourceKey] ? (await sources[sourceKey]()).default : null;
+---
+
+{
+  asset && (
+    <section class="evidence" aria-labelledby="evidence-heading">
+      <h2 id="evidence-heading">本站保留的测速证据</h2>
+
+      <div class="ev-meta">
+        <div class="ev-chip">
+          <span class="ev-k">批次</span>
+          <span class="ev-v">{SPEEDTEST_BATCH.batchId}</span>
+        </div>
+        <div class="ev-chip">
+          <span class="ev-k">测试时间</span>
+          <span class="ev-v">{asset.testedAt.replace('T', ' ').replace('+08:00', ' CST')}</span>
+        </div>
+        <div class="ev-chip">
+          <span class="ev-k">图中协议</span>
+          <span class="ev-v">{asset.protocolDisplayed}</span>
+        </div>
+        <div class="ev-chip">
+          <span class="ev-k">测试工具</span>
+          <span class="ev-v">{asset.toolFamily}</span>
+        </div>
+        <div class={`ev-chip is-status ${approved ? 'is-ok' : 'is-hold'}`}>
+          <span class="ev-k">数据状态</span>
+          <span class="ev-v">{approved ? 'Measured · 已放行' : 'Measured · 待复核'}</span>
+        </div>
+      </div>
+
+      {approved && derived ? (
+        <figure class="ev-figure">
+          <div class="ev-imgwrap panel notch">
+            <span class="ev-derived">Derived View</span>
+            <div class="panel-in">
+              <Image
+                src={derived}
+                alt={altFor(asset)}
+                widths={[480, 800, 1122]}
+                sizes="(max-width: 760px) 100vw, 720px"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <figcaption>{captionFor(asset)}</figcaption>
+          <p class="ev-original">
+            这是按网页尺寸重新编码的衍生图。原始 PNG 未经裁剪或修改,可
+            <a href={originalPath(asset)} target="_blank" rel="noopener">
+              下载核验
+            </a>
+            ,SHA-256 为 <code>{asset.sha256.slice(0, 32)}…</code>(完整值见
+            <a href={BATCH_DOCS.manifest} target="_blank" rel="noopener">
+              批次 manifest
+            </a>
+            )。
+          </p>
+        </figure>
+      ) : (
+        <div class="ev-hold panel notch">
+          <div class="panel-in">
+            <p class="ev-hold-title">素材已采集,但还没有通过发布审核</p>
+            <p>
+              本站持有这张 {asset.testedAt.slice(0, 10)} 的节点测速截图,已登记 SHA-256 并只读保存,
+              但它<strong>当前不对外展示</strong>。原因是这批证据的审核状态为
+              <code>review-required</code>——发布测速数据需要先完成人工核对,
+              包括图注措辞、适用范围与页面表达是否会让读者过度解读。
+            </p>
+            {decision?.note && <p class="ev-hold-note">{decision.note}</p>}
+            <p class="ev-hold-fine">
+              你仍然可以自己查看原始材料:
+              <a href={originalPath(asset)} target="_blank" rel="noopener">
+                原始截图
+              </a>
+              ·
+              <a href={BATCH_DOCS.readme} target="_blank" rel="noopener">
+                批次说明
+              </a>
+              ·
+              <a href={BATCH_DOCS.manifest} target="_blank" rel="noopener">
+                机读 manifest
+              </a>
+              。我们把材料公开,但不把未经核对的东西写成结论。
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div class="ev-claims">
+        <div class="ev-col is-can">
+          <h3>这张图能证明什么</h3>
+          <ul>
+            {ALLOWED_CLAIMS.map((c) => (
+              <li>{c}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="ev-col is-cannot">
+          <h3>不能证明什么</h3>
+          <ul>
+            {PROHIBITED_CLAIMS.map((c) => (
+              <li>{c}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <p class="ev-nonranking">
+        本批 16 张截图使用了两套测试工具、两种协议,测试时间从 00:21 横跨到 22:46,
+        不同品牌不在同一条件下测试。<strong>因此本站不用它做任何跨品牌的速度或稳定性排名。</strong>
+        要做真正的横向比较,必须先统一工具、后端、地点、协议与时段并多次重复测试。
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .evidence {
+    margin: var(--s7) 0;
+  }
+  .ev-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: var(--s4) 0;
+  }
+  .ev-chip {
+    display: grid;
+    gap: 3px;
+    padding: 8px 12px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-chip);
+    background: var(--surface-2);
+  }
+  .ev-k {
+    font: 600 10px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  .ev-v {
+    font-size: 13px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .is-status.is-hold {
+    border-color: var(--warn-soft);
+    background: var(--warn-soft);
+  }
+  .is-status.is-hold .ev-v {
+    color: var(--warn);
+  }
+  .is-status.is-ok {
+    border-color: var(--success-soft);
+    background: var(--success-soft);
+  }
+  .is-status.is-ok .ev-v {
+    color: var(--success);
+  }
+
+  .ev-figure {
+    margin: var(--s5) 0;
+  }
+  .ev-imgwrap {
+    position: relative;
+  }
+  .ev-imgwrap .panel-in {
+    padding: 10px;
+  }
+  .ev-imgwrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+  }
+  .ev-derived {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font: 600 10px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    padding: 5px 9px;
+    background: var(--text);
+    color: var(--bg);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  }
+  .ev-figure figcaption {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.85;
+  }
+  .ev-original {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.85;
+  }
+  .ev-original code {
+    font-size: 11.5px;
+    word-break: break-all;
+  }
+
+  .ev-hold .panel-in {
+    padding: 20px 22px;
+    display: grid;
+    gap: 12px;
+  }
+  .ev-hold-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--warn);
+  }
+  .ev-hold p {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .ev-hold code {
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--surface-2);
+  }
+  .ev-hold-note {
+    padding: 10px 14px;
+    border-left: 2px solid var(--warn);
+    background: var(--warn-soft);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    font-size: 13.5px !important;
+  }
+  .ev-hold-fine {
+    font-size: 12.5px !important;
+    color: var(--text-faint) !important;
+    padding-top: 10px;
+    border-top: 1px dashed var(--hairline);
+  }
+
+  .ev-claims {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr 1fr;
+    margin: var(--s5) 0;
+  }
+  @media (max-width: 720px) {
+    .ev-claims {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ev-col {
+    padding: 16px 18px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .ev-col h3 {
+    font-size: 14.5px;
+    margin-bottom: 10px;
+  }
+  .is-can {
+    border-left: 2px solid var(--success);
+  }
+  .is-can h3 {
+    color: var(--success);
+  }
+  .is-cannot {
+    border-left: 2px solid var(--danger);
+  }
+  .is-cannot h3 {
+    color: var(--danger);
+  }
+  .ev-col ul {
+    list-style: none;
+    display: grid;
+    gap: 9px;
+  }
+  .ev-col li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .ev-col li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+  .is-can li::before {
+    background: var(--success);
+  }
+  .is-cannot li::before {
+    background: var(--danger);
+  }
+
+  .ev-nonranking {
+    padding: 14px 16px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-panel);
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .ev-nonranking strong {
+    color: var(--text);
+  }
+</style>

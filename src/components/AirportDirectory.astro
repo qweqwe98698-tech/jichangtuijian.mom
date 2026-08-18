@@ -1,0 +1,799 @@
+---
+import {
+  BRANDS,
+  costPerGB,
+  formatCostPerGB,
+  hasUnlimitedTimePlan,
+  lastVerified,
+  lineLabel,
+  COMMERCIAL_VERIFIED_AT,
+} from '@data/brands';
+import { scoreBrand } from '@lib/scoring';
+import { assetForBrand, isApproved } from '@data/evidence';
+import RouteMark from './RouteMark.astro';
+
+/**
+ * 机场导航目录。全站第四处、也是最后一处允许水合的交互(搜索、筛选与排序)。
+ *
+ * 两条来自第三阶段指令 T4 的硬约束:
+ *   1. **不提供按综合评分/星级排序**。当前测速证据的工具、协议、时间都不统一,
+ *      支撑不了任何形式的横向性能排名;编辑评分虽然不取自测速,但用它排序同样会
+ *      制造"这是权威榜单"的暗示。排序只开放价格、流量、单位成本、开业年份这类客观字段。
+ *   2. 每张卡片必须显示数据状态与核验日期,让读者知道哪些是厂商声明、哪些已实测。
+ *
+ * 未执行 JS 时:16 家全部静态渲染,控件隐藏,列表完整可读。
+ */
+
+const rows = BRANDS.map((b) => {
+  const asset = assetForBrand(b.slug);
+  const price = b.vendor.pricing;
+  const approved = asset ? isApproved(asset) : false;
+  return {
+    brand: b,
+    score: scoreBrand(b),
+    perGB: Number(costPerGB(b).toFixed(6)),
+    priceTier: price.entryPriceCNY <= 15 ? 'lte15' : price.entryPriceCNY <= 20 ? 'lte20' : 'gt20',
+    trafficTier: price.trafficGB < 100 ? 'small' : price.trafficGB < 130 ? 'mid' : 'large',
+    lineKind: b.vendor.lines.includes('IEPL')
+      ? 'iepl'
+      : b.vendor.lines.includes('IPLC')
+        ? 'iplc'
+        : b.vendor.lines.includes('内网专线')
+          ? 'private'
+          : 'relay',
+    hasOwnClient: b.vendor.claims.ownClient,
+    unlimited: hasUnlimitedTimePlan(b.slug),
+    pays: b.commercial.payments,
+    evidenceDate: asset?.testedAt.slice(0, 10) ?? null,
+    evidenceState: approved ? 'released' : 'pending',
+    verifiedAt: lastVerified(b.slug),
+  };
+}).sort((a, b) => a.perGB - b.perGB);
+
+/** 标签导航:按编辑标签聚合,给不知道该按什么字段筛的读者一个入口 */
+const tagCounts = new Map<string, number>();
+for (const b of BRANDS) {
+  for (const t of b.editorial.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+}
+const TOP_TAGS = [...tagCounts.entries()]
+  .filter(([, n]) => n >= 2)
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-Hans-CN'))
+  .slice(0, 10);
+
+const FILTERS = [
+  {
+    key: 'basis',
+    label: '计价口径',
+    options: [
+      { v: 'monthly', t: '月付' },
+      { v: 'annual-equivalent', t: '年付折算' },
+      { v: 'unlimited', t: '含不限时套餐' },
+    ],
+  },
+  {
+    key: 'price',
+    label: '入门价格',
+    options: [
+      { v: 'lte15', t: '15 元以内' },
+      { v: 'lte20', t: '15–20 元' },
+      { v: 'gt20', t: '20 元以上' },
+    ],
+  },
+  {
+    key: 'traffic',
+    label: '月流量',
+    options: [
+      { v: 'small', t: '100GB 以下' },
+      { v: 'mid', t: '100–130GB' },
+      { v: 'large', t: '130GB 以上' },
+    ],
+  },
+  {
+    key: 'line',
+    label: '线路类型',
+    options: [
+      { v: 'iepl', t: 'IEPL 专线' },
+      { v: 'private', t: '内网专线' },
+      { v: 'relay', t: '中转 / 直连' },
+    ],
+  },
+  {
+    key: 'client',
+    label: '客户端',
+    options: [{ v: 'own', t: '提供自研客户端' }],
+  },
+  {
+    key: 'pay',
+    label: '支付方式',
+    options: [
+      { v: 'alipay', t: '支付宝' },
+      { v: 'wechat', t: '微信' },
+      { v: 'usdt', t: 'USDT' },
+    ],
+  },
+  {
+    key: 'evidence',
+    label: '测速证据',
+    options: [
+      { v: 'released', t: '已放行' },
+      { v: 'pending', t: '待复核' },
+    ],
+  },
+] as const;
+
+const SORTS = [
+  { v: 'pergb', t: '单位流量成本(低→高)' },
+  // 刻意不叫「入门价格」:这一列里 3 家是年付折算价、13 家是月付价,
+  // 排在一起的是标价而不是同口径的价格。名字说实话,下面的提示再解释一次。
+  { v: 'price', t: '标价数字(低→高,两种口径混排)' },
+  { v: 'traffic', t: '月流量(高→低)' },
+  { v: 'since', t: '开业年份(早→晚)' },
+  { v: 'verified', t: '最近核验日期(新→旧)' },
+  { v: 'name', t: '品牌名' },
+] as const;
+
+const payKey = (p: string) =>
+  p.includes('支付宝') ? 'alipay' : p.includes('微信') ? 'wechat' : 'usdt';
+---
+
+<div class="directory" data-directory>
+  <nav class="dir-tags" aria-label="按标签浏览">
+    <span class="dt-label">按标签</span>
+    <button type="button" class="dt-chip is-on" data-tag="" aria-pressed="true"
+      >全部 {BRANDS.length}</button
+    >
+    {
+      TOP_TAGS.map(([tag, n]) => (
+        <button type="button" class="dt-chip" data-tag={tag} aria-pressed="false">
+          {tag} {n}
+        </button>
+      ))
+    }
+  </nav>
+
+  <div class="dir-controls" data-dir-controls hidden>
+    <div class="dir-search">
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+        <circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+        <path d="M10.5 10.5 L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+        ></path>
+      </svg>
+      <input
+        type="search"
+        id="dir-q"
+        placeholder="搜索品牌名、协议或线路…"
+        aria-label="搜索机场"
+        data-dir-q
+      />
+    </div>
+
+    <div class="dir-filters">
+      {
+        FILTERS.map((f) => (
+          <fieldset class="dir-group">
+            <legend>{f.label}</legend>
+            {f.options.map((o) => (
+              <label class="dir-chip">
+                <input type="checkbox" data-filter={f.key} value={o.v} />
+                <span>{o.t}</span>
+              </label>
+            ))}
+          </fieldset>
+        ))
+      }
+    </div>
+
+    <div class="dir-sort">
+      <label for="dir-sort-sel">排序</label>
+      <select id="dir-sort-sel" data-dir-sort>
+        {SORTS.map((s) => <option value={s.v}>{s.t}</option>)}
+      </select>
+      <button type="button" class="dir-reset" data-dir-reset>清除全部筛选</button>
+      <p class="dir-sort-note">
+        本目录<strong>不提供按综合评分排序</strong>。当前测速证据的工具、协议与时间都不统一,
+        支撑不了任何形式的性能排名——按客观字段自己筛,比看一个总分可靠。
+      </p>
+      {
+        /* 按标价排序时,7 元(年付折算)会排到 14.9 元(月付)前面。
+          卡片各自标了口径,但排序这个动作本身会制造「最便宜的是它」的印象,
+          所以这条提示必须跟着排序状态出现,而不是藏在页面某处。 */
+      }
+      <p class="dir-basis-warn" data-dir-basis-warn hidden>
+        <strong>这一列不是同口径。</strong>标价最低的 3 家(7 / 7.5 / 8 元)是<strong
+          >年付折算价</strong
+        >, 要一次性付一整年;其余 13 家是月付价。想真正横向比,请改用
+        <strong>单位流量成本</strong>,或先用上面的「计价口径」筛到同一组再排。
+      </p>
+    </div>
+
+    <p class="dir-count" data-dir-count role="status" aria-live="polite"></p>
+  </div>
+
+  <div class="dir-grid" data-dir-grid>
+    {
+      rows.map((r) => (
+        <article
+          class="dir-card panel notch"
+          data-basis={r.brand.vendor.pricing.basis}
+          data-unlimited={r.unlimited ? 'unlimited' : ''}
+          data-price={r.priceTier}
+          data-traffic={r.trafficTier}
+          data-line={r.lineKind}
+          data-client={r.hasOwnClient ? 'own' : 'none'}
+          data-pay={r.pays.map(payKey).join(' ')}
+          data-evidence={r.evidenceState}
+          data-tags={r.brand.editorial.tags.join('|')}
+          data-sort-price={r.brand.vendor.pricing.entryPriceCNY}
+          data-sort-traffic={r.brand.vendor.pricing.trafficGB}
+          data-sort-pergb={r.perGB}
+          data-sort-since={r.brand.vendor.since ?? 9999}
+          data-sort-verified={r.verifiedAt}
+          data-sort-name={r.brand.name}
+          data-text={`${r.brand.name} ${r.brand.alias} ${r.brand.vendor.protocols.join(' ')} ${r.brand.vendor.lines.join(' ')} ${r.brand.editorial.tags.join(' ')}`}
+        >
+          <div class="panel-in">
+            <div class="dc-head">
+              <RouteMark lines={r.brand.vendor.lines} size={18} />
+              <a href={`/reviews/${r.brand.slug}/`} class="dc-name">
+                {r.brand.name}
+              </a>
+              <span class="dc-since">
+                {r.brand.vendor.since ? `${r.brand.vendor.since} 年开业` : '开业年份未标明'}
+              </span>
+            </div>
+
+            <dl class="dc-specs">
+              <div>
+                <dt>入门价</dt>
+                <dd>
+                  <b>{r.brand.vendor.pricing.entryPriceCNY}</b> 元
+                  {r.brand.vendor.pricing.basis === 'annual-equivalent' && <em>年付折算</em>}
+                </dd>
+              </div>
+              <div>
+                <dt>月流量</dt>
+                <dd>
+                  <b>{r.brand.vendor.pricing.trafficGB}</b> GB
+                </dd>
+              </div>
+              <div>
+                <dt>元 / GB</dt>
+                <dd>
+                  <b>{formatCostPerGB(r.brand)}</b>
+                </dd>
+              </div>
+            </dl>
+
+            <div class="chips">
+              <span class="chip route">{lineLabel(r.brand)}</span>
+              {r.brand.vendor.protocols.length ? (
+                r.brand.vendor.protocols.map((p) => <span class="chip">{p}</span>)
+              ) : (
+                <span class="chip is-unstated">协议未标明</span>
+              )}
+              {r.hasOwnClient && <span class="chip">自研客户端</span>}
+              {r.unlimited && <span class="chip">不限时套餐</span>}
+            </div>
+
+            <div class="dc-status">
+              <span class="ds-item">
+                <i class="ds-dot is-vendor" aria-hidden="true" />
+                规格来自厂商资料
+              </span>
+              <span class="ds-item">
+                <i
+                  class={`ds-dot ${r.evidenceState === 'released' ? 'is-ok' : 'is-pending'}`}
+                  aria-hidden="true"
+                />
+                测速证据 {r.evidenceDate ?? '—'} ·{' '}
+                {r.evidenceState === 'released' ? '已放行' : '待复核'}
+              </span>
+              <span class="ds-item">
+                <i class="ds-dot is-neutral" aria-hidden="true" />
+                商业信息核验于 <time datetime={r.verifiedAt}>{r.verifiedAt}</time>
+              </span>
+            </div>
+
+            <div class="dc-foot">
+              <a class="btn btn-primary" href={`/reviews/${r.brand.slug}/`}>
+                查看评测
+              </a>
+              <span class="dc-score" title="编辑评分,由公开字段按固定公式算出,不用于本目录排序">
+                编辑评分 <b>{r.score.overall.toFixed(1)}</b>
+              </span>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="dir-empty" data-dir-empty hidden tabindex="-1" role="status">
+    <p>
+      没有符合条件的机场。本站只收录 {BRANDS.length} 家,筛选条件叠太多很容易一家都不剩。
+    </p>
+    <button type="button" class="btn btn-ghost" data-dir-reset>清除全部筛选</button>
+  </div>
+
+  <p class="dir-meta">
+    最后更新 {COMMERCIAL_VERIFIED_AT} · 价格与套餐每月复查 ·
+    <a href="/editorial-policy/">收录标准与评分算法</a> ·
+    <a href="/disclaimer/">数据来源与免责说明</a>
+  </p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-directory]');
+  if (root) {
+    const controls = root.querySelector<HTMLElement>('[data-dir-controls]')!;
+    const grid = root.querySelector<HTMLElement>('[data-dir-grid]')!;
+    const empty = root.querySelector<HTMLElement>('[data-dir-empty]')!;
+    const count = root.querySelector<HTMLElement>('[data-dir-count]')!;
+    const q = root.querySelector<HTMLInputElement>('[data-dir-q]')!;
+    const sortSel = root.querySelector<HTMLSelectElement>('[data-dir-sort]')!;
+    const basisWarn = root.querySelector<HTMLElement>('[data-dir-basis-warn]');
+    const tagBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-tag]')];
+    const cards = [...grid.querySelectorAll<HTMLElement>('.dir-card')];
+    const total = cards.length;
+    let activeTag = '';
+
+    // 控件默认隐藏:没有 JS 时列表仍完整可读,不给一个点了没反应的筛选栏
+    controls.hidden = false;
+
+    const apply = () => {
+      const filters = new Map<string, Set<string>>();
+      for (const cb of root.querySelectorAll<HTMLInputElement>('input[data-filter]:checked')) {
+        const k = cb.dataset.filter!;
+        if (!filters.has(k)) filters.set(k, new Set());
+        filters.get(k)!.add(cb.value);
+      }
+      const term = q.value.trim().toLowerCase();
+      let visible = 0;
+
+      for (const card of cards) {
+        const d = card.dataset;
+        let ok = true;
+
+        for (const [key, values] of filters) {
+          if (key === 'basis') {
+            // 「含不限时套餐」与计价口径是并列选项,任一命中即可
+            const hit = [...values].some((v) =>
+              v === 'unlimited' ? d.unlimited === 'unlimited' : d.basis === v
+            );
+            if (!hit) ok = false;
+          } else if (key === 'pay') {
+            const owned = (d.pay ?? '').split(' ');
+            if (![...values].every((v) => owned.includes(v))) ok = false;
+          } else {
+            const field =
+              key === 'price'
+                ? d.price
+                : key === 'traffic'
+                  ? d.traffic
+                  : key === 'line'
+                    ? d.line
+                    : key === 'evidence'
+                      ? d.evidence
+                      : d.client;
+            if (!values.has(field ?? '')) ok = false;
+          }
+        }
+
+        if (ok && activeTag && !(d.tags ?? '').split('|').includes(activeTag)) ok = false;
+        if (ok && term && !(d.text ?? '').toLowerCase().includes(term)) ok = false;
+
+        card.hidden = !ok;
+        if (ok) visible++;
+      }
+
+      const key = sortSel.value;
+      const textual = key === 'name' || key === 'verified';
+      const desc = key === 'traffic' || key === 'verified';
+      const prop = `sort${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+      const sorted = [...cards].sort((a, b) => {
+        const x = a.dataset[prop] ?? '';
+        const y = b.dataset[prop] ?? '';
+        const cmp = textual ? x.localeCompare(y, 'zh-Hans-CN') : Number(x) - Number(y);
+        return desc ? -cmp : cmp;
+      });
+      for (const c of sorted) grid.appendChild(c);
+
+      if (basisWarn) basisWarn.hidden = key !== 'price';
+
+      empty.hidden = visible > 0;
+      count.textContent =
+        visible === total ? `显示全部 ${total} 家` : `${visible} / ${total} 家符合条件`;
+    };
+
+    const reset = () => {
+      for (const cb of root.querySelectorAll<HTMLInputElement>('input[data-filter]'))
+        cb.checked = false;
+      q.value = '';
+      activeTag = '';
+      for (const b of tagBtns) {
+        const on = b.dataset.tag === '';
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-pressed', String(on));
+      }
+      apply();
+      q.focus();
+    };
+
+    for (const btn of tagBtns) {
+      btn.addEventListener('click', () => {
+        activeTag = btn.dataset.tag ?? '';
+        for (const b of tagBtns) {
+          const on = b === btn;
+          b.classList.toggle('is-on', on);
+          b.setAttribute('aria-pressed', String(on));
+        }
+        apply();
+      });
+    }
+
+    for (const btn of root.querySelectorAll<HTMLButtonElement>('[data-dir-reset]')) {
+      btn.addEventListener('click', reset);
+    }
+
+    root.addEventListener('change', apply);
+    q.addEventListener('input', apply);
+    apply();
+  }
+</script>
+
+<style>
+  .dir-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: var(--s4);
+  }
+  .dt-label {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .dt-chip {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-chip);
+    background: var(--surface);
+    font: inherit;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background 0.15s ease;
+  }
+  .dt-chip:hover {
+    color: var(--text);
+  }
+  .dt-chip.is-on {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .dt-chip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .dir-controls {
+    display: grid;
+    gap: 16px;
+    padding: 18px 20px;
+    margin-bottom: var(--s5);
+    border: 1px solid var(--border);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .dir-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 12px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-field);
+    background: var(--surface-2);
+    color: var(--text-faint);
+  }
+  .dir-search:focus-within {
+    border-color: var(--accent);
+  }
+  .dir-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 14.5px;
+    color: var(--text);
+    outline: none;
+  }
+  .dir-filters {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .dir-group {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dir-group legend {
+    width: 100%;
+    padding: 0 0 6px;
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  .dir-chip input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .dir-chip span {
+    display: inline-block;
+    padding: 5px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-chip);
+    background: var(--surface-2);
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background 0.15s ease;
+  }
+  .dir-chip span:hover {
+    color: var(--text);
+  }
+  .dir-chip input:checked + span {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .dir-chip input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .dir-sort {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .dir-sort label {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  .dir-sort select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-field);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+  }
+  .dir-reset {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-field);
+    background: none;
+    font: inherit;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .dir-reset:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .dir-basis-warn {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-left: 2px solid var(--warn, var(--accent));
+    background: var(--accent-soft);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .dir-basis-warn strong {
+    color: var(--text);
+  }
+
+  .dir-sort-note {
+    flex-basis: 100%;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.8;
+  }
+  .dir-sort-note strong {
+    color: var(--text-muted);
+  }
+  .dir-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dir-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  }
+  .dir-card[hidden] {
+    display: none;
+  }
+  .dir-card .panel-in {
+    padding: 16px 18px;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+  .dc-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .dc-name {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .dc-name:hover {
+    color: var(--accent);
+  }
+  .dc-since {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dc-specs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 0;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .dc-specs dt {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 3px;
+  }
+  .dc-specs dd {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .dc-specs b {
+    font-size: 17px;
+    color: var(--text);
+  }
+  .dc-specs em {
+    display: block;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--warn);
+    margin-top: 2px;
+  }
+
+  /* 「未标明」是信息缺口,视觉上要与真实标注区分开 */
+  .chip.is-unstated {
+    border-style: dashed;
+    color: var(--text-faint);
+    background: transparent;
+  }
+
+  .dc-status {
+    display: grid;
+    gap: 5px;
+  }
+  .ds-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--r-node);
+    flex: none;
+  }
+  .is-vendor {
+    background: var(--warn);
+  }
+  .is-pending {
+    background: var(--text-faint);
+  }
+  .is-ok {
+    background: var(--success);
+  }
+  .is-neutral {
+    background: var(--border-strong);
+  }
+
+  .dc-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+  }
+  .dc-score {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-faint);
+    cursor: help;
+  }
+  .dc-score b {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dir-empty {
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+    padding: 28px 20px;
+    text-align: center;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-panel);
+  }
+  .dir-empty[hidden] {
+    display: none;
+  }
+  .dir-empty p {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.85;
+    max-width: 46ch;
+  }
+  .dir-empty:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .dir-meta {
+    margin-top: var(--s5);
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.9;
+  }
+  .dir-meta a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .dir-meta a:hover {
+    color: var(--accent);
+  }
+</style>

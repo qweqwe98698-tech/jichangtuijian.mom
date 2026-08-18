@@ -1,0 +1,311 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import { BRANDS } from '@data/brands';
+import { faqSchema } from '@lib/schema';
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '联系与纠错', href: '/contact/' },
+];
+
+const total = BRANDS.length;
+
+/** 四类最有价值的反馈,按处理优先级排列 */
+const kinds = [
+  {
+    tag: 'P0',
+    name: '价格或套餐与官网不符',
+    detail:
+      '入门价、月流量、计费周期任意一项和官网结算页对不上。这一类优先级最高,因为价格是评分的输入之一,改一家的价格会连带影响其他品牌的性价比得分。',
+    need: '品牌名、你看到的正确数值、以及是在官网哪个页面看到的(定价页还是结算页)。',
+  },
+  {
+    tag: 'P1',
+    name: '规格描述有误',
+    detail:
+      '线路类型、协议支持、客户端支持、开业年份等结构性字段写错了。这类字段决定线路等级、运营时长、客户端友好度三个维度的得分。',
+    need: '品牌名、具体是哪一项、以及可核对的公开来源(官网页面或官方公告)。',
+  },
+  {
+    tag: 'P1',
+    name: '教程步骤失效',
+    detail:
+      '客户端更新后按钮位置变了、菜单改名了、某一步再也走不通了。教程失效的危害比数据过期更大——读者会卡在中途,而且往往不知道是自己操作错了还是文章过期了。',
+    need: '文章链接、卡在第几步、你用的客户端版本与系统版本。',
+  },
+  {
+    tag: 'P2',
+    name: '品牌状态变化',
+    detail:
+      '官网长期无法访问、跑路迹象、大规模线路劣化、支付方式变更。这类信息我们无法只凭一条反馈就下结论,但会作为线索去核实。',
+    need: '品牌名、你观察到的现象、发生的大致时间。',
+  },
+];
+
+const faq = [
+  {
+    question: '为什么这一页没有邮箱地址?',
+    answer:
+      '因为本站还没有配置一个能稳定收发的联系邮箱。与其放一个我们不能保证会查看的地址,不如先说明现状:站内反馈表单正在开发中,上线后会直接在本页放出入口。在此之前,我们不希望你把发现的问题写完发出去,然后石沉大海。',
+  },
+  {
+    question: '我反馈的问题会被公开吗?',
+    answer:
+      '反馈内容不会公开,也不会用于反馈处理以外的任何用途。但纠错带来的数据变更会体现在页面上——被修正的字段会更新,页面的「最近更新」日期会刷新。如果是影响面较大的修正,我们会在相关页面用一句话说明改了什么。',
+  },
+  {
+    question: '品牌方可以要求修改评测内容吗?',
+    answer:
+      '可以要求更正事实,不能要求修改判断。事实层面的错误——价格、流量、线路、协议、开业年份——只要提供可核对的官方来源,我们会更新。评分是公式算出来的,改事实数据会连带改变分数,这属于正常结果。但编辑判断部分(适合人群、优缺点、需要提醒的口径问题)不接受修改要求,分数也不接受任何形式的付费调整。',
+  },
+  {
+    question: '我遇到的是使用问题,不是网站内容问题,该怎么办?',
+    answer:
+      '连不上、超时、订阅导入失败、连上了但没网这类问题,故障排查栏目按现象分类写了排查步骤,通常比等回复更快。如果确认是服务商侧的问题(比如节点全部失效),那应该找服务商的客服——本站不接触任何服务商的后台,没有能力协助处理账号或节点问题。',
+  },
+];
+
+const description =
+  '发现价格过期、规格有误、教程失效或品牌状态变化,可以告诉我们。这一页说明哪些反馈最有用、需要准备什么信息,以及一条纠错从核对到更新标注的完整处理流程。';
+---
+
+<BaseLayout
+  title="联系与纠错:发现问题怎么告诉我们"
+  description={description}
+  crumbs={crumbs}
+  schemas={[faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Contact &amp; Corrections</span>
+          <h1>联系与纠错</h1>
+          <p class="post-meta">最近更新 2026-08-18 · 站内反馈表单开发中</p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            如果你发现本站的<strong>价格过期、规格写错、教程步骤失效</strong
+            >,或者某家品牌出现了状态变化,
+            这些都值得反馈——它们直接影响其他读者的判断。需要先说明的是:
+            <strong>站内反馈表单还在开发中,尚未开放</strong>。本站目前没有配置对外邮箱,
+            我们不想放一个不能保证会查看的地址。表单上线后会直接出现在这一页。
+            在此之前,下面写清楚了什么样的反馈最有用、需要准备哪些信息,以及我们会怎么处理。
+          </p>
+        </AnswerBox>
+
+        <div class="prose">
+          <h2 id="kinds">哪些反馈对我们最有用</h2>
+          <p>
+            本站收录 {total} 家品牌,每家几十个字段,再加上随客户端版本变化的教程步骤—— 靠每月复查不可能覆盖所有变动,读者的反馈往往比复查周期更快发现问题。按处理优先级,这四类最有价值:
+          </p>
+          <div class="kinds">
+            {
+              kinds.map((k) => (
+                <div class="kind">
+                  <div class="kd-head">
+                    <span class="kd-tag">{k.tag}</span>
+                    <b>{k.name}</b>
+                  </div>
+                  <p>{k.detail}</p>
+                  <p class="kd-need">需要提供:{k.need}</p>
+                </div>
+              ))
+            }
+          </div>
+
+          <h2 id="channel">反馈渠道:站内表单即将开放</h2>
+          <p>
+            <strong>站内反馈表单正在开发中,尚未上线。</strong
+            >它会做成一个不需要注册、不收集个人信息的简单表单:
+            选择反馈类型、填写品牌或文章、写下你看到的正确信息,提交即可。
+            表单上线后,这一页会放出入口,同时在相关页面加上「报错」快捷链接。
+          </p>
+          <p>
+            我们没有在这里放邮箱或社交账号,原因很直接:本站还没有配置能稳定收发的联系邮箱,
+            放一个不能保证会查看的地址,只会浪费你写反馈的时间。
+            <a href="/about/">关于本站</a>也用同样的标准写了目前还没做到的事——
+            没做到的就说没做到,这比填满所有栏位重要。
+          </p>
+          <div class="tip">
+            <span class="ico" aria-hidden="true">✳</span>
+            <p>
+              <b>如果你现在就发现了问题:</b>建议先把三样东西记下来——页面链接、你看到的错误内容、
+              你认为正确的内容与来源。表单开放后这三样可以直接粘贴进去,一次就能处理完,
+              不用我们再回头找你补信息。
+            </p>
+          </div>
+
+          <h2 id="process">一条纠错是怎么被处理的</h2>
+          <p>处理流程是固定的,不因反馈来自读者还是品牌方而改变:</p>
+          <ol class="steps">
+            <li>
+              <b>核对来源。</b>价格与套餐一律以品牌官网的<strong>结算页</strong
+              >为准,不采信首页宣传价,
+              也不采信第三方转述。规格类字段以官网页面或官方公告为准。我们不会仅凭一条反馈就改数据。
+            </li>
+            <li>
+              <b>更新数据文件。</b>核实属实则修改品牌数据文件里对应的字段。
+              由于评分完全由这些字段算出,数据一改,<a href="/editorial-policy/">分数会自动重算</a>——
+              包括受归一化影响的其他品牌的性价比得分。我们不会为了维持某个排名而搁置修正。
+            </li>
+            <li>
+              <b>页面标注更新时间。</b>受影响页面的「最近更新」日期会刷新。
+              影响面较大的修正,会在页面上用一句话说明改动了什么,而不是静默替换数字。
+            </li>
+            <li>
+              <b>无法核实的先记录不发布。</b
+              >比如「某家跑路了」这类信息,在没有确凿迹象前不会写进页面。
+              一条错误的跑路指控对服务商和读者都是伤害,但我们会把它列入观察名单,并在
+              <a href="/risk/">风险预警</a>的复查中重点核对。
+            </li>
+          </ol>
+
+          <h2 id="priority">处理时限与优先级</h2>
+          <ul class="notes">
+            <li>
+              <strong>价格类(P0)</strong>:是评分输入,收到即核对,属实则当次更新,不等下一个周期。
+            </li>
+            <li>
+              <strong>规格与教程类(P1)</strong
+              >:并入最近一次内容复查处理;教程失效若导致读者完全走不通,按 P0 处理。
+            </li>
+            <li>
+              <strong>品牌状态类(P2)</strong>:进入观察名单,需要多个独立迹象或官方信息才会形成结论。
+            </li>
+          </ul>
+          <p>
+            表单尚未开放,现阶段的更新主要来自<strong>每月价格复查</strong>与<strong
+              >每季度结构性字段复查</strong
+            >, 机制写在<a href="/editorial-policy/">编辑与评测规范</a>。
+          </p>
+
+          <h2 id="self-serve">有些问题不必等我们回复</h2>
+          <p>
+            如果你遇到的是使用层面的问题——客户端连上了但没网、节点全部超时、订阅导入失败、
+            某个网站打不开——这些在<a href="/troubleshooting/">故障排查</a>里按现象分类写了排查顺序,
+            自己走一遍通常比等回复快。客户端本身的安装与配置步骤在<a href="/guides/">客户端教程</a
+            >。
+          </p>
+          <p>
+            如果确认问题出在服务商侧(节点全线失效、账号异常、支付未到账),应该直接联系服务商客服。
+            本站不接触任何服务商的后台,不能代为处理账号、退款或节点事务—— 这一点在<a
+              href="/disclaimer/">数据与免责说明</a
+            >里有完整界定。
+          </p>
+
+          <h2 id="business">品牌方与合作咨询</h2>
+          <p>
+            品牌方可以要求更正<strong>事实性错误</strong
+            >:价格、流量、线路、协议、开业年份、客户端支持,
+            只要提供可核对的官方来源,我们会按上面的流程更新,并接受由此带来的分数变化。
+          </p>
+          <p>
+            但有三件事不在可协商范围内:<strong>编辑判断部分不接受修改要求</strong>
+            (定位、适合人群、优缺点、需要提醒的口径问题);
+            <strong>分数不接受付费调整</strong>,评分函数在结构上就读不到商业信息;
+            <strong>不设置可以购买的推荐位</strong>,排序由公开公式决定。
+            合作关系本身如何被隔离在评分之外,写在<a href="/editorial-policy/">编辑与评测规范</a
+            >的最后一节。
+          </p>
+        </div>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="使用中遇到问题?先按现象自查"
+          href="/troubleshooting/"
+          reason="大部分「连不上」「没网」「全部超时」的问题都有固定的排查顺序,自己走一遍通常十分钟内就能定位到是客户端配置、订阅内容还是服务商侧的问题。"
+          alt={{ label: '想了解数据怎么核对与更新?', href: '/editorial-policy/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .kinds {
+    display: grid;
+    gap: 12px;
+    margin: var(--s5) 0;
+  }
+  .kind {
+    padding: 15px 17px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .kd-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .kd-tag {
+    font: 600 10.5px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    padding: 4px 7px;
+    border-radius: var(--r-chip);
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft);
+  }
+  .kd-head b {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .kind p {
+    margin: 0 0 7px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+  .kd-need {
+    margin-bottom: 0;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .notes {
+    list-style: none;
+    display: grid;
+    gap: 11px;
+    margin: var(--s4) 0 var(--s5);
+  }
+  .notes li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+  .notes strong {
+    color: var(--text);
+  }
+</style>

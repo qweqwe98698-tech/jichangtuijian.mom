@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>编辑部年鉴 · 视觉方向 B · 机场实测室</title>
+<style>
+/* =========================================================
+   方向 B：编辑部年鉴 Editorial Almanac
+   设计令牌 Design Tokens
+   ========================================================= */
+:root{
+  /* 浅色（默认） */
+  --bg:#faf8f3;
+  --surface:#ffffff;
+  --surface-2:#f1ece1;
+  --surface-3:#e7e0d1;
+  --border:#ddd5c4;
+  --border-strong:#8c8471;
+  --rule-ink:#17150f;
+  --text:#17150f;
+  --text-muted:#5c564a;
+  --text-faint:#7c7364;
+  --accent:#1b3a57;          /* 主色：档案墨蓝 */
+  --accent-fg:#ffffff;
+  --accent-soft:#e4ecf3;
+  --accent-2:#a6301c;        /* 强调：年鉴朱红（编号 / 标记 / 重点） */
+  --accent-2-soft:#f6e6e1;
+  --success:#1f6b3b;
+  --success-soft:#e3efe6;
+  --warn:#8a5a00;
+  --warn-soft:#f7edd9;
+  --danger:#93221a;
+  --danger-soft:#f7e4e1;
+  --selection:#f0e0c8;
+
+  /* 圆角：近乎直角 */
+  --r-0:0px;
+  --r-1:2px;
+  --r-2:3px;
+  --r-pill:2px;
+
+  /* 阴影：几乎不用，只允许极薄的分层边 */
+  --shadow-none:none;
+  --shadow-hairline:0 1px 0 0 var(--border);
+  --shadow-sticky:0 1px 0 0 var(--rule-ink);
+  --shadow-raise:0 1px 2px rgba(23,21,15,.08);
+
+  /* 间距刻度 */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
+
+  /* 字体栈：全部系统字体，零外部请求 */
+  --font-serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti SC","Noto Serif CJK SC","Source Han Serif SC",STSong,SimSun,serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Sarasa Mono SC",monospace;
+
+  --header-h:58px;
+  --maxw:1200px;
+}
+
+html:has(#theme-dark:checked){
+  --bg:#131210;
+  --surface:#1a1915;
+  --surface-2:#22201a;
+  --surface-3:#2c2921;
+  --border:#3a362d;
+  --border-strong:#7b7462;
+  --rule-ink:#c9c1ad;
+  --text:#ede8dc;
+  --text-muted:#a79e8b;
+  --text-faint:#8d846f;
+  --accent:#8fb6dc;
+  --accent-fg:#101317;
+  --accent-soft:#1e2a35;
+  --accent-2:#e8846a;
+  --accent-2-soft:#31201b;
+  --success:#6fbf89;
+  --success-soft:#182a1f;
+  --warn:#d8a93f;
+  --warn-soft:#2d2412;
+  --danger:#e8776a;
+  --danger-soft:#301a17;
+  --selection:#3a3320;
+  --shadow-raise:0 1px 2px rgba(0,0,0,.5);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-sans);
+  font-size:16px;
+  line-height:1.8;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  counter-reset:sec;
+  overflow-x:hidden;
+}
+::selection{background:var(--selection);color:var(--text)}
+img,svg{max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:600;margin:0;line-height:1.3;letter-spacing:.01em}
+p{margin:0}
+em,i,cite,dfn,address{font-style:normal} /* 中文无斜体，硬规则 */
+b,strong{font-weight:600}
+
+/* 数字 / 代码 / 中英混排的字距处理 */
+.num,time,td .num,.metric{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.mix{letter-spacing:.02em}
+
+/* 视觉隐藏但可聚焦 */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+
+/* =========================================================
+   版式骨架：编号栏 / 正文栏 / 边注栏
+   ========================================================= */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-4)}
+.grid3{
+  display:grid;
+  grid-template-columns:72px minmax(0,1fr) 232px;
+  column-gap:var(--s-6);
+}
+.grid3 > .col-num{grid-column:1}
+.grid3 > .col-main{grid-column:2}
+.grid3 > .col-side{grid-column:3}
+@media (max-width:1040px){
+  .grid3{grid-template-columns:56px minmax(0,1fr);column-gap:var(--s-4)}
+  .grid3 > .col-side{grid-column:2;margin-top:var(--s-4)}
+}
+@media (max-width:640px){
+  .grid3{grid-template-columns:minmax(0,1fr)}
+  .grid3 > .col-num,.grid3 > .col-main,.grid3 > .col-side{grid-column:1}
+}
+
+/* 章节编号（朱红，等宽数字，前导零） */
+.secnum{
+  font-family:var(--font-mono);
+  font-size:12px;letter-spacing:.14em;line-height:1.4;
+  color:var(--accent-2);
+  padding-top:6px;
+  white-space:nowrap;
+}
+.secnum::before{
+  counter-increment:sec;
+  content:counter(sec,decimal-leading-zero);
+  display:block;
+  font-family:var(--font-serif);
+  font-size:26px;letter-spacing:0;line-height:1;
+  color:var(--accent-2);
+  padding-bottom:4px;
+  border-bottom:1px solid currentColor;
+  margin-bottom:6px;
+}
+@media (max-width:640px){
+  .secnum{display:flex;align-items:baseline;gap:8px;padding-top:0;margin-bottom:var(--s-2)}
+  .secnum::before{border-bottom:0;padding-bottom:0;margin-bottom:0;font-size:20px}
+}
+
+/* 边注 */
+.side-note{
+  font-size:13px;line-height:1.85;color:var(--text-muted);
+  border-left:2px solid var(--accent-2);
+  padding-left:var(--s-3);
+}
+.side-note b{color:var(--text);display:block;font-size:12px;letter-spacing:.1em;margin-bottom:4px;font-family:var(--font-mono)}
+.side-note + .side-note{margin-top:var(--s-4);}
+
+/* 规则线 */
+.rule{border:0;border-top:1px solid var(--border);margin:0}
+.rule-ink{border:0;border-top:1px solid var(--rule-ink);margin:0}
+.rule-double{border:0;border-top:3px double var(--border-strong);margin:0}
+
+/* 分节标题（栏内） */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-4);flex-wrap:wrap;padding-bottom:var(--s-3);border-bottom:1px solid var(--rule-ink)}
+.sec-head h2{font-size:clamp(22px,3.4vw,30px)}
+.sec-head .kicker{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--text-faint);text-transform:uppercase}
+section.sec{padding:var(--s-8) 0}
+@media (max-width:640px){section.sec{padding:var(--s-6) 0}}
+
+/* =========================================================
+   a. 顶部导航
+   ========================================================= */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  background:var(--bg);
+  border-bottom:1px solid var(--rule-ink);
+}
+.topbar-in{
+  max-width:var(--maxw);margin:0 auto;padding:0 var(--s-4);
+  height:var(--header-h);
+  display:flex;align-items:center;gap:var(--s-5);
+}
+.brandmark{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brandmark .wordmark{display:flex;flex-direction:column;line-height:1.15}
+.wordmark .cn{font-family:var(--font-serif);font-size:17px;font-weight:600;letter-spacing:.04em}
+.wordmark .en{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;color:var(--text-faint)}
+.mainnav{display:flex;gap:var(--s-5);margin-left:auto;align-items:center;font-size:14px}
+.mainnav a{
+  color:var(--text-muted);padding:2px 0;
+  background-image:linear-gradient(var(--accent-2),var(--accent-2));
+  background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;
+  transition:background-size .18s ease-out,color .18s ease-out;
+}
+.mainnav a:hover,.mainnav a[aria-current]{color:var(--text);background-size:100% 1px}
+.mainnav a[aria-current]{color:var(--text)}
+@media (max-width:900px){.mainnav{display:none}}
+
+/* 主题切换（纯 CSS，:has 驱动） */
+.themeswitch{margin-left:auto;display:flex;align-items:center;gap:6px;flex:0 0 auto}
+@media (min-width:901px){.themeswitch{margin-left:var(--s-5)}}
+.themeswitch label{
+  cursor:pointer;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
+  border:1px solid var(--border-strong);border-radius:var(--r-1);
+  padding:5px 9px;color:var(--text-muted);
+  display:flex;align-items:center;gap:6px;
+  transition:color .18s ease-out,border-color .18s ease-out;
+}
+.themeswitch label:hover{color:var(--text);border-color:var(--rule-ink)}
+.themeswitch .on{display:none}
+html:has(#theme-dark:checked) .themeswitch .off{display:none}
+html:has(#theme-dark:checked) .themeswitch .on{display:inline}
+#theme-dark:focus-visible + label{outline:2px solid var(--accent-2);outline-offset:2px}
+
+/* 移动端导航（<details>，零 JS） */
+.mnav{display:none;margin-left:var(--s-3)}
+@media (max-width:900px){.mnav{display:block}}
+.mnav > summary{
+  list-style:none;cursor:pointer;
+  border:1px solid var(--border-strong);border-radius:var(--r-1);
+  padding:5px 9px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--text-muted);
+}
+.mnav > summary::-webkit-details-marker{display:none}
+.mnav[open] > summary{color:var(--text);border-color:var(--rule-ink)}
+.mnav-panel{
+  position:absolute;left:0;right:0;top:var(--header-h);
+  background:var(--surface);border-bottom:1px solid var(--rule-ink);
+  padding:var(--s-4);
+  display:grid;grid-template-columns:1fr 1fr;gap:2px var(--s-4);
+}
+.mnav-panel a{display:block;padding:9px 0;font-size:14px;border-bottom:1px solid var(--border);color:var(--text-muted)}
+
+/* =========================================================
+   b. Hero
+   ========================================================= */
+.masthead{border-bottom:1px solid var(--rule-ink);padding-top:var(--s-6)}
+.issue-line{
+  display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4);align-items:baseline;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;color:var(--text-faint);
+  padding-bottom:var(--s-3);border-bottom:1px solid var(--border);
+}
+.issue-line .stamp{color:var(--accent-2)}
+.hero-h1{
+  font-size:clamp(34px,7vw,62px);line-height:1.12;letter-spacing:.005em;
+  margin:var(--s-5) 0 var(--s-3);
+  max-width:15em;
+}
+.hero-h1 .sub{display:block;font-size:.42em;color:var(--text-muted);letter-spacing:.06em;margin-top:var(--s-3);font-weight:400}
+.deck{font-size:16px;line-height:1.85;color:var(--text-muted);max-width:44em}
+
+.verdict{
+  margin:var(--s-6) 0 0;
+  border:1px solid var(--rule-ink);
+  border-top:3px solid var(--accent-2);
+  border-radius:var(--r-1);
+  background:var(--surface);
+  padding:var(--s-5);
+}
+.verdict-label{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--accent-2);
+  display:flex;align-items:center;gap:8px;margin-bottom:var(--s-3);
+}
+.verdict-label::after{content:"";flex:1;border-top:1px solid var(--border)}
+.verdict p{font-family:var(--font-serif);font-size:clamp(17px,2.4vw,21px);line-height:1.75}
+.verdict p + p{margin-top:var(--s-3)}
+.verdict mark{background:var(--accent-2-soft);color:var(--text);padding:0 3px;border-radius:0}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 20px;border-radius:var(--r-1);
+  font-size:15px;border:1px solid transparent;
+  transition:transform .14s ease-out,opacity .14s ease-out,background-color .14s ease-out,color .14s ease-out;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.btn-ghost:hover{border-color:var(--rule-ink);background:var(--surface-2)}
+.btn .arrow{font-family:var(--font-mono)}
+
+.facts{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  border-top:1px solid var(--rule-ink);margin-top:var(--s-6);
+}
+.facts div{padding:var(--s-4) var(--s-4) var(--s-5) 0;border-right:1px solid var(--border)}
+.facts div:last-child{border-right:0}
+.facts .k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;color:var(--text-faint);display:block}
+.facts .v{font-family:var(--font-serif);font-size:26px;line-height:1.2;display:block;margin-top:4px}
+.facts .v small{font-size:13px;font-family:var(--font-sans);color:var(--text-muted);margin-left:3px}
+@media (max-width:640px){
+  .facts{grid-template-columns:1fr 1fr}
+  .facts div{border-bottom:1px solid var(--border);padding-right:var(--s-3)}
+  .facts div:nth-child(2n){border-right:0}
+  .facts div:nth-last-child(-n+2){border-bottom:0}
+}
+
+/* =========================================================
+   c. 品牌推荐卡片
+   ========================================================= */
+.brandgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--rule-ink);margin-top:var(--s-5)}
+.brandgrid > article{border-right:1px solid var(--border);padding:var(--s-5) var(--s-5) var(--s-5) 0}
+.brandgrid > article:last-child{border-right:0}
+@media (max-width:900px){
+  .brandgrid{grid-template-columns:1fr 1fr}
+  .brandgrid > article{border-bottom:1px solid var(--border)}
+  .brandgrid > article:nth-child(2n){border-right:0;padding-right:0}
+  .brandgrid > article:nth-child(2n+1){padding-right:var(--s-5)}
+}
+@media (max-width:640px){
+  .brandgrid{grid-template-columns:1fr}
+  .brandgrid > article{border-right:0;padding-right:0}
+  .brandgrid > article:last-child{border-bottom:0}
+}
+.bcard-rank{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;color:var(--accent-2);
+  display:flex;align-items:center;gap:8px;
+}
+.bcard-rank .badge{
+  border:1px solid var(--accent-2);color:var(--accent-2);
+  padding:1px 6px;border-radius:var(--r-1);font-size:10px;letter-spacing:.1em;
+}
+.bcard h3{font-size:23px;margin:var(--s-2) 0 2px}
+.bcard .pos{font-size:13px;color:var(--text-muted);letter-spacing:.02em}
+.price-line{display:flex;align-items:baseline;gap:6px;margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--border)}
+.price-line .amt{font-family:var(--font-serif);font-size:32px;line-height:1}
+.price-line .unit{font-size:13px;color:var(--text-muted)}
+.price-line .traffic{margin-left:auto;font-size:13px;color:var(--text-muted)}
+.price-line .traffic b{font-family:var(--font-serif);font-size:19px;color:var(--text);font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--s-3)}
+.tag{
+  font-size:11.5px;letter-spacing:.04em;padding:2px 7px;border-radius:var(--r-1);
+  border:1px solid var(--border);color:var(--text-muted);background:var(--surface-2);
+}
+.tag.line{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.tag.proto{border-color:var(--border-strong);color:var(--text)}
+.meters{margin-top:var(--s-4);display:grid;gap:9px}
+.meter{display:grid;grid-template-columns:5.5em 1fr 2.6em;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
+.meter .bar{height:7px;background:var(--surface-3);border:1px solid var(--border);border-radius:0;position:relative;overflow:hidden}
+.meter .bar i{position:absolute;inset:0 auto 0 0;background:var(--accent);display:block}
+.meter .bar.alt i{background:var(--accent-2)}
+.meter .val{text-align:right;font-family:var(--font-mono);font-size:11.5px;color:var(--text)}
+.bcard-foot{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);flex-wrap:wrap}
+.code-chip{font-family:var(--font-mono);font-size:12px;border:1px dashed var(--border-strong);padding:3px 8px;border-radius:var(--r-1);color:var(--text)}
+.textlink{
+  font-size:14px;color:var(--accent);
+  background-image:linear-gradient(var(--accent),var(--accent));
+  background-repeat:no-repeat;background-position:0 100%;background-size:100% 1px;
+  transition:background-size .18s ease-out;
+}
+.textlink:hover{background-size:0% 1px}
+
+/* =========================================================
+   d. 对比表格
+   ========================================================= */
+.tablewrap{
+  overflow-x:auto;border:1px solid var(--rule-ink);border-radius:var(--r-1);
+  margin-top:var(--s-5);background:var(--surface);
+  -webkit-overflow-scrolling:touch;
+}
+table.cmp{border-collapse:separate;border-spacing:0;width:100%;min-width:760px;font-size:14px}
+table.cmp caption{
+  caption-side:top;text-align:left;padding:var(--s-3) var(--s-4);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;color:var(--text-faint);
+  border-bottom:1px solid var(--border);background:var(--surface-2);
+}
+table.cmp th,table.cmp td{padding:11px var(--s-4);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+table.cmp thead th{
+  position:sticky;top:var(--header-h);z-index:20;
+  background:var(--surface-2);
+  font-family:var(--font-sans);font-weight:600;font-size:12px;letter-spacing:.08em;color:var(--text);
+  border-bottom:1px solid var(--rule-ink);
+  box-shadow:inset 0 -1px 0 0 var(--rule-ink);
+}
+table.cmp tbody th{
+  position:sticky;left:0;z-index:10;background:var(--surface);
+  font-family:var(--font-serif);font-weight:600;font-size:15px;
+  border-right:1px solid var(--border);
+}
+table.cmp thead th:first-child{left:0;z-index:30}
+table.cmp tbody tr:hover td{background:var(--surface-2)}
+table.cmp tbody tr:last-child th,table.cmp tbody tr:last-child td{border-bottom:0}
+table.cmp .n{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+table.cmp .best{color:var(--accent-2)}
+table.cmp .best::after{content:" ▲";font-size:9px;vertical-align:2px}
+.scroll-hint{font-size:12px;color:var(--text-faint);margin-top:var(--s-2);font-family:var(--font-mono);letter-spacing:.08em}
+
+/* =========================================================
+   e. 文章正文排版
+   ========================================================= */
+.prose{max-width:38em}
+.prose h2{
+  font-size:clamp(21px,3vw,28px);margin:var(--s-7) 0 var(--s-4);
+  padding-bottom:var(--s-2);border-bottom:3px double var(--border-strong);
+}
+.prose h2:first-child{margin-top:0}
+.prose h3{font-size:19px;margin:var(--s-6) 0 var(--s-3);color:var(--text)}
+.prose h3::before{content:"§ ";color:var(--accent-2);font-family:var(--font-mono);font-size:14px}
+.prose p{font-size:17px;line-height:1.85;margin:0 0 var(--s-4);color:var(--text)}
+.prose p .lead-cap{color:var(--text-muted)}
+.prose ol{counter-reset:step;list-style:none;padding:0;margin:0 0 var(--s-5)}
+.prose ol > li{
+  counter-increment:step;position:relative;padding-left:2.6em;margin-bottom:var(--s-4);
+  font-size:16px;line-height:1.85;
+}
+.prose ol > li::before{
+  content:counter(step,decimal-leading-zero);
+  position:absolute;left:0;top:.15em;
+  font-family:var(--font-serif);font-size:15px;color:var(--accent-2);
+  border-bottom:1px solid var(--accent-2);padding-bottom:1px;
+}
+.prose ol > li b{display:block;font-size:16px}
+.prose ul{padding-left:1.2em;margin:0 0 var(--s-4)}
+.prose ul li{margin-bottom:6px}
+.prose ul li::marker{color:var(--accent-2)}
+code{font-family:var(--font-mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--border);padding:1px 5px;border-radius:var(--r-1)}
+pre{
+  margin:0 0 var(--s-5);background:var(--surface-2);border:1px solid var(--border);
+  border-left:3px solid var(--accent);border-radius:var(--r-1);
+  padding:var(--s-4);overflow-x:auto;
+}
+pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.75;display:block;white-space:pre;color:var(--text)}
+pre .c{color:var(--text-faint)}
+pre .k{color:var(--accent-2)}
+.callout{
+  border:1px solid var(--border);border-left:3px solid var(--accent);
+  background:var(--accent-soft);padding:var(--s-4);border-radius:var(--r-1);margin:0 0 var(--s-5);
+}
+.callout .t{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;color:var(--accent);margin-bottom:6px}
+.callout p{font-size:15px;line-height:1.8;margin:0;color:var(--text)}
+blockquote{
+  margin:0 0 var(--s-5);padding:var(--s-2) 0 var(--s-2) var(--s-5);
+  border-left:1px solid var(--border-strong);
+  font-family:var(--font-serif);font-size:19px;line-height:1.8;color:var(--text-muted);
+}
+blockquote footer{font-family:var(--font-sans);font-size:13px;color:var(--text-faint);margin-top:var(--s-2)}
+blockquote footer::before{content:"—— "}
+
+/* =========================================================
+   f. FAQ
+   ========================================================= */
+.faq{border-top:1px solid var(--rule-ink);margin-top:var(--s-5)}
+.faq details{border-bottom:1px solid var(--border)}
+.faq summary{
+  list-style:none;cursor:pointer;padding:var(--s-4) var(--s-6) var(--s-4) 0;position:relative;
+  font-family:var(--font-serif);font-size:17px;line-height:1.6;
+  transition:color .16s ease-out;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--accent-2)}
+.faq summary::after{
+  content:"+";position:absolute;right:2px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:18px;color:var(--accent-2);
+  transition:opacity .16s ease-out;
+}
+.faq details[open] summary::after{content:"–"}
+.faq .a{padding:0 var(--s-6) var(--s-5) 0;font-size:15px;line-height:1.85;color:var(--text-muted);animation:reveal .18s ease-out}
+.faq .a p + p{margin-top:var(--s-3)}
+@keyframes reveal{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
+
+/* =========================================================
+   g. 风险预警 / 免责
+   ========================================================= */
+.notice{
+  border:1px solid var(--danger);border-radius:var(--r-1);
+  background:var(--danger-soft);
+  display:grid;grid-template-columns:44px minmax(0,1fr);
+}
+.notice .flag{
+  border-right:1px solid var(--danger);display:flex;align-items:flex-start;justify-content:center;padding-top:var(--s-4);
+}
+.notice .body{padding:var(--s-4) var(--s-5) var(--s-5)}
+.notice h3{font-size:17px;color:var(--danger);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.notice h3 .lvl{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;border:1px solid var(--danger);color:var(--danger);padding:1px 6px;border-radius:var(--r-1)}
+.notice ul{margin:var(--s-3) 0 0;padding-left:1.15em;font-size:14.5px;line-height:1.85;color:var(--text)}
+.notice ul li{margin-bottom:5px}
+.notice ul li::marker{color:var(--danger)}
+.notice .fine{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--danger);font-size:12.5px;line-height:1.8;color:var(--text-muted)}
+@media (max-width:640px){.notice{grid-template-columns:1fr}.notice .flag{border-right:0;border-bottom:1px solid var(--danger);justify-content:flex-start;padding:var(--s-3) var(--s-4) var(--s-3)}}
+
+/* =========================================================
+   h. 页脚
+   ========================================================= */
+.sitefoot{border-top:1px solid var(--rule-ink);margin-top:var(--s-8);background:var(--surface-2)}
+.footgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--s-6);padding:var(--s-7) 0 var(--s-6)}
+@media (max-width:900px){.footgrid{grid-template-columns:1fr 1fr;gap:var(--s-5)}}
+@media (max-width:520px){.footgrid{grid-template-columns:1fr}}
+.footgrid h4{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;color:var(--text-faint);font-weight:400;margin-bottom:var(--s-3)}
+.footgrid a{display:block;font-size:14px;color:var(--text-muted);padding:4px 0;transition:color .16s ease-out}
+.footgrid a:hover{color:var(--text)}
+.colophon{font-size:13px;line-height:1.85;color:var(--text-muted);max-width:26em}
+.footbar{border-top:1px solid var(--border);padding:var(--s-4) 0 var(--s-7);display:flex;justify-content:space-between;gap:var(--s-4);flex-wrap:wrap;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--text-faint)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-dark" class="vh">
+
+<!-- ============ a. 顶部导航 ============ -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brandmark" href="#top" aria-label="机场实测室 首页">
+      <!-- 原创 logo：档案框 + 三段测速规则线 + 朱红标点 -->
+      <svg width="30" height="30" viewBox="0 0 30 30" role="img" aria-hidden="true" focusable="false">
+        <rect x="1.5" y="1.5" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <line x1="6" y1="21.5" x2="17" y2="21.5" stroke="currentColor" stroke-width="1.4"/>
+        <line x1="6" y1="16.5" x2="21" y2="16.5" stroke="currentColor" stroke-width="1.4"/>
+        <line x1="6" y1="11.5" x2="13" y2="11.5" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="23" cy="8" r="2.6" fill="var(--accent-2)"/>
+      </svg>
+      <span class="wordmark">
+        <span class="cn">机场实测室</span>
+        <span class="en">JICHANGTUIJIAN.MOM</span>
+      </span>
+    </a>
+
+    <nav class="mainnav" aria-label="主导航">
+      <a href="#rank" aria-current="page">推荐榜</a>
+      <a href="#cmp">对比</a>
+      <a href="#guide">教程</a>
+      <a href="#proto">协议</a>
+      <a href="#risk">风险预警</a>
+    </nav>
+
+    <div class="themeswitch">
+      <label for="theme-dark">
+        <span class="off">浅色 · LIGHT</span>
+        <span class="on">深色 · DARK</span>
+      </label>
+    </div>
+
+    <details class="mnav">
+      <summary aria-label="展开导航菜单">菜单</summary>
+      <div class="mnav-panel">
+        <a href="#rank">推荐榜</a>
+        <a href="#cmp">对比表</a>
+        <a href="#guide">客户端教程</a>
+        <a href="#proto">协议知识</a>
+        <a href="#faq">常见问题</a>
+        <a href="#risk">风险预警</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ b. Hero ============ -->
+<div class="masthead">
+  <div class="wrap">
+    <div class="grid3">
+      <div class="col-num" aria-hidden="true">
+        <div class="secnum">卷首</div>
+      </div>
+      <div class="col-main">
+        <div class="issue-line">
+          <span class="stamp">第 2026 卷 · 第 08 期</span>
+          <span>编纂：机场实测室编辑部</span>
+          <span>更新 <time datetime="2026-08-18">2026-08-18</time></span>
+          <span>下次复核 2026-09-01</span>
+        </div>
+
+        <h1 class="hero-h1">
+          2026 年机场推荐年鉴
+          <span class="sub">16 家在售品牌的价格、流量、线路与适用人群，一次性说清楚</span>
+        </h1>
+
+        <p class="deck">本页不做排名营销，只做可核对的编辑记录：所有价格、流量与协议均取自品牌公开资料，实测项单独标注数据周期。看完这页，你应该能在五分钟内确定自己该买哪一档。</p>
+
+        <div class="verdict">
+          <div class="verdict-label">本刊结论 · THE VERDICT</div>
+          <p>如果只看一句：<mark>15 元以内</mark>选宇宙云或唯兔云（14.9 元 / 100GB，VLESS 起步）；<mark>20 元档要大流量</mark>选一翻云（20 元 / 150GB）；<mark>重度使用 AI 与流媒体</mark>选速界或光速云（IEPL 专线 + 自研客户端）；<mark>愿意年付压价</mark>则看飞猫云，年付折合约 7 元 / 月。</p>
+          <p style="font-size:15px;color:var(--text-muted);font-family:var(--font-sans)">注：年付折算价不能与月付价直接比较，判断前请先看第 04 节的均价换算。</p>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#rank">查看完整推荐榜 <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="#risk">先读避坑与风险说明</a>
+        </div>
+
+        <div class="facts">
+          <div><span class="k">收录品牌</span><span class="v">16<small>家</small></span></div>
+          <div><span class="k">价格区间</span><span class="v">7–25<small>元/月</small></span></div>
+          <div><span class="k">数据周期</span><span class="v">30<small>天</small></span></div>
+          <div><span class="k">复核频率</span><span class="v">每周<small>一次</small></span></div>
+        </div>
+      </div>
+      <div class="col-side">
+        <aside class="side-note">
+          <b>体例说明</b>
+          「厂商资料」= 品牌公开声明；「本站实测」= 编辑部自测样本。二者在本页分开标注，不混写为同一结论。
+        </aside>
+        <aside class="side-note">
+          <b>利益披露</b>
+          本站与文中品牌存在推广合作关系，收入不影响排序逻辑；排序依据价格、流量与线路规格，可在第 04 节自行核对。
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ c. 品牌推荐卡片 ============ -->
+<div class="wrap">
+  <section class="sec grid3" id="rank">
+    <div class="col-num" aria-hidden="true"><div class="secnum">编辑推荐</div></div>
+    <div class="col-main">
+      <div class="sec-head">
+        <h2>编辑部三档首选</h2>
+        <span class="kicker">Editors&rsquo; Picks · 2026 Q3</span>
+      </div>
+
+      <div class="brandgrid">
+        <article class="bcard">
+          <div class="bcard-rank">01 · 综合首选 <span class="badge">老牌</span></div>
+          <h3>光速云</h3>
+          <div class="pos">2020 年开业 · IEPL 专线 + VLESS · AI 与流媒体场景</div>
+          <div class="price-line">
+            <span class="amt num">17</span><span class="unit">元 / 月起</span>
+            <span class="traffic">月流量 <b class="num">110</b> GB</span>
+          </div>
+          <div class="tags">
+            <span class="tag line">IEPL 专线</span>
+            <span class="tag proto">VLESS</span>
+            <span class="tag">自研客户端</span>
+            <span class="tag">支付宝 / 微信 / USDT</span>
+          </div>
+          <div class="meters">
+            <div class="meter"><span>晚高峰</span><span class="bar"><i style="width:88%"></i></span><span class="val">8.8</span></div>
+            <div class="meter"><span>AI 访问</span><span class="bar"><i style="width:85%"></i></span><span class="val">8.5</span></div>
+            <div class="meter"><span>性价比</span><span class="bar alt"><i style="width:72%"></i></span><span class="val">7.2</span></div>
+          </div>
+          <div class="bcard-foot">
+            <span class="code-chip">优惠码 AMM · 8 折</span>
+            <a class="textlink" href="#">阅读评测 →</a>
+          </div>
+        </article>
+
+        <article class="bcard">
+          <div class="bcard-rank">02 · 大流量档 <span class="badge">20 元档</span></div>
+          <h3>一翻云</h3>
+          <div class="pos">2024 年开业 · 同价位流量规格突出 · 多设备日常使用</div>
+          <div class="price-line">
+            <span class="amt num">20</span><span class="unit">元 / 月起</span>
+            <span class="traffic">月流量 <b class="num">150</b> GB</span>
+          </div>
+          <div class="tags">
+            <span class="tag line">IEPL 专线</span>
+            <span class="tag proto">VLESS</span>
+            <span class="tag">月付 / 季付 / 年付</span>
+          </div>
+          <div class="meters">
+            <div class="meter"><span>晚高峰</span><span class="bar"><i style="width:80%"></i></span><span class="val">8.0</span></div>
+            <div class="meter"><span>AI 访问</span><span class="bar"><i style="width:76%"></i></span><span class="val">7.6</span></div>
+            <div class="meter"><span>性价比</span><span class="bar alt"><i style="width:91%"></i></span><span class="val">9.1</span></div>
+          </div>
+          <div class="bcard-foot">
+            <span class="code-chip">优惠码 yfy6666</span>
+            <a class="textlink" href="#">阅读评测 →</a>
+          </div>
+        </article>
+
+        <article class="bcard">
+          <div class="bcard-rank">03 · 低价入门 <span class="badge">15 元内</span></div>
+          <h3>宇宙云</h3>
+          <div class="pos">2023 年开业 · 15 元档也能拿到专线 · 轻中度用户</div>
+          <div class="price-line">
+            <span class="amt num">14.9</span><span class="unit">元 / 月起</span>
+            <span class="traffic">月流量 <b class="num">100</b> GB</span>
+          </div>
+          <div class="tags">
+            <span class="tag line">IEPL 专线</span>
+            <span class="tag proto">VLESS</span>
+            <span class="tag">自研客户端</span>
+          </div>
+          <div class="meters">
+            <div class="meter"><span>晚高峰</span><span class="bar"><i style="width:74%"></i></span><span class="val">7.4</span></div>
+            <div class="meter"><span>AI 访问</span><span class="bar"><i style="width:70%"></i></span><span class="val">7.0</span></div>
+            <div class="meter"><span>性价比</span><span class="bar alt"><i style="width:86%"></i></span><span class="val">8.6</span></div>
+          </div>
+          <div class="bcard-foot">
+            <span class="code-chip">优惠码 YUZHOU553</span>
+            <a class="textlink" href="#">阅读评测 →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="col-side">
+      <aside class="side-note">
+        <b>评分口径</b>
+        晚高峰 / AI 访问为编辑部 30 天抽样评分（满分 10），性价比为「价格 ÷ 流量」换算后的相对分，非厂商提供数据。
+      </aside>
+      <aside class="side-note">
+        <b>关于「解锁」</b>
+        厂商声明支持 AI 与流媒体，不等于全节点可用。本站不写「全部解锁」，只写抽样结果。
+      </aside>
+    </div>
+  </section>
+
+  <hr class="rule-double">
+
+  <!-- ============ d. 对比表 ============ -->
+  <section class="sec grid3" id="cmp">
+    <div class="col-num" aria-hidden="true"><div class="secnum">价格总表</div></div>
+    <div class="col-main">
+      <div class="sec-head">
+        <h2>16 家入门套餐横向对照</h2>
+        <span class="kicker">Comparison Table · 节选 6 家</span>
+      </div>
+
+      <div class="tablewrap">
+        <table class="cmp">
+          <caption>入门套餐对照 · 均价按「入门价格 ÷ 月流量」计算 · 数据取自品牌公开资料</caption>
+          <thead>
+            <tr>
+              <th scope="col">品牌</th>
+              <th scope="col">入门价格</th>
+              <th scope="col">月流量</th>
+              <th scope="col">每 GB 均价</th>
+              <th scope="col">线路</th>
+              <th scope="col">协议</th>
+              <th scope="col">编辑定位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">飞猫云</th>
+              <td class="n">约 7.00 元<span style="color:var(--text-faint)"> / 年付折算</span></td>
+              <td class="n">50 GB</td>
+              <td class="n">0.140 元</td>
+              <td>IEPL 专线</td>
+              <td>VLESS</td>
+              <td>低价小流量</td>
+            </tr>
+            <tr>
+              <th scope="row">星岛梦</th>
+              <td class="n">约 8.00 元<span style="color:var(--text-faint)"> / 年付折算</span></td>
+              <td class="n">60 GB</td>
+              <td class="n">0.133 元</td>
+              <td>企业内网专线</td>
+              <td>VMess / VLESS</td>
+              <td>不限时套餐</td>
+            </tr>
+            <tr>
+              <th scope="row">宇宙云</th>
+              <td class="n">14.90 元</td>
+              <td class="n">100 GB</td>
+              <td class="n">0.149 元</td>
+              <td>IEPL 专线</td>
+              <td>VLESS</td>
+              <td>15 元档性价比</td>
+            </tr>
+            <tr>
+              <th scope="row">光速云</th>
+              <td class="n">17.00 元</td>
+              <td class="n">110 GB</td>
+              <td class="n">0.155 元</td>
+              <td>IEPL 专线</td>
+              <td>VLESS</td>
+              <td>老牌综合型</td>
+            </tr>
+            <tr>
+              <th scope="row">灵猫网络</th>
+              <td class="n">19.00 元</td>
+              <td class="n">150 GB</td>
+              <td class="n">0.127 元</td>
+              <td>企业内网专线</td>
+              <td>VLESS / Trojan</td>
+              <td>月付大流量</td>
+            </tr>
+            <tr>
+              <th scope="row">一翻云</th>
+              <td class="n">20.00 元</td>
+              <td class="n">150 GB</td>
+              <td class="n best">0.133 元</td>
+              <td>IEPL 专线</td>
+              <td>VLESS</td>
+              <td>20 元档大流量</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint">← 表格可左右滑动 · 表头与首列在滚动时保持可见 →</p>
+    </div>
+    <div class="col-side">
+      <aside class="side-note">
+        <b>换算陷阱</b>
+        飞猫云与星岛梦的价格是年付折算值，需一次性支付一年费用。若只想按月试用，实际支出会明显高于表中数字。
+      </aside>
+    </div>
+  </section>
+
+  <hr class="rule-double">
+
+  <!-- ============ e. 正文排版 ============ -->
+  <section class="sec grid3" id="guide">
+    <div class="col-num" aria-hidden="true"><div class="secnum">选购方法</div></div>
+    <div class="col-main">
+      <div class="sec-head">
+        <h2>三步确认一家机场值不值得买</h2>
+        <span class="kicker">Method · 约 6 分钟读完</span>
+      </div>
+
+      <div class="prose">
+        <p style="margin-top:var(--s-5)">大多数人买错机场，不是因为选了「差品牌」，而是因为把别人的使用场景当成了自己的。下面这套方法只需要一个可退款周期，就能把判断建立在自己的网络环境上，而不是宣传页上。</p>
+
+        <h3>先确定你的流量档位</h3>
+        <p>把「每天看多久视频」换算成月流量比价格更有意义。<span class="mix">1080P</span> 视频约 <span class="num">1.5</span> GB / 小时，AI 对话与网页浏览一个月通常不超过 <span class="num">10</span> GB。日常够用的档位多半落在 <span class="num">100</span>–<span class="num">150</span> GB。</p>
+
+        <ol>
+          <li><b>先买最短周期</b>不要一上来就年付。用月付跑满一个晚高峰周期（约七天），确认晚上 <span class="num">20</span>:<span class="num">00</span>–<span class="num">23</span>:<span class="num">00</span> 的实际体验，再考虑续长期。</li>
+          <li><b>把订阅导入第三方客户端</b>自研客户端通常做了优化，看不出线路真实素质。用 Clash Verge Rev 或 Shadowrocket 导入同一条订阅，对比延迟与丢包。</li>
+          <li><b>测你自己要用的服务</b>不要只跑测速网站。直接打开你日常要用的站点与工具，记录三天的失败次数，这比任何评测分数都准确。</li>
+        </ol>
+
+        <h3>订阅导入示例（Clash Verge Rev）</h3>
+        <p>拿到订阅链接后，在客户端「订阅」页新增即可。若需要手动写入配置文件，最小可用片段如下。</p>
+
+        <pre><code><span class="c"># config.yaml · 最小可用片段</span>
+<span class="k">port</span>: 7890
+<span class="k">socks-port</span>: 7891
+<span class="k">allow-lan</span>: false
+<span class="k">mode</span>: rule
+<span class="k">log-level</span>: info
+<span class="k">proxy-providers</span>:
+  airport:
+    <span class="k">type</span>: http
+    <span class="k">url</span>: "https://example.com/api/v1/client/subscribe?token=***"
+    <span class="k">interval</span>: 3600
+    <span class="k">path</span>: ./providers/airport.yaml</code></pre>
+
+        <div class="callout">
+          <div class="t">编者按 · EDITOR&rsquo;S NOTE</div>
+          <p>订阅链接等同于账号凭证。不要把它贴进任何在线转换站、聊天群或截图里；一旦外泄，流量会被他人跑光，且多数品牌不会为此补偿。</p>
+        </div>
+
+        <blockquote>
+          价格差三块钱，一年也就三十多；但晚高峰卡一次会议，损失远不止三十。
+          <footer>本站编辑部，2026 年第 08 期卷首语</footer>
+        </blockquote>
+
+        <h3>常见误判</h3>
+        <ul>
+          <li>把「节点数量多」当成「速度快」——节点多只代表覆盖广，与单点带宽无关。</li>
+          <li>把「IEPL / IPLC」当成绝对保证——专线降低的是拥塞概率，不是零故障。</li>
+          <li>把年付折算价与月付价直接对比——两者的资金占用与跑路风险完全不同。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-side">
+      <aside class="side-note">
+        <b>术语 · IEPL</b>
+        国际以太网专线。流量在境内先进入运营商内网再出境，通常比公网中转更稳定，成本也更高。
+      </aside>
+      <aside class="side-note">
+        <b>术语 · VLESS</b>
+        无状态的轻量传输协议，握手开销低于 VMess，常与 Reality / XTLS 搭配使用。
+      </aside>
+      <aside class="side-note">
+        <b>延伸阅读</b>
+        <a class="textlink" href="#">Clash Verge Rev 完整教程</a><br>
+        <a class="textlink" href="#">Shadowrocket 订阅导入</a><br>
+        <a class="textlink" href="#">v2rayN 无法上网排查</a>
+      </aside>
+    </div>
+  </section>
+
+  <hr class="rule-double">
+
+  <!-- ============ f. FAQ ============ -->
+  <section class="sec grid3" id="faq">
+    <div class="col-num" aria-hidden="true"><div class="secnum">答疑</div></div>
+    <div class="col-main">
+      <div class="sec-head">
+        <h2>读者常问的四个问题</h2>
+        <span class="kicker">FAQ · 零脚本折叠</span>
+      </div>
+
+      <div class="faq">
+        <details open>
+          <summary>机场和 VPN 是一回事吗？</summary>
+          <div class="a">
+            <p>不完全是。传统 VPN 多为一家公司提供的整套客户端与线路服务；这里说的「机场」通常指提供订阅链接、由用户在 Clash、Shadowrocket、v2rayN 等第三方客户端中导入节点的服务形态。</p>
+            <p>差别在于：机场的节点与线路可以随订阅更新，配置权在用户手上，因此也更依赖用户自己会看规则与分流设置。</p>
+          </div>
+        </details>
+        <details>
+          <summary>免费节点能长期用吗？</summary>
+          <div class="a">
+            <p>不建议作为主力。公开免费节点的常见问题是：随时失效、带宽被大量用户挤占、以及无法确认运营方是否记录流量。它适合临时应急与学习客户端操作，不适合承载登录账号一类的敏感场景。</p>
+          </div>
+        </details>
+        <details>
+          <summary>年付折合 7 元 / 月是不是最划算？</summary>
+          <div class="a">
+            <p>要看两件事：一是你是否真的需要连续使用十二个月；二是该品牌的运营年限。年付把资金一次性交出去，换来的是单价下降，同时也放大了服务中断带来的损失。开业时间较短的品牌，编辑部一般建议先月付观察。</p>
+          </div>
+        </details>
+        <details>
+          <summary>客户端显示有节点，但网页打不开？</summary>
+          <div class="a">
+            <p>按顺序排查：先确认系统代理或 TUN 模式已开启；再切换到另一个节点组测试；然后手动更新订阅，确认不是订阅过期或流量耗尽；最后检查规则模式是否把目标域名分流到了直连。</p>
+          </div>
+        </details>
+      </div>
+    </div>
+    <div class="col-side">
+      <aside class="side-note">
+        <b>提交问题</b>
+        本栏问题来自站内搜索词与读者来信，每期更新。若你的问题未被收录，可在文末联系方式留言。
+      </aside>
+    </div>
+  </section>
+
+  <hr class="rule-double">
+
+  <!-- ============ g. 风险预警 ============ -->
+  <section class="sec grid3" id="risk">
+    <div class="col-num" aria-hidden="true"><div class="secnum">风险与免责</div></div>
+    <div class="col-main">
+      <div class="sec-head">
+        <h2>风险预警与免责说明</h2>
+        <span class="kicker">Risk Notice · 每期必读</span>
+      </div>
+
+      <div class="notice" style="margin-top:var(--s-5)" role="note" aria-label="风险预警">
+        <div class="flag" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" focusable="false">
+            <path d="M10 2 L18.5 17.5 L1.5 17.5 Z" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-linejoin="round"/>
+            <line x1="10" y1="7.5" x2="10" y2="12" stroke="var(--danger)" stroke-width="1.6"/>
+            <circle cx="10" cy="14.6" r="1" fill="var(--danger)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>购买前请先确认这四条 <span class="lvl">LEVEL · 必读</span></h3>
+          <ul>
+            <li><b>不要一次性长期付款。</b>行业内服务中断属于常态风险，年付以上周期请只考虑运营三年以上的品牌。</li>
+            <li><b>不要在任何机场面板复用重要密码。</b>建议单独设置密码，并使用非主力邮箱注册。</li>
+            <li><b>订阅链接即凭证。</b>不要上传到在线转换工具、公开仓库或群聊，也不要出现在截图中。</li>
+            <li><b>公开免费节点风险不可控。</b>无法确认运营方身份与日志策略，不要用于登录任何账号或处理敏感信息。</li>
+          </ul>
+          <p class="fine">免责说明：本页所列价格、流量、协议与线路信息均整理自各品牌公开资料，可能随时调整，最终以品牌官网页面为准。文中含推广链接，读者通过链接注册可能为本站带来收入，但不影响信息的呈现方式与排序依据。本站不提供任何形式的服务担保，也不对因第三方服务中断、涨价或数据泄露造成的损失承担责任。请在遵守所在地法律法规的前提下使用相关网络工具。</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-side">
+      <aside class="side-note">
+        <b>更新记录</b>
+        2026-08-18 复核 16 家价格；2026-08-11 移除一家长期无法访问的品牌；2026-08-04 新增每 GB 均价列。
+      </aside>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<!-- ============ h. 页脚 ============ -->
+<footer class="sitefoot">
+  <div class="wrap">
+    <div class="footgrid">
+      <div>
+        <a class="brandmark" href="#top" style="margin-bottom:var(--s-3)">
+          <svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <line x1="6" y1="21.5" x2="17" y2="21.5" stroke="currentColor" stroke-width="1.4"/>
+            <line x1="6" y1="16.5" x2="21" y2="16.5" stroke="currentColor" stroke-width="1.4"/>
+            <line x1="6" y1="11.5" x2="13" y2="11.5" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="23" cy="8" r="2.6" fill="var(--accent-2)"/>
+          </svg>
+          <span class="wordmark"><span class="cn">机场实测室</span><span class="en">EST. 2026</span></span>
+        </a>
+        <p class="colophon">一份持续更新的中文机场资料年鉴。所有条目标注数据来源与复核日期，厂商声明与本站实测分开呈现，不写无法核对的结论。</p>
+      </div>
+      <div>
+        <h4>推荐与对比</h4>
+        <a href="#">2026 机场推荐</a>
+        <a href="#">便宜机场推荐</a>
+        <a href="#">IEPL / IPLC 专线</a>
+        <a href="#">不限时套餐</a>
+      </div>
+      <div>
+        <h4>客户端教程</h4>
+        <a href="#">Clash Verge Rev</a>
+        <a href="#">Shadowrocket</a>
+        <a href="#">v2rayN</a>
+        <a href="#">订阅导入总览</a>
+      </div>
+      <div>
+        <h4>知识与排查</h4>
+        <a href="#">协议对照表</a>
+        <a href="#">免费节点风险</a>
+        <a href="#">节点全部超时</a>
+        <a href="#">AI 工具访问</a>
+      </div>
+    </div>
+    <div class="footbar">
+      <span>© 2026 JICHANGTUIJIAN.MOM · 第 2026 卷</span>
+      <span>本期复核 2026-08-18 · 下期 2026-09-01</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

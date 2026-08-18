@@ -1,0 +1,311 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import { BRANDS, monthlyBrands, annualEquivalentBrands, hasMeasuredData } from '@data/brands';
+import { faqSchema } from '@lib/schema';
+import { SITE } from '@config/site';
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '关于本站', href: '/about/' },
+];
+
+const total = BRANDS.length;
+const monthlyCount = monthlyBrands().length;
+const annualCount = annualEquivalentBrands().length;
+const measuredCount = BRANDS.filter(hasMeasuredData).length;
+const streamingClaimed = BRANDS.filter((b) => b.vendor.claims.streaming === 'vendor-claim').length;
+const aiClaimed = BRANDS.filter((b) => b.vendor.claims.aiTools === 'vendor-claim').length;
+
+/** 四层数据结构,与 src/data/brands.ts 的字段定义一一对应 */
+const layers = [
+  {
+    key: 'vendor',
+    name: '厂商资料',
+    what: '开业年份、协议、线路类型、入门价格与月流量、厂商声明的流媒体与 AI 能力、自研客户端与第三方客户端支持。',
+    from: '来自品牌官网、定价页与官方公告。',
+    rule: '这一层的任何字段都以「厂商声明」的身份渲染,页面上不会写成「已验证」。',
+  },
+  {
+    key: 'measured',
+    name: '本站实测',
+    what: '实测速率、延迟、测试节点区域、测试环境说明,以及流媒体与 AI 工具的解锁结果。',
+    from: '来自本站自己的测试记录,每条样本都带日期与环境说明。',
+    rule: `状态分 pending / review-required / done 三档。目前 ${total} 家全部为 pending,页面会直接显示「尚未实测」而不是留空。`,
+  },
+  {
+    key: 'commercial',
+    name: '商业信息',
+    what: '优惠码、活动文案、注册链接、支持的支付方式。',
+    from: `来自与品牌的推广合作,${total} 家全部是推广关系,没有一家是自营。`,
+    rule: '这一层不参与评分计算,出现推广链接的页面必须同时渲染合作披露。',
+  },
+  {
+    key: 'editorial',
+    name: '编辑判断',
+    what: '定位描述、适合人群、优缺点、需要提醒的口径问题、可对比的同价位品牌。',
+    from: '由编辑基于前三层的字段写出,属于判断而非事实。',
+    rule: '它可以引用厂商资料,但不能把厂商资料改写成实测结论。',
+  },
+];
+
+const faq = [
+  {
+    question: '本站和这 16 家机场是什么关系?',
+    answer:
+      '全部 16 家都是推广合作关系,不存在本站自营的服务。你通过站内链接注册,我们可能获得分成。这层关系被单独存放在数据结构的 commercial 层,不参与评分计算——评分只读取厂商公开字段,任何人拿同一份数据按公开公式都能算出同一个分数。',
+  },
+  {
+    question: '既然还没实测,为什么站名叫「实测室」?',
+    answer:
+      '因为实测是这个站要长期做的事,也是我们认为这类内容唯一有增量价值的部分。但在实测数据真正产生之前,我们不会用站名去暗示已经测过:数据结构里 measured 层是独立的一层,状态为 pending 时页面会明确显示「尚未实测」,评分算法里也没有任何一项读取实测数据。',
+  },
+  {
+    question: '如果厂商说支持某个 AI 工具,页面上会怎么写?',
+    answer:
+      '会写成「厂商声明支持」,并且在评分里只进入「场景覆盖」这一个占 15% 的维度。它不会被写成「本站实测可用」,也不会出现在实测层。等我们真正测过,结果会以 pass / fail / partial 的形式写进 measured 层,那时页面上才会出现实测结论,并标注测试日期与环境。',
+  },
+  {
+    question: '数据多久更新一次?',
+    answer:
+      '价格与套餐规格每月复查一次,以品牌官网结算页为准;线路、协议、客户端支持等结构性字段在复查时一并核对。评分基准年与复查周期同步,基准年一变全站分数都会变,所以改动会同步更新到编辑与评测规范页。',
+  },
+];
+
+const description =
+  '机场实测室是一个把 16 家机场的公开规格整理成同一套可比字段的评测站。这一页说明内容从哪来、四层数据结构如何区分厂商声明与本站实测,以及目前哪些能力还只是厂商声明。';
+---
+
+<BaseLayout
+  title="关于本站:我们做什么、数据从哪来"
+  description={description}
+  crumbs={crumbs}
+  schemas={[faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">About</span>
+          <h1>关于{SITE.name}</h1>
+          <p class="post-meta">
+            最近更新 2026-08-18 · 收录 {total} 家品牌 · 已完成实测 {measuredCount} 家
+          </p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            {SITE.name}只做一件事:把 {total} 家机场服务商的公开规格整理成<strong
+              >同一套可比较的字段</strong
+            >, 再用一条公开的公式排出顺序。本站与这 {total} 家全部是推广合作关系,所以我们把数据拆成四层存放——
+            厂商说的、本站测的、商业的、编辑判断的——任何一层都不会被自动升级成另一层。 需要先说清楚的是:目前实测层是空的,{
+              total
+            } 家的流媒体与 AI 能力都还是厂商声明。
+          </p>
+        </AnswerBox>
+
+        <div class="prose">
+          <h2 id="what">这个站在做什么</h2>
+          <p>
+            找机场时最费时间的不是找不到信息,而是每家官网都用自己的口径描述自己:有的把年付折算价写成月价,
+            有的把「支持」写在首页却不说明是哪种支持,有的连开业年份都不写。这些信息单看每一家都成立,
+            放在一起就无法比较。本站要解决的就是这个可比性问题:把 {total} 家的入门价格、月流量、 单位流量成本、线路类型、协议、客户端支持整理成同一套字段,然后放进同一张
+            <a href="/compare/">对照表</a>里。
+          </p>
+          <p>
+            在此之上,我们再做两件事:一是按公开公式给出<a href="/editorial-policy/">编辑评分</a>,
+            让规格差异有一个可排序的表达;二是写客户端配置与
+            <a href="/troubleshooting/">故障排查</a
+            >的操作步骤,因为买到之后用不起来,选得再对也没有意义。
+          </p>
+
+          <h2 id="who">这个站为谁做</h2>
+          <p>
+            我们默认读者是第一次或第二次买这类服务的人:预算在每月 15 到 25 元之间,
+            需要的是一个能稳定用下去的订阅,而不是一份节点列表。所以本站不提供任何节点或订阅地址,
+            也不讨论如何自建。如果你要找的是免费节点,<a href="/free-nodes/">那个栏目</a
+            >写的是它们的来源与风险, 不会给你可用的地址。
+          </p>
+
+          <h2 id="layers">内容是怎么来的:四层数据结构</h2>
+          <p>
+            每一家品牌的数据在源文件里被强制拆成四层,页面渲染时必须保留层级归属。
+            这不是排版上的分类,而是数据结构上的隔离——不同层的字段来源不同、可信度不同、能推出的结论也不同。
+          </p>
+          <div class="layers">
+            {
+              layers.map((l) => (
+                <div class="layer">
+                  <div class="ly-head">
+                    <code>{l.key}</code>
+                    <b>{l.name}</b>
+                  </div>
+                  <p class="ly-what">{l.what}</p>
+                  <p class="ly-from">{l.from}</p>
+                  <p class="ly-rule">{l.rule}</p>
+                </div>
+              ))
+            }
+          </div>
+
+          <h2 id="why-layers">为什么要分层</h2>
+          <p>
+            因为不分层的话,一句厂商宣传会在三次转述之内变成一条实测结论。
+            典型路径是这样的:官网写「支持主流 AI 工具」,评测站写成「支持 AI 工具」, 排行榜写成「AI
+            工具可用」,读者读到的是「有人测过,能用」。整个过程没有人说谎,
+            但结论的可信度被凭空提升了两级。
+          </p>
+          <p>
+            分层让这条路径在第一步就断掉:厂商声明只能写进 <code>vendor.claims</code>,
+            而这个字段的类型只允许 <code>vendor-claim</code> / <code>measured</code> / <code
+              >unknown</code
+            > 三个取值。 要让页面显示「本站实测支持」,唯一的办法是有人真的去测,把结果写进 <code
+              >measured.unlock</code
+            >。
+            <strong>没有任何代码路径能把厂商声明自动升级成实测结论</strong
+            >,这是这套结构存在的全部意义。
+          </p>
+          <p>
+            同一个原则也用在商业信息上。优惠码、活动、注册链接全部在 <code>commercial</code> 层,
+            <a href="/editorial-policy/">评分函数</a>只读取 <code>vendor</code> 层的字段, 结构上就拿不到商业信息——所以合作深浅不可能影响分数。
+          </p>
+
+          <h2 id="honest">目前还没做到的事</h2>
+          <p>
+            应该直说:本站上线时间不长,{total} 家品牌的 <code>measured</code> 层状态全部是 pending。 这意味着——
+          </p>
+          <ul class="notes">
+            <li>
+              <strong>流媒体解锁</strong>:{streamingClaimed} 家公开声明支持、其余
+              {total - streamingClaimed} 家未作声明,本站均<strong>尚未验证</strong>。
+              未声明不代表不支持,只代表公开资料里没有找到。
+            </li>
+            <li>
+              <strong>AI 工具访问</strong>:{aiClaimed} 家有公开声明,同样尚未验证。 这一项的实际表现和账号、支付方式、出口
+              IP 的历史记录都有关系,单靠厂商声明无法判断。
+            </li>
+            <li>
+              <strong>速率与延迟</strong>:本站没有发布任何测速数字。一次测速只能代表一个时间点、
+              一条线路、一个测试环境,把它写成「实测 xx Mbps」是对读者的误导。
+            </li>
+          </ul>
+          <p>
+            所以本站现在能给你的,是<strong>规格层面的横向可比性</strong>与口径提醒,不是性能结论。
+            这个边界写在每一页上,也写在<a href="/disclaimer/">数据与免责说明</a>里。
+          </p>
+
+          <h2 id="not-do">本站不做的事</h2>
+          <ul class="notes">
+            <li>不分发节点、订阅地址或任何可直接使用的配置,免费节点栏目也一样。</li>
+            <li>不接受付费提高排名。排名由公开公式算出,改分数只能改公式,而公式是公开的。</li>
+            <li>
+              不编造用户评分。品牌页的结构化数据里刻意没有 aggregateRating,因为没有真实评分数据。
+            </li>
+            <li>
+              不对第三方服务的可用性、退款与跑路风险作出承诺,这部分请看<a href="/risk/">风险预警</a
+              >。
+            </li>
+          </ul>
+          <p>
+            价格与套餐每月复查一次,{monthlyCount} 家月付口径与 {annualCount} 家年付折算口径在全站始终分组呈现,
+            不会混排进同一个价格排行。发现任何数据过期或有误,欢迎通过<a href="/contact/"
+              >联系与纠错</a
+            >告诉我们。
+          </p>
+        </div>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="看评分的五个维度与完整公式"
+          href="/editorial-policy/"
+          reason="知道数据怎么分层之后,下一个该确认的是分数怎么算。评分的五个维度、权重与每一档的取值全部公开,你可以拿同一份数据自己复算一遍。"
+          alt={{ label: '先看数据口径与免责说明', href: '/disclaimer/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .layers {
+    display: grid;
+    gap: 12px;
+    margin: var(--s5) 0;
+  }
+  .layer {
+    padding: 16px 18px;
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    background: var(--surface);
+  }
+  .ly-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .ly-head code {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  .ly-head b {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .layer p {
+    margin: 0 0 6px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+  .ly-from,
+  .ly-rule {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .layer p:last-child {
+    margin-bottom: 0;
+  }
+  .notes {
+    list-style: none;
+    display: grid;
+    gap: 11px;
+    margin: var(--s4) 0 var(--s5);
+  }
+  .notes li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+  .notes strong {
+    color: var(--text);
+  }
+</style>

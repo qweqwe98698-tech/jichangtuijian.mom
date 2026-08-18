@@ -1,0 +1,312 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import Toc from '@components/Toc.astro';
+import Faq from '@components/Faq.astro';
+import NextStep from '@components/NextStep.astro';
+import Disclosure from '@components/Disclosure.astro';
+import BrandCard from '@components/BrandCard.astro';
+import {
+  allPosts,
+  allPillars,
+  postUrl,
+  pillarUrl,
+  orderedPillarPosts,
+  resolveRelated,
+} from '@lib/content';
+import type { Post, Pillar } from '@lib/content';
+import { getBrand } from '@data/brands';
+import { articleSchema, faqSchema, itemListSchema, howToSchema } from '@lib/schema';
+import { CATEGORY_META } from '../content.config';
+import { readingTime, wordCount } from '@lib/text';
+
+/**
+ * 文章与专题页的统一路由。
+ * URL 形态由 lib/content 的 postUrl / pillarUrl 决定,这里只负责把它们转成 Astro 的 path 参数。
+ * /reviews/ 与 /compare/ 有各自的专用路由,静态与更具体的路由优先级高于本 catch-all,不会冲突。
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const [posts, pillars] = await Promise.all([allPosts(), allPillars()]);
+
+  const pillarPaths = pillars.map((pillar) => ({
+    params: { slug: pillarUrl(pillar).slice(1, -1) },
+    props: { kind: 'pillar' as const, pillar },
+  }));
+
+  const postPaths = posts.map((post) => ({
+    params: { slug: postUrl(post).slice(1, -1) },
+    props: { kind: 'post' as const, post },
+  }));
+
+  return [...pillarPaths, ...postPaths];
+};
+
+type Props = { kind: 'pillar'; pillar: Pillar } | { kind: 'post'; post: Post };
+
+const props = Astro.props as Props;
+const isPost = props.kind === 'post';
+const entry = isPost ? props.post : props.pillar;
+const data = entry.data;
+const path = isPost ? postUrl(props.post) : pillarUrl(props.pillar);
+const catMeta = CATEGORY_META[data.category];
+
+const { Content, headings } = await render(entry as never);
+
+/* 专题页需要列出其下全部 cluster 文章(内链规则 R05) */
+const clusterPosts = isPost ? [] : await orderedPillarPosts(props.pillar);
+const related = isPost ? await resolveRelated(props.post) : [];
+const brands = (data.brands ?? []).map((s: string) => getBrand(s)).filter(Boolean);
+
+/* 品牌卡不得出现在纯知识型栏目的正文区(内链规则 R11) */
+const NO_BRAND_CARD_CATEGORIES = ['basics', 'protocols', 'risk', 'free-nodes'];
+const showBrandCards = brands.length > 0 && !NO_BRAND_CARD_CATEGORIES.includes(data.category);
+
+const body = 'body' in entry ? ((entry as { body?: string }).body ?? '') : '';
+const minutes = readingTime(body);
+const words = wordCount(body);
+
+/* 面包屑第二级要显示专题的中文标题,而不是 slug。找不到对应专题时直接省略该级,
+   避免出现指向不存在页面的面包屑(内链规则 R13) */
+const parentPillar =
+  isPost && props.post.data.pillar
+    ? (await allPillars()).find(
+        (p) => p.id === props.post.data.pillar && p.data.category === data.category
+      )
+    : undefined;
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: catMeta.name, href: `/${data.category}/` },
+  ...(parentPillar ? [{ name: parentPillar.data.title, href: pillarUrl(parentPillar) }] : []),
+  { name: data.title, href: path },
+];
+
+const schemas = [
+  articleSchema({
+    title: data.title,
+    description: data.description,
+    path,
+    pubDate: data.pubDate,
+    updatedDate: data.updatedDate,
+    authorName: '机场实测室编辑部',
+    authorPath: '/authors/editorial-team/',
+    section: catMeta.name,
+    keywords: [
+      data.primaryKeyword,
+      ...('secondaryKeywords' in data ? data.secondaryKeywords : []),
+      ...(('tags' in data ? data.tags : []) as string[]),
+    ],
+    wordCount: words,
+    ...(data.cover
+      ? { image: { src: data.cover.src, width: data.cover.width, height: data.cover.height } }
+      : {}),
+  }),
+  ...(data.faq?.length ? [faqSchema(data.faq)] : []),
+  ...(!isPost
+    ? [
+        itemListSchema(
+          data.title,
+          clusterPosts.map((p) => ({
+            name: p.data.title,
+            href: postUrl(p),
+            description: p.data.description,
+          }))
+        ),
+      ]
+    : []),
+  ...(isPost && props.post.data.howTo
+    ? [
+        howToSchema({
+          name: data.title,
+          description: data.description,
+          totalTime: props.post.data.howTo.totalTime,
+          supply: props.post.data.howTo.supply,
+          steps: props.post.data.howTo.steps,
+          path,
+        }),
+      ]
+    : []),
+];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  crumbs={crumbs}
+  schemas={schemas}
+  ogType="article"
+  publishedTime={data.pubDate}
+  modifiedTime={data.updatedDate}
+  ogImage={data.cover?.src}
+>
+  <article class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en"
+            >{isPost ? catMeta.name : `Topic Hub · ${clusterPosts.length} Articles`}</span
+          >
+          <h1>{data.title}</h1>
+          <p class="post-meta">
+            最近更新 {data.updatedDate.toISOString().slice(0, 10)} · 约 {minutes} 分钟读完 · 由<a
+              href="/authors/editorial-team/">机场实测室编辑部</a
+            >撰写与核对
+          </p>
+        </header>
+
+        <AnswerBox>
+          <p>{data.answer}</p>
+        </AnswerBox>
+
+        <Toc headings={headings} />
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          showBrandCards && (
+            <section>
+              <h2 id="brands">符合上述条件的机场</h2>
+              <p>
+                下面这几家的公开规格符合本文提到的条件。点开评测页可以看到完整规格与需要权衡的地方。
+              </p>
+              <Disclosure />
+              <div class="card-grid">{brands.map((b) => b && <BrandCard brand={b} />)}</div>
+            </section>
+          )
+        }
+
+        {data.faq?.length ? <Faq items={data.faq} /> : null}
+
+        {
+          !isPost && clusterPosts.length > 0 && (
+            <section>
+              <h2 id="cluster">这个专题下的全部文章</h2>
+              <p>按建议的阅读顺序排列。如果你是第一次接触这个主题,从第一篇开始按顺序读效率最高。</p>
+              <ol class="cluster-list">
+                {clusterPosts.map((p) => (
+                  <li>
+                    <a href={postUrl(p)}>{p.data.title}</a>
+                    <span>{p.data.description}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )
+        }
+
+        {
+          related.length > 0 && (
+            <section>
+              <h2 id="related">相关阅读</h2>
+              <ul class="related-list">
+                {related.map((p) => (
+                  <li>
+                    <a href={postUrl(p)}>{p.data.title}</a>
+                    <span>{p.data.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          isPost && (
+            <NextStep
+              label={props.post.data.nextStep.label}
+              href={props.post.data.nextStep.href}
+              reason={props.post.data.nextStep.reason}
+            />
+          )
+        }
+        {
+          !isPost && clusterPosts.length > 0 && (
+            <NextStep
+              label={`从第一篇开始:${clusterPosts[0].data.title}`}
+              href={postUrl(clusterPosts[0])}
+              reason="这个专题的文章是按递进关系组织的,从第一篇开始能省掉不少来回翻找的时间。"
+              alt={{ label: `回到${catMeta.name}栏目`, href: `/${data.category}/` }}
+            />
+          )
+        }
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.32;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .post-meta a {
+    color: var(--text-muted);
+  }
+
+  .cluster-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    counter-reset: cl;
+    margin: var(--s4) 0;
+  }
+  .cluster-list li {
+    counter-increment: cl;
+    position: relative;
+    padding: 13px 16px 13px 44px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .cluster-list li::before {
+    content: counter(cl, decimal-leading-zero);
+    position: absolute;
+    left: 14px;
+    top: 15px;
+    font: 600 12px/1 var(--font-mono);
+    color: var(--text-faint);
+  }
+  .cluster-list a,
+  .related-list a {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+  }
+  .cluster-list a:hover,
+  .related-list a:hover {
+    color: var(--accent);
+  }
+  .cluster-list span,
+  .related-list span {
+    display: block;
+    margin-top: 5px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+
+  .related-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .related-list li {
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    background: var(--surface);
+  }
+</style>

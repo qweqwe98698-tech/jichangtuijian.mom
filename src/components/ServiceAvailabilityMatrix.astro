@@ -1,0 +1,163 @@
+---
+import type { Brand } from '@data/brands';
+import { AVAILABILITY_SERVICES } from '@data/status';
+import StatusBadge from './StatusBadge.astro';
+
+/**
+ * 服务可用性矩阵(第三阶段 T6 第 2 类组件)。
+ *
+ * 这是全站最容易被做成谎言的一个组件。行业惯例是画一排绿色对勾,
+ * 暗示"全部解锁"。本站的做法相反 —— 它把两件事**分成两列**:
+ *
+ *   本站实测:全部 not-tested。本批测速证据根本没测过解锁能力(红线第 1 条)。
+ *   厂商声明:vendor 或 unstated。声明是一种信息,但它不是验证。
+ *
+ * 分列之后,"厂商说能用"就不可能被读成"测过能用"——这正是合并成一列时必然发生的事。
+ *
+ * 组件刻意不接受任何 measured 输入:等本站真的做了解锁测试,
+ * 需要显式改造这个组件并同步更新 evidence 层,而不是悄悄填个绿灯进去。
+ */
+interface Props {
+  brand: Brand;
+}
+const { brand } = Astro.props;
+
+const { streaming, aiTools } = brand.vendor.claims;
+
+/** 厂商是否声明覆盖该服务所在的场景组 */
+const vendorClaimFor = (group: string) =>
+  group === 'AI 工具' ? aiTools === 'vendor-claim' : streaming === 'vendor-claim';
+
+const groups = ['AI 工具', '流媒体'] as const;
+const claimedCount = AVAILABILITY_SERVICES.filter((s) => vendorClaimFor(s.group)).length;
+---
+
+<section class="avail" aria-labelledby="avail-heading">
+  <h2 id="avail-heading">服务可用性矩阵</h2>
+
+  <p class="avail-intro">
+    这张表把<strong>本站测过什么</strong>和<strong>厂商声称什么</strong>分成两列。
+    合并成一列是这个行业最常见的误导方式——一排绿勾看起来像验证结果,实际上只是宣传语的复述。
+  </p>
+
+  <div class="md-table-scroll" tabindex="0" role="region" aria-label="可横向滚动的可用性矩阵">
+    <table class="avail-table">
+      <caption class="sr">{brand.name} 的 AI 工具与流媒体可用性状态</caption>
+      <thead>
+        <tr>
+          <th scope="col">服务</th>
+          <th scope="col">本站实测状态</th>
+          <th scope="col">厂商公开声明</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          groups.map((g) => (
+            <>
+              <tr class="avail-group">
+                <th scope="rowgroup" colspan="3">
+                  {g}
+                </th>
+              </tr>
+              {AVAILABILITY_SERVICES.filter((s) => s.group === g).map((s) => (
+                <tr>
+                  <th scope="row">{s.name}</th>
+                  <td>
+                    <StatusBadge status="not-tested" compact />
+                  </td>
+                  <td>
+                    {vendorClaimFor(s.group) ? (
+                      <StatusBadge status="vendor" compact label="声明覆盖该场景" />
+                    ) : (
+                      <StatusBadge status="unstated" compact label="资料未提及" />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="avail-notes">
+    <p>
+      <strong>为什么整列都是「未测试」:</strong>本站保留的 2026-08-11 批次是<strong>节点测速</strong
+      >截图,它记录的是延迟与吞吐, 根本没有对任何流媒体或 AI
+      服务做过访问测试。没测过的东西不能写成结论, 哪怕厂商已经声明支持。
+    </p>
+    <p>
+      <strong>「厂商声明」该怎么读:</strong>
+      {
+        claimedCount > 0
+          ? `${brand.name}的公开资料声明覆盖其中 ${claimedCount} 项所在的场景。这说明品牌把它作为卖点,不说明它当前可用——解锁能力随节点、IP 信誉与平台风控策略变化,而这三者都不在服务方的完全控制之内。`
+          : `${brand.name}的公开资料没有提及这些场景。未提及不等于不支持,只说明品牌没有把它写进宣传,你需要自己验证。`
+      }
+    </p>
+    <p class="avail-action">
+      如果这些服务是你的主要用途,可靠的做法只有一个:<strong>买最短周期的套餐自己测一次</strong>。
+      任何第三方的解锁清单都有时效问题,包括本站将来发布的。
+    </p>
+  </div>
+</section>
+
+<style>
+  .avail {
+    margin: var(--s7) 0;
+  }
+  .avail-intro {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+    max-width: 68ch;
+  }
+  .avail-intro strong {
+    color: var(--text);
+  }
+
+  .avail-table {
+    min-width: 520px;
+    font-size: 14px;
+  }
+  .avail-table thead th {
+    background: var(--surface-2);
+  }
+  .avail-group th {
+    position: static;
+    background: var(--surface-2);
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-right: 0;
+  }
+  .avail-table tbody th[scope='row'] {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .avail-table td {
+    white-space: nowrap;
+  }
+
+  .avail-notes {
+    display: grid;
+    gap: 12px;
+    margin-top: var(--s4);
+  }
+  .avail-notes p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .avail-notes strong {
+    color: var(--text);
+  }
+  .avail-action {
+    padding: 12px 14px;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+  }
+</style>

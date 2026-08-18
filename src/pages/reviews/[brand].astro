@@ -1,0 +1,620 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import BrandLink from '@components/BrandLink.astro';
+import Disclosure from '@components/Disclosure.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import Faq from '@components/Faq.astro';
+import NextStep from '@components/NextStep.astro';
+import RiskNotice from '@components/RiskNotice.astro';
+import RouteMark from '@components/RouteMark.astro';
+import SpeedtestEvidence from '@components/SpeedtestEvidence.astro';
+import ServiceAvailabilityMatrix from '@components/ServiceAvailabilityMatrix.astro';
+import NetworkPathDiagram from '@components/NetworkPathDiagram.astro';
+import type { Brand } from '@data/brands';
+import { BRANDS, getBrand, formatCostPerGB, protocolLabel, lineLabel } from '@data/brands';
+import type { ScoreBreakdown } from '@lib/scoring';
+import { scoreBrand, SCORING_RUBRIC } from '@lib/scoring';
+import { articleSchema, faqSchema, brandReviewSchema } from '@lib/schema';
+
+/* 刻意不加 `: GetStaticPaths` 注解 —— 那会把返回类型擦成泛型,
+   Astro 据此推断出的 props 是 unknown,并且会盖过本地的 Props 接口。
+   不加注解时 Astro 能从实际返回值推断出 { brand: Brand } */
+export function getStaticPaths() {
+  return BRANDS.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
+}
+
+const { brand } = Astro.props;
+const score = scoreBrand(brand);
+// 线路与协议一律通过 lineLabel / protocolLabel 取值,它们会把空数组渲染成「公开资料未标明」
+const { pricing, claims, since, highlights } = brand.vendor;
+// measured 层由 SpeedtestEvidence 与 ServiceAvailabilityMatrix 直接读取,这里不需要
+const { editorial, commercial } = brand;
+
+const path = `/reviews/${brand.slug}/`;
+
+/**
+ * 品牌档案提供逐家不同的分析正文。没有档案时页面仍可发布,
+ * 只是缺少独立分析部分——指令允许「信息不足的品牌保持 draft/noindex,不用模板填充」,
+ * 这里取更温和的做法:结构化信息照常发布,分析部分留空而不是拿模板凑。
+ */
+const profile = await getEntry('brandProfiles', brand.slug);
+const hasProfile = Boolean(profile && !profile.data.draft);
+const ProfileBody = hasProfile ? (await render(profile!)).Content : null;
+
+const title = hasProfile
+  ? profile!.data.title
+  : `${brand.name}怎么样?${editorial.positioning.split(' · ')[0]}实测评测`;
+
+const description = hasProfile
+  ? profile!.data.description
+  : `${brand.name}入门套餐 ${pricing.entryPriceCNY} 元/月含 ${pricing.trafficGB}GB 流量,线路类型为${lineLabel(brand)},协议为${protocolLabel(brand)}。本文拆解它的套餐规格、适合人群与需要注意的地方,并标明哪些是厂商声明、哪些已实测。`;
+
+/** 同价位可比品牌,驱动内链与对比页(内链规则 R06) */
+const peers = editorial.comparableWith
+  .map((s) => getBrand(s))
+  .filter((b): b is Brand => Boolean(b));
+
+const priceLabel = pricing.basis === 'annual-equivalent' ? '元/月(年付折算)' : '元/月';
+
+const specs = [
+  { k: '入门套餐价格', v: `${pricing.entryPriceCNY} ${priceLabel}` },
+  { k: '入门套餐流量', v: `${pricing.trafficGB} GB / 月` },
+  { k: '单位流量成本', v: `约 ${formatCostPerGB(brand)} 元 / GB` },
+  { k: '线路类型', v: lineLabel(brand) },
+  { k: '主要协议', v: protocolLabel(brand) },
+  { k: '开业年份', v: since ? `${since} 年` : '公开资料未标明' },
+  { k: '支付方式', v: commercial.payments.join(' / ') },
+  { k: '自研客户端', v: claims.ownClient ? '提供' : '公开资料未提及' },
+  { k: '第三方客户端', v: claims.thirdPartyClient ? '支持订阅导入' : '公开资料未提及' },
+];
+
+type ScoreDim = keyof Omit<ScoreBreakdown, 'overall'>;
+
+const DIM_LABEL: Record<ScoreDim, string> = {
+  value: '流量性价比',
+  line: '线路等级',
+  track: '运营时长',
+  client: '客户端友好度',
+  coverage: '场景覆盖',
+};
+
+const faq = [
+  {
+    question: `${brand.name}适合什么人用?`,
+    answer: `${editorial.bestFor}。如果你的需求与此不符,建议先看同价位的其他选项再决定。`,
+  },
+  {
+    question: `${brand.name}的入门套餐是多少钱?`,
+    answer:
+      pricing.basis === 'annual-equivalent'
+        ? `入门套餐折算约 ${pricing.entryPriceCNY} 元/月,含 ${pricing.trafficGB}GB 月流量。注意这是年付折算价,需要一次性支付一年费用,不能直接和月付套餐的价格比较。`
+        : `入门套餐 ${pricing.entryPriceCNY} 元/月,含 ${pricing.trafficGB}GB 月流量,单位流量成本约 ${formatCostPerGB(brand)} 元/GB。`,
+  },
+  {
+    question: `${brand.name}能用来访问 ChatGPT 或看流媒体吗?`,
+    answer:
+      claims.aiTools === 'vendor-claim' || claims.streaming === 'vendor-claim'
+        ? `品牌公开资料声明覆盖${[claims.streaming === 'vendor-claim' ? '主流流媒体' : null, claims.aiTools === 'vendor-claim' ? 'AI 工具' : null].filter(Boolean).join('与')}使用场景。这属于厂商声明,本站尚未完成统一实测,实际可用性会随节点和时间变化,建议购买前先用短周期套餐验证。`
+        : `品牌公开资料没有给出统一说法,本站也尚未完成实测,因此无法给出确定结论。如果你的主要用途就是 AI 工具或流媒体,建议优先选择在这方面有明确说明的品牌,或先用最短周期套餐实测。`,
+  },
+  {
+    question: `${brand.name}用 Clash 或小火箭能连吗?`,
+    answer: claims.thirdPartyClient
+      ? `支持第三方客户端订阅导入。具体的订阅地址获取方式以官方说明为准,导入步骤可以参考本站的客户端教程。`
+      : `公开资料未明确说明第三方客户端支持情况,建议购买前先向官方客服确认。`,
+  },
+  ...(editorial.caveat
+    ? [{ question: `${brand.name}有什么需要特别注意的?`, answer: editorial.caveat }]
+    : []),
+];
+
+/* 有档案时用档案里逐家撰写的 FAQ,它对应正文里真实回答过的问题;
+   没有档案才退回模板生成的通用问答 */
+const faqItems = hasProfile ? profile!.data.faq : faq;
+
+/* 可比品牌同样优先取档案的判断 */
+const profilePeers = hasProfile
+  ? (profile!.data.peers.map((s) => getBrand(s)).filter(Boolean) as Brand[])
+  : peers;
+
+const schemas = [
+  articleSchema({
+    title,
+    description,
+    path,
+    pubDate: new Date('2026-08-18'),
+    updatedDate: new Date('2026-08-18'),
+    authorName: '机场实测室编辑部',
+    authorPath: '/authors/editorial-team/',
+    section: '机场评测',
+    keywords: [`${brand.name}`, `${brand.name}怎么样`, `${brand.name}评测`, ...editorial.tags],
+  }),
+  brandReviewSchema({
+    brandName: brand.name,
+    path,
+    description,
+    priceCNY: pricing.entryPriceCNY,
+    authorName: '机场实测室编辑部',
+    updatedDate: new Date('2026-08-18'),
+  }),
+  faqSchema(faqItems),
+];
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '机场评测', href: '/reviews/' },
+  { name: brand.name, href: path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  schemas={schemas}
+  ogType="article"
+  publishedTime={new Date('2026-08-18')}
+  modifiedTime={new Date('2026-08-18')}
+>
+  <article class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Brand Review · {brand.alias}</span>
+          <h1>{hasProfile ? profile!.data.h1 : title}</h1>
+          <p class="post-meta">
+            最近更新 2026-08-18 · 由<a href="/authors/editorial-team/">机场实测室编辑部</a
+            >撰写与核对
+          </p>
+        </header>
+
+        <AnswerBox>
+          {
+            hasProfile ? (
+              <p>{profile!.data.leadAnswer}</p>
+            ) : (
+              <p>
+                {brand.name}的入门套餐是{' '}
+                <strong>
+                  {pricing.entryPriceCNY} {priceLabel}
+                </strong>
+                ,含
+                <strong>{pricing.trafficGB}GB</strong> 月流量,线路类型为 {lineLabel(brand)},协议为{' '}
+                {protocolLabel(brand)}。 它
+                {editorial.bestFor.replace(/^希望|^注重|^经常/, '更适合')}。
+                {editorial.caveat ? `需要注意的是,${editorial.caveat}` : ''}
+              </p>
+            )
+          }
+        </AnswerBox>
+
+        <Disclosure />
+
+        {
+          /* 逐家撰写的独立分析。结构块保持一致,分析部分必须各不相同 */
+          ProfileBody && (
+            <div class="prose brand-analysis">
+              <ProfileBody />
+            </div>
+          )
+        }
+
+        <h2 id="specs">套餐与线路规格</h2>
+        <p>
+          下表全部来自品牌公开资料,本站只做整理与统一口径,不代表已验证。
+          单位流量成本由入门套餐价格除以流量算出,便于和其他品牌横向比较。
+        </p>
+        <div class="table-shell panel notch">
+          {/* 可横向滚动的区域必须能用键盘聚焦,否则纯键盘用户看不到溢出部分的列 */}
+          <div
+            class="panel-in"
+            tabindex="0"
+            role="region"
+            aria-label={`${brand.name}规格表,可横向滚动`}
+          >
+            <table class="spec-table">
+              <caption class="sr">{brand.name}套餐与线路规格</caption>
+              <tbody>
+                {
+                  specs.map((s) => (
+                    <tr>
+                      <th scope="row">{s.k}</th>
+                      <td>{s.v}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {
+          pricing.note && (
+            <p class="note-line">
+              <strong>价格口径:</strong>
+              {pricing.note}
+            </p>
+          )
+        }
+
+        <h2 id="scores">编辑评分明细</h2>
+        <p>
+          评分不是实测跑分,而是由上表这些公开字段按固定公式算出的结果,权重与算法公开在
+          <a href="/editorial-policy/">编辑与评测规范</a>。任何人拿到同一份数据都能复现同一分数。
+        </p>
+        <div class="score-grid">
+          {
+            SCORING_RUBRIC.map((r) => (
+              <div class="score-item">
+                <div class="meter-l">
+                  {DIM_LABEL[r.key]}
+                  <b>{score[r.key].toFixed(1)}</b>
+                </div>
+                <div class="ticks" aria-hidden="true">
+                  {Array.from({ length: 10 }, (_, i) =>
+                    i < Math.round(score[r.key]) ? <i class="on" /> : <i />
+                  )}
+                </div>
+                <small>
+                  权重 {r.weight} · {r.basis}
+                </small>
+              </div>
+            ))
+          }
+          <div class="score-item is-total">
+            <div class="meter-l">
+              加权总分<b>{score.overall.toFixed(1)}</b>
+            </div>
+            <small>五项维度按公开权重加权得出</small>
+          </div>
+        </div>
+
+        <ServiceAvailabilityMatrix brand={brand} />
+
+        <NetworkPathDiagram brand={brand} />
+
+        <SpeedtestEvidence brand={brand} />
+
+        <h2 id="pros-cons">优点与需要权衡的地方</h2>
+        <div class="pc-grid">
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>优点</h3>
+              <ul class="pc-list is-pro">
+                {editorial.pros.map((p) => <li>{p}</li>)}
+              </ul>
+            </div>
+          </div>
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>需要权衡</h3>
+              <ul class="pc-list is-con">
+                {editorial.cons.map((c) => <li>{c}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="fit">谁适合选它,谁不适合</h2>
+        <p><strong>适合:</strong>{hasProfile ? profile!.data.targetUser : editorial.bestFor}。</p>
+        <p>
+          <strong>不太适合:</strong>
+          {
+            hasProfile
+              ? profile!.data.whenToPickOthers
+              : pricing.basis === 'annual-equivalent'
+                ? '不确定自己会长期使用、或者希望先短期试用的人。年付折算价的前提是一次性支付一年费用,退款条件以官方说明为准。'
+                : pricing.trafficGB < 100
+                  ? '每月需要大量看视频的重度用户。这个流量规格在日常网页与轻度视频下够用,但重度使用会偏紧。'
+                  : '预算极度敏感、只想找最低价的人。同样是这个价位,更看重单纯低价的用户可以先看年付折算档的选项。'
+          }
+        </p>
+        {
+          highlights.length > 0 && (
+            <p>
+              品牌自己强调的卖点是:{highlights.join('、')}
+              。这些属于厂商表述,可以作为了解它定位的参考,
+              但不建议当作选购依据——同类品牌的宣传口径高度相似,真正能区分它们的是上面那张规格表。
+            </p>
+          )
+        }
+
+        <h2 id="peers">同价位还有哪些选择</h2>
+        <p>如果你还在犹豫,下面这几家和它处在相近的价位或定位,值得放在一起比较:</p>
+        <ul class="peer-list">
+          {
+            profilePeers.map((p) => (
+              <li>
+                <RouteMark lines={p.vendor.lines} size={16} />
+                <a href={`/reviews/${p.slug}/`}>{p.name}</a>
+                <span class="peer-meta">
+                  {p.vendor.pricing.entryPriceCNY} 元 · {p.vendor.pricing.trafficGB}GB ·{' '}
+                  {p.editorial.positioning}
+                </span>
+                <a class="peer-vs" href={`/compare/${[brand.slug, p.slug].sort().join('-vs-')}/`}>
+                  逐项对比 →
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        {
+          hasProfile && (
+            <>
+              <h2 id="risk">风险与当前状态</h2>
+              <RiskNotice
+                title={`选 ${brand.name} 之前该知道的`}
+                badge="RISK"
+                items={profile!.data.riskItems}
+                fine={profile!.data.supportEntry}
+              />
+            </>
+          )
+        }
+
+        <h2 id="signup">优惠与注册</h2>
+        <Disclosure />
+        <div class="signup-box panel notch">
+          <div class="panel-in">
+            <div class="signup-row">
+              <div>
+                <span class="tag-en">Current Offer</span>
+                <p class="offer-text">
+                  {commercial.promoText ?? '暂无公开的新用户折扣活动'}
+                  {
+                    commercial.promoCode && (
+                      <>
+                        {' '}
+                        · 优惠码 <code class="coupon-inline">{commercial.promoCode}</code>
+                      </>
+                    )
+                  }
+                </p>
+                {hasProfile && <p class="offer-condition">{profile!.data.ctaCondition}</p>}
+                <p class="offer-fine">
+                  优惠码请按上面显示的大小写原样输入。活动与价格以官网结算页为准,本站数据每月复查一次。
+                </p>
+              </div>
+              <BrandLink brand={brand} />
+            </div>
+          </div>
+        </div>
+
+        <Faq items={faqItems} />
+
+        <NextStep
+          label={`把${brand.name}和同价位机场逐项对比`}
+          href={`/compare/${[brand.slug, profilePeers[0].slug].sort().join('-vs-')}/`}
+          reason={`看完单家评测,最容易出错的一步是没有横向比较就下单。${brand.name}和${profilePeers[0].name}处在相近的价位段,把两者的规格逐项摆在一起,更容易判断多花的钱买到了什么。`}
+          alt={{ label: '先看完整的 16 家对照表', href: '/compare/' }}
+        />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-head {
+    margin-bottom: var(--s6);
+  }
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .post-meta a {
+    color: var(--text-muted);
+  }
+
+  /* 全局 table 规则为横向对比表设了 760px 最小宽度,双列规格表不需要,否则小屏会溢出 */
+  .spec-table {
+    width: 100%;
+    min-width: 0;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .spec-table th,
+  .spec-table td {
+    white-space: normal;
+    position: static;
+  }
+  .spec-table th,
+  .spec-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .spec-table th {
+    width: 40%;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .spec-table td {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .spec-table tr:last-child th,
+  .spec-table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .note-line {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+  }
+
+  .score-grid {
+    display: grid;
+    gap: 18px 28px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin: var(--s5) 0;
+  }
+  .score-item small {
+    display: block;
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+  .score-item.is-total .meter-l b {
+    color: var(--accent);
+    font-size: 20px;
+  }
+
+  .claim-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin: var(--s4) 0;
+  }
+  .claim-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 11px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+    font-size: 15px;
+  }
+  .claim-list li span {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .pc-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    margin: var(--s5) 0;
+  }
+  @media (max-width: 760px) {
+    .pc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .pc-grid .panel-in {
+    padding: 18px 20px;
+  }
+  .pc-grid h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .pc-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+  .pc-list li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+  .pc-list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .is-pro li::before {
+    background: var(--success);
+  }
+  .is-con li::before {
+    background: var(--warn);
+  }
+
+  .peer-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin: var(--s4) 0;
+  }
+  .peer-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .peer-list li > a:first-of-type {
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .peer-meta {
+    font-size: 13px;
+    color: var(--text-faint);
+    flex: 1;
+    min-width: 180px;
+  }
+  .peer-vs {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .signup-box .panel-in {
+    padding: 20px 22px;
+  }
+  .signup-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .signup-row > div {
+    flex: 1;
+    min-width: 260px;
+  }
+  .offer-text {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+  .coupon-inline {
+    font-family: var(--font-mono);
+    padding: 3px 8px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-chip);
+    background: var(--surface-2);
+  }
+  .offer-condition {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.85;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+  }
+  .offer-fine {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.8;
+  }
+
+  /* 逐家撰写的分析正文,与模板生成的结构块之间留出视觉区隔 */
+  .brand-analysis {
+    padding-bottom: var(--s5);
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: var(--s6);
+  }
+</style>

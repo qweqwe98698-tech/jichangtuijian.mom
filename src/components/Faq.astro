@@ -1,0 +1,32 @@
+---
+/**
+ * FAQ 区块。使用原生 <details>,零 JS 即可展开收起,且内容始终在静态 HTML 中,
+ * 搜索引擎与生成式系统无需执行脚本就能读到全部问答。
+ * 对应 Frontmatter 的 faq 字段,同一份数据同时用于 FAQPage 结构化数据。
+ */
+interface Props {
+  items: { question: string; answer: string }[];
+  title?: string;
+  /** 首项默认展开,给读者一个可见的内容样例 */
+  openFirst?: boolean;
+}
+const { items, title = '常见问题', openFirst = true } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading">{title}</h2>
+      <div class="faq">
+        {items.map((item, i) => (
+          <details open={openFirst && i === 0}>
+            <summary>{item.question}</summary>
+            <div class="fa-body">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}

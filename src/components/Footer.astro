@@ -1,0 +1,96 @@
+---
+import { SITE, NAV, TRUST_LINKS } from '@config/site';
+import Logo from './Logo.astro';
+import { CATEGORY_META } from '../content.config';
+
+const year = new Date().getFullYear();
+
+const knowledgeLinks = (['protocols', 'basics', 'free-nodes', 'unlock'] as const).map((c) => ({
+  label: CATEGORY_META[c].name,
+  href: `/${c}/`,
+}));
+---
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a class="brandmark" href="/" aria-label={`${SITE.name} 首页`}>
+          <Logo size={26} />
+          <span class="bm-txt">
+            <b>{SITE.name}</b>
+            <span class="bm-sub">JICHANGTUIJIAN.MOM</span>
+          </span>
+        </a>
+        <p>
+          {
+            SITE.tagline
+          }。我们把每家机场的价格、流量、协议与线路类型摊开对照,标明哪些来自厂商公开资料、哪些来自本站实测,让你在付款前看清自己买的是什么。
+        </p>
+      </div>
+
+      <div>
+        <h4>选机场</h4>
+        <ul>
+          {
+            NAV.slice(0, 4).map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h4>知识库</h4>
+        <ul>
+          {
+            knowledgeLinks.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h4>关于与规范</h4>
+        <ul>
+          {
+            TRUST_LINKS.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bar">
+      <span>© {year} {SITE.name}</span>
+      <span>
+        本站收录的机场品牌均为推广合作关系,页面中的注册链接为推广链接。合作关系不影响评测口径,
+        评分算法公开于<a href="/editorial-policy/">编辑与评测规范</a>。
+      </span>
+      <span class="sp"><a href="/rss.xml">RSS 订阅</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot-bar a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .foot-bar a:hover {
+    color: var(--accent);
+  }
+  .foot-bar span:nth-child(2) {
+    max-width: 62ch;
+    line-height: 1.75;
+  }
+</style>

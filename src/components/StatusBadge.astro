@@ -1,0 +1,109 @@
+---
+import type { StatusKey } from '@data/status';
+import { STATUS } from '@data/status';
+
+/**
+ * 统一状态标记。全站任何表达「这条信息可靠到什么程度」的地方都用它,
+ * 不允许各处自己发明标记 —— 那正是读者分不清厂商声明与实测结论的根源。
+ *
+ * 刻意不用 ✅❌ emoji(指令 §T6 禁止):emoji 在不同系统上渲染差异大,
+ * 而且绿勾会被读成"已验证",这里恰恰大部分状态都不是。
+ */
+interface Props {
+  status: StatusKey;
+  /** 紧凑模式用于表格单元格 */
+  compact?: boolean;
+  /** 覆盖默认文案,用于需要补充具体信息的场合 */
+  label?: string;
+}
+
+const { status, compact = false, label } = Astro.props;
+const meta = STATUS[status];
+---
+
+<span
+  class={`sbadge tone-${meta.tone}${compact ? ' is-compact' : ''}`}
+  title={meta.title}
+  data-status={status}
+>
+  <i aria-hidden="true"></i>
+  <span class="sb-text">{label ?? meta.label}</span>
+  {!compact && <span class="sb-code">{meta.code}</span>}
+</span>
+
+<style>
+  .sbadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--r-chip);
+    background: var(--sb-bg);
+    color: var(--sb-fg);
+    font-size: 12.5px;
+    line-height: 1.4;
+    white-space: nowrap;
+    cursor: help;
+  }
+  .sbadge i {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--r-node);
+    background: var(--sb-dot);
+    flex: none;
+  }
+  .sb-code {
+    font: 600 9.5px/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    color: var(--sb-dot);
+    opacity: 0.75;
+    padding-left: 5px;
+    border-left: 1px solid var(--sb-border);
+  }
+  .is-compact {
+    padding: 2px 7px;
+    font-size: 11.5px;
+    gap: 5px;
+  }
+
+  /* 只有 measured 是成功色。指令禁止用绿色 Badge 代替真实测试结论,
+     而本站目前唯一真实测过的就是那批节点测速 */
+  .tone-ok {
+    --sb-border: var(--success-soft);
+    --sb-bg: var(--success-soft);
+    --sb-fg: var(--success);
+    --sb-dot: var(--success);
+  }
+  /* 厂商声明用警示色:它看起来像信息,但没有被验证过 */
+  .tone-claim {
+    --sb-border: var(--warn-soft);
+    --sb-bg: var(--warn-soft);
+    --sb-fg: var(--warn);
+    --sb-dot: var(--warn);
+  }
+  .tone-neutral {
+    --sb-border: var(--border);
+    --sb-bg: var(--surface-2);
+    --sb-fg: var(--text-muted);
+    --sb-dot: var(--text-faint);
+  }
+  .tone-hold {
+    --sb-border: var(--border-strong);
+    --sb-bg: transparent;
+    --sb-fg: var(--text-muted);
+    --sb-dot: var(--border-strong);
+  }
+  .tone-warn {
+    --sb-border: var(--warn-soft);
+    --sb-bg: transparent;
+    --sb-fg: var(--warn);
+    --sb-dot: var(--warn);
+  }
+  .tone-bad {
+    --sb-border: var(--danger-soft);
+    --sb-bg: var(--danger-soft);
+    --sb-fg: var(--danger);
+    --sb-dot: var(--danger);
+  }
+</style>

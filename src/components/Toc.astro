@@ -1,0 +1,73 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+/**
+ * 文章目录。仅在正文较长时渲染(由调用方判断)。
+ * 使用 rehype-slug 生成的锚点,纯静态,不依赖 JS。
+ * 只收 H2/H3 两级,更深层级对导航没有帮助反而增加噪音。
+ */
+interface Props {
+  headings: MarkdownHeading[];
+}
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length >= 3 && (
+    <nav class="toc" aria-labelledby="toc-title">
+      <p class="tag-en" id="toc-title">
+        Contents
+      </p>
+      <ol>
+        {items.map((h) => (
+          <li class={h.depth === 3 ? 'is-sub' : ''}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    margin: var(--s5) 0;
+    padding: 16px 18px;
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    background: var(--surface);
+  }
+  .toc ol {
+    list-style: none;
+    display: grid;
+    gap: 7px;
+    margin-top: 10px;
+    counter-reset: toc;
+  }
+  .toc li {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .toc li:not(.is-sub) {
+    counter-increment: toc;
+  }
+  .toc li:not(.is-sub)::before {
+    content: counter(toc) '.';
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin-right: 7px;
+  }
+  .toc li.is-sub {
+    padding-left: 24px;
+    font-size: 13.5px;
+  }
+  .toc a {
+    color: var(--text-muted);
+  }
+  .toc a:hover {
+    color: var(--accent);
+  }
+</style>

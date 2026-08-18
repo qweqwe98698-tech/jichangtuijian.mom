@@ -1,0 +1,18 @@
+---
+/**
+ * 结论先行区块。放在正文最前面,2-3 句直接回答标题隐含的问题。
+ * 同时服务两个目标:人类读者快速拿到答案,生成式搜索系统拿到可直接摘录的段落。
+ * 因此这里使用完整句子而非碎片短语,并且不依赖上下文即可独立成立。
+ */
+interface Props {
+  title?: string;
+}
+const { title = '一句话结论' } = Astro.props;
+---
+
+<div class="answer panel notch" data-answer-box>
+  <div class="panel-in">
+    <h2>{title}</h2>
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,52 @@
+---
+import type { Brand } from '@data/brands';
+
+/**
+ * 指向机场官网的唯一合法出口(内链规则 R10)。
+ * 全站任何指向品牌官网的链接都必须走这个组件,以保证:
+ *   rel 同时包含 sponsored / nofollow / noopener,target=_blank
+ * 构建期脚本会扫描 dist,发现绕开本组件的品牌外链即报错。
+ */
+interface Props {
+  brand: Brand;
+  label?: string;
+  variant?: 'primary' | 'ghost' | 'inline';
+}
+
+const { brand, label, variant = 'primary' } = Astro.props;
+const text = label ?? `前往 ${brand.name} 官网`;
+const cls = variant === 'inline' ? 'brandlink-inline' : `btn btn-${variant}`;
+---
+
+<a
+  class={cls}
+  href={brand.commercial.affiliateUrl}
+  target="_blank"
+  rel="sponsored nofollow noopener"
+  data-brand={brand.slug}
+>
+  {text}
+  {
+    variant !== 'inline' && (
+      <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true" style="margin-left:2px">
+        <path
+          d="M5 2h7v7M12 2 5.5 8.5M11 8.5V12H2V3h3.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    )
+  }
+  <span class="sr">(推广链接,将在新窗口打开)</span>
+</a>
+
+<style>
+  .brandlink-inline {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

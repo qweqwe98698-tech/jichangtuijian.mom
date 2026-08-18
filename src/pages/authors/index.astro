@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import { itemListSchema } from '@lib/schema';
+
+const authors = await getCollection('authors');
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '评测团队', href: '/authors/' },
+];
+
+const listSchema = itemListSchema(
+  '机场实测室评测团队',
+  authors.map((a) => ({ name: a.data.name, href: `/authors/${a.id}/`, description: a.data.role }))
+);
+---
+
+<BaseLayout
+  title="评测团队"
+  description="机场实测室的内容由谁撰写、负责哪些领域、按什么机制复查。了解内容背后的人和流程,是判断一个评测站是否可信的前提。"
+  crumbs={crumbs}
+  schemas={[listSchema]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Editorial Team</span>
+          <h1>评测团队</h1>
+        </header>
+
+        <AnswerBox title="为什么这一页值得看">
+          <p>
+            一个推荐类网站是否可信,很大程度上取决于内容由谁撰写、依据什么标准、多久复查一次。
+            这一页说明我们的分工与复查机制,你可以据此判断本站结论的可靠边界在哪里。
+          </p>
+        </AnswerBox>
+
+        <ul class="author-list">
+          {
+            authors.map((a) => (
+              <li>
+                <a href={`/authors/${a.id}/`}>{a.data.name}</a>
+                <span class="al-role">{a.data.role}</span>
+                <span class="al-bio">{a.data.bio}</span>
+                <span class="al-exp">{a.data.expertise.join(' · ')}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <NextStep
+          label="查看评分算法与编辑规范"
+          href="/editorial-policy/"
+          reason="知道内容由谁写之后,更关键的是知道结论怎么算出来的。评分的五个维度与权重完全公开,你可以自己复算。"
+          alt={{ label: '了解本站的数据分层设计', href: '/about/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .author-list {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    margin: var(--s5) 0;
+  }
+  .author-list li {
+    display: grid;
+    gap: 7px;
+    padding: 18px 20px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .author-list a {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .author-list a:hover {
+    color: var(--accent);
+  }
+  .al-role {
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .al-bio {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.85;
+  }
+  .al-exp {
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+/**
+ * 风险提示组件。用于免费节点风险、跑路预警、数据口径说明等场景。
+ * 视觉上刻意与推荐类组件区隔(危险色边框 + 更大切角),避免读者把提示误读为推荐。
+ */
+interface Props {
+  title: string;
+  badge?: string;
+  items: string[];
+  /** 底部细则,例如数据来源、适用范围、免责说明 */
+  fine?: string;
+}
+const { title, badge = 'NOTICE', items, fine } = Astro.props;
+---
+
+<aside class="risk" role="note">
+  <div class="panel notch">
+    <div class="panel-in">
+      <div class="risk-head">
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 18 18"
+          aria-hidden="true"
+          style="color:var(--danger)"
+        >
+          <path
+            d="M9 1.8 16.4 15H1.6z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linejoin="round"></path>
+          <path d="M9 6.6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          <circle cx="9" cy="12.7" r=".95" fill="currentColor"></circle>
+        </svg>
+        <h3>{title}</h3>
+        <span class="risk-badge">{badge}</span>
+      </div>
+      <ul>
+        {items.map((item) => <li>{item}</li>)}
+      </ul>
+      {fine && <p class="fine">{fine}</p>}
+    </div>
+  </div>
+</aside>

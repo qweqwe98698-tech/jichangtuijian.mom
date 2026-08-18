@@ -1,0 +1,194 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CompareTable from '@components/CompareTable.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import Disclosure from '@components/Disclosure.astro';
+import Faq from '@components/Faq.astro';
+import { BRANDS, costPerGB, formatCostPerGB, getBrand } from '@data/brands';
+import { itemListSchema, faqSchema } from '@lib/schema';
+import { pairSlug, comparePairs } from '@lib/compare';
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '机场对比', href: '/compare/' },
+];
+
+const cheapestPerGB = [...BRANDS].sort((a, b) => costPerGB(a) - costPerGB(b))[0];
+const pairs = comparePairs();
+
+const faq = [
+  {
+    question: '为什么年付折算价不能和月付价放在一起排名?',
+    answer:
+      '年付折算价是把一年的总费用除以 12 得到的数字,它的前提是你一次性支付了一整年的费用。月付价则是每个月都可以停。两者的付款风险和资金占用完全不同,直接放在同一个价格排行里,会让年付品牌显得比实际更便宜。所以本站把它们拆成两组分别排列。',
+  },
+  {
+    question: '单位流量成本(元/GB)是怎么算的?',
+    answer:
+      '用入门套餐的价格除以该套餐的月流量。例如 20 元含 150GB,单位流量成本就是约 0.133 元/GB。这个指标的好处是把价格和流量两个变量合并成一个可比数字,缺点是它没有反映线路质量——单位成本最低的不一定最好用,需要结合线路类型一起看。',
+  },
+  {
+    question: 'IEPL 和普通中转的区别值多少钱?',
+    answer:
+      'IEPL 属于企业级内网专线,数据在运营商内网中传输,理论上受公网拥塞的影响更小,晚高峰的表现通常是它的主要卖点。中转线路成本更低,但在高峰时段更容易受公网状况波动影响。本站收录的品牌中,标注 IEPL 的入门价大多在 14.9 元以上,而这个差价是否值得,取决于你是否在晚高峰有稳定性需求。',
+  },
+  {
+    question: '编辑评分能直接当作购买依据吗?',
+    answer:
+      '不建议。评分是由公开字段按固定权重算出的综合值,它反映的是"整体规格的均衡程度",而不是"对你个人是否合适"。如果你的需求非常明确——例如只在意流量便宜、或者只在意 AI 工具能用——应该直接看对应的单项维度,而不是看总分。',
+  },
+];
+
+const listSchema = itemListSchema(
+  '机场两两对比页索引',
+  pairs.map((p) => ({
+    name: `${getBrand(p[0])!.name} 和 ${getBrand(p[1])!.name} 哪个好`,
+    href: `/compare/${pairSlug(p[0], p[1])}/`,
+  }))
+);
+
+const description =
+  '把 16 家机场的入门价格、月流量、单位流量成本、线路类型与协议放进同一张可排序对照表,并说明年付折算价为什么不能和月付价直接比较,帮你找出真正适合自己需求的那一档。';
+---
+
+<BaseLayout
+  title="机场对比:16 家横向对照表"
+  description={description}
+  crumbs={crumbs}
+  schemas={[listSchema, faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Comparison Matrix</span>
+          <h1>机场对比:{BRANDS.length} 家横向对照</h1>
+          <p class="post-meta">最近更新 2026-08-18 · 价格与套餐每月复查</p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            按单位流量成本算,目前最低的是<a href={`/reviews/${cheapestPerGB.slug}/`}
+              >{cheapestPerGB.name}</a
+            >
+            (约 {formatCostPerGB(cheapestPerGB)} 元/GB)。但单位成本最低不等于最适合——它没有反映线路质量。
+            下表把价格、流量、单位成本、线路类型、协议与开业年份放在一起,你可以点击表头按任意一列重排。
+          </p>
+        </AnswerBox>
+
+        <CompareTable />
+
+        <h2 id="how-to-read">这张表该怎么读</h2>
+        <p>
+          先确定你的<strong>月流量需求</strong>,再看在这个流量档位下哪几家的价格可接受,最后用
+          <strong>线路类型</strong
+          >做筛选。反过来先看总分再挑,很容易买到规格均衡但不符合你具体需求的套餐。
+        </p>
+        <ul class="read-tips">
+          <li><strong>每月不到 50GB:</strong>年付折算档最划算,但要接受一次性付一年的资金占用。</li>
+          <li>
+            <strong>每月 100GB 上下:</strong>14.9–18 元档选择最多,这一档已经能拿到 IEPL 专线。
+          </li>
+          <li><strong>每月 130GB 以上:</strong>20 元档的流量规格差异明显,直接看流量列排序。</li>
+          <li>
+            <strong>在意晚高峰稳定:</strong>优先看线路列标注 IEPL 的品牌,这是它们的核心卖点,
+            但注意目前这属于厂商声明,本站尚未完成统一实测。
+          </li>
+        </ul>
+
+        <Disclosure />
+
+        <h2 id="pairs">两两逐项对比</h2>
+        <p>
+          如果你已经缩小到两三个候选,下面这些页面把它们的每一项规格并排列出,并按使用场景分别给出判断:
+        </p>
+        <ul class="pair-list">
+          {
+            pairs.map(([a, b]) => (
+              <li>
+                <a href={`/compare/${pairSlug(a, b)}/`}>
+                  {getBrand(a)!.name} <span class="vs">vs</span> {getBrand(b)!.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="看完整的 16 家单独评测"
+          href="/reviews/"
+          reason="对照表告诉你规格差异在哪,但它放不下每家的适合人群、优缺点与需要注意的口径问题。缩小到两三个候选后,建议逐页看完再决定。"
+          alt={{ label: '还不确定自己需要什么规格?', href: '/basics/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .read-tips {
+    list-style: none;
+    display: grid;
+    gap: 11px;
+    margin: var(--s4) 0;
+  }
+  .read-tips li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .read-tips li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+  .read-tips strong {
+    color: var(--text);
+  }
+  .pair-list {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .pair-list a {
+    display: block;
+    padding: 11px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14.5px;
+  }
+  .pair-list a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .vs {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    padding: 0 4px;
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NextStep from '@components/NextStep.astro';
+import { allPosts, postUrl } from '@lib/content';
+import { abs } from '@lib/schema';
+import { SITE_URL } from '@config/site';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const authors = await getCollection('authors');
+  return authors.map((author) => ({ params: { slug: author.id }, props: { author } }));
+};
+
+interface Props {
+  author: CollectionEntry<'authors'>;
+}
+
+const { author } = Astro.props;
+const { Content } = await render(author);
+const path = `/authors/${author.id}/`;
+
+const posts = (await allPosts()).filter((p) => p.data.author === author.id);
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '评测团队', href: '/authors/' },
+  { name: author.data.name, href: path },
+];
+
+/** Person 实体与 Organization 关联,是 E-E-A-T 的作者可信度信号 */
+const personSchema = {
+  '@type': 'Person',
+  '@id': `${abs(path)}#person`,
+  name: author.data.name,
+  jobTitle: author.data.role,
+  description: author.data.bio,
+  url: abs(path),
+  knowsAbout: author.data.expertise,
+  worksFor: { '@id': `${SITE_URL}/#organization` },
+};
+
+const description = `${author.data.name}:${author.data.role}。${author.data.bio.slice(0, 80)}`;
+---
+
+<BaseLayout
+  title={`${author.data.name} — ${author.data.role}`}
+  description={description}
+  crumbs={crumbs}
+  schemas={[personSchema]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Editorial Team</span>
+          <h1>{author.data.name}</h1>
+          <p class="role">{author.data.role}</p>
+        </header>
+
+        <div class="panel notch">
+          <div class="panel-in">
+            <h2>负责领域</h2>
+            <ul class="expertise">
+              {author.data.expertise.map((e) => <li>{e}</li>)}
+            </ul>
+            {
+              author.data.reviewProcess && (
+                <>
+                  <h2>内容复查机制</h2>
+                  <p class="review-process">{author.data.reviewProcess}</p>
+                </>
+              )
+            }
+          </div>
+        </div>
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          posts.length > 0 && (
+            <section>
+              <h2 id="posts">撰写的内容({posts.length} 篇)</h2>
+              <ul class="author-posts">
+                {posts.map((p) => (
+                  <li>
+                    <a href={postUrl(p)}>{p.data.title}</a>
+                    <span>更新于 {p.data.updatedDate.toISOString().slice(0, 10)}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <NextStep
+          label="看看我们的评分算法是怎么设计的"
+          href="/editorial-policy/"
+          reason="了解谁在写内容之后,下一个该问的问题是这些结论怎么来的。评分的五个维度、权重与计算方式全部公开在编辑与评测规范页。"
+          alt={{ label: '发现内容有误?告诉我们', href: '/contact/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0 6px;
+  }
+  .role {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+  .panel-in {
+    padding: 20px 22px;
+  }
+  .panel-in h2 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .panel-in h2 + * {
+    margin-top: 0;
+  }
+  .expertise {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .expertise li {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-chip);
+    background: var(--surface-2);
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .review-process {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .author-posts {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin: var(--s4) 0;
+  }
+  .author-posts li {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .author-posts a {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .author-posts a:hover {
+    color: var(--accent);
+  }
+  .author-posts span {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

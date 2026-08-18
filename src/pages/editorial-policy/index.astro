@@ -1,0 +1,405 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import { BRANDS, costPerGB, getBrand } from '@data/brands';
+import { SCORING_RUBRIC, scoreBrand } from '@lib/scoring';
+import { faqSchema } from '@lib/schema';
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '编辑与评测规范', href: '/editorial-policy/' },
+];
+
+/** 归一化的两个端点,直接从当前品牌数据算出,保证页面上的数字与算法同步 */
+const costs = BRANDS.map((b) => ({ brand: b, cost: costPerGB(b) }));
+const best = costs.reduce((m, c) => (c.cost < m.cost ? c : m));
+const worst = costs.reduce((m, c) => (c.cost > m.cost ? c : m));
+
+/** 完整算一遍给读者看,数字随数据变动自动更新 */
+const sample = getBrand('guangsuyun')!;
+const s = scoreBrand(sample);
+const parts = [
+  { label: '流量性价比', score: s.value, weight: 0.3 },
+  { label: '线路等级', score: s.line, weight: 0.25 },
+  { label: '运营时长', score: s.track, weight: 0.15 },
+  { label: '客户端友好度', score: s.client, weight: 0.15 },
+  { label: '场景覆盖', score: s.coverage, weight: 0.15 },
+];
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+const faq = [
+  {
+    question: '为什么本站不做「实测评分」?',
+    answer:
+      '因为本站还没有完成 16 家的统一实测,而没测过的东西不能打成实测分。当前分数完全由厂商公开字段按固定公式算出,页面上一律标注为「编辑评分(基于公开资料)」。等实测数据补齐,我们会新增一个独立的实测维度,而不是悄悄把现有分数改叫实测分——那样读者无法分辨分数的性质变过。',
+  },
+  {
+    question: '同一个品牌,不同时间看到的分数会变吗?',
+    answer:
+      '会,但只在三种情况下变:品牌的公开数据变了(比如涨价或换线路)、评分基准年推进了一年(运营时长维度会重算)、或者公式本身被修改。前两种属于数据更新,第三种会在本页说明。分数不会因为合作关系、推广活动或任何商业因素变动,因为评分函数在结构上读不到商业信息。',
+  },
+  {
+    question: '为什么单位流量成本占了 30% 这么高的权重?',
+    answer:
+      '因为它是本站字段中唯一一个完全客观、无需解释、且对读者决策影响最直接的指标——价格除以流量,没有解释空间。其余维度或多或少依赖厂商表述,可信度低一些,所以权重也低一些。权重分配的原则是:字段越客观、越可核对,权重越高。',
+  },
+  {
+    question: '我发现某家的价格已经变了,分数会跟着改吗?',
+    answer:
+      '会。价格是评分输入之一,改价格会同时改变这家的单位流量成本,还会影响归一化的两个端点,进而影响其他品牌的性价比得分。所以价格纠错的优先级最高,收到反馈后我们会先核对官网结算页,再更新数据并在页面上标注更新时间。',
+  },
+];
+
+const description =
+  '公开机场实测室的评分算法:流量性价比 30%、线路等级 25%、运营时长 15%、客户端友好度 15%、场景覆盖 15%,每个维度的取值规则、权重理由、复查周期与纠错流程全部列出,任何人都能复算。';
+---
+
+<BaseLayout
+  title="编辑与评测规范:评分算法全公开"
+  description={description}
+  crumbs={crumbs}
+  schemas={[faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Editorial Policy</span>
+          <h1>编辑与评测规范</h1>
+          <p class="post-meta">
+            最近更新 2026-08-18 · 评分基准年 2026 · 覆盖 {BRANDS.length} 家品牌
+          </p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            本站的分数是<strong>编辑评分,不是实测评分</strong>。它由 5 个维度加权算出: 流量性价比
+            30%、线路等级 25%、运营时长 15%、客户端友好度 15%、场景覆盖 15%。
+            每个维度的输入都是厂商公开字段,取值规则写死在代码里,没有人工调分的入口—— 这意味着<strong
+              >任何人拿同一份品牌数据,都能算出完全相同的分数</strong
+            >。 下面把五个维度的公式逐条列出,你可以自己复算一遍。
+          </p>
+        </AnswerBox>
+
+        <div class="prose">
+          <h2 id="nature">先说清楚:这是编辑评分</h2>
+          <p>
+            本站尚未完成 {BRANDS.length} 家的统一实测,因此评分中<strong
+              >不包含任何速率、延迟或解锁测试结果</strong
+            >。 它衡量的是「公开规格的均衡程度」,不是「实际用起来快不快」——两者答案未必一致。
+          </p>
+          <p>
+            需求明确的话——只在意流量便宜,或只在意晚高峰稳定——直接看<strong>单项维度</strong
+            >比看总分有用; 总分只用来排除明显偏科的选项。数据分层的设计写在<a href="/about/"
+              >关于本站</a
+            >。
+          </p>
+
+          <h2 id="rubric">五个维度与权重</h2>
+          <div class="rubric">
+            {
+              SCORING_RUBRIC.map((r) => (
+                <div class="rb">
+                  <div class="rb-head">
+                    <b>{r.label}</b>
+                    <span class="rb-w">{r.weight}</span>
+                  </div>
+                  <p>{r.basis}</p>
+                </div>
+              ))
+            }
+          </div>
+          <p>
+            五个维度都是 <strong>10 分制</strong>,加权后保留一位小数。权重按一条原则分配:
+            <strong>字段越客观、越容易核对,权重越高</strong>。单位流量成本是纯算术、没有解释空间,占
+            30%; 线路等级虽来自厂商标注,至少是可查的事实描述,占 25%;
+            运营时长、客户端、场景覆盖要么颗粒度太粗、要么依赖厂商表述,各占 15%。
+          </p>
+
+          <h2 id="formulas">每个维度具体怎么算</h2>
+
+          <h3>1. 流量性价比(30%)</h3>
+          <p>
+            取<strong>单位流量成本</strong>(入门价 ÷ 月流量,元/GB),在 {BRANDS.length} 家之间线性归一到
+            4–10 分: 最低的得 10 分,最高的得 4 分,中间按比例插值。当前区间是
+            <code>{best.cost.toFixed(3)} 元/GB</code>({best.brand.name})到
+            <code>{worst.cost.toFixed(3)} 元/GB</code>({worst.brand.name})。
+          </p>
+          <p>
+            注意这个归一是<strong>相对的</strong>:某一家降价会同时抬高自己、压低其他家的分数。
+          </p>
+
+          <h3>2. 线路等级(25%)</h3>
+          <p>取厂商公开的线路类型,按四档取固定值,不做插值:</p>
+          <ul class="ladder">
+            <li><b>9.5 分</b>——同时标注 IEPL/IPLC 与内网专线</li>
+            <li><b>9.0 分</b>——标注 IEPL 或 IPLC 企业专线</li>
+            <li><b>8.5 分</b>——仅标注内网专线</li>
+            <li><b>7.0 分</b>——中转线路</li>
+            <li><b>6.0 分</b>——纯直连</li>
+          </ul>
+          <p>
+            差距刻意压得小(6 到 9.5,而不是 0 到 10):线路类型来自厂商标注,本站没验证过。
+            <a href="/protocols/">线路命名的水分</a>是老问题,不该让未经验证的标签拉开过大分差。
+          </p>
+
+          <h3>3. 运营时长(15%)</h3>
+          <p>
+            用评分基准年(<code>2026</code>)减去公开开业年份,每满一年加 0.8 分,基础分 6 分、上限 10
+            分——
+            <strong>运营满 5 年即满分</strong>。未公开开业年份的按 6 分计,与「今年刚开业」同分。
+          </p>
+          <p>
+            它衡量的是跑路风险的经验性下限,不是服务质量:老牌不等于好用,但运营五年以上的服务消失概率确实更低。
+            <strong>基准年每推进一年全站分数都会变化</strong>,改动会同步更新到本页。
+          </p>
+
+          <h3>4. 客户端友好度(15%)</h3>
+          <p>
+            看两个字段:是否提供自研客户端、是否支持第三方客户端订阅导入。 两者都有 9.5 分,仅自研 8.5
+            分,仅第三方 7.5 分,都没有 6 分。
+          </p>
+          <p>
+            自研之所以高一档:新手最容易卡在把订阅导进客户端这一步,自研客户端通常做成一键登录;
+            代价是被绑定在一个厂商的软件上。差异写在<a href="/guides/">客户端教程</a>。
+          </p>
+
+          <h3>5. 场景覆盖(15%)</h3>
+          <p>
+            统计厂商<strong>公开声明</strong>的两类场景——流媒体、AI 工具——按数量取值: 两类 9.2
+            分,一类 8.3 分,都没声明 7 分。
+          </p>
+          <p>
+            这一项衡量的是<strong>厂商说了什么</strong>,不是<strong>实际能用什么</strong>——
+            本站实测层为空,这个维度没有任何一分来自验证过的结果。
+          </p>
+
+          <h2 id="floor">为什么下限是 7 分,而不是 0 分</h2>
+          <p>
+            场景覆盖如果按「没声明就是 0 分」算,受罚的不是能力差的品牌,而是<strong
+              >官网写得少的品牌</strong
+            >。
+            有几家收录品牌的官网只写线路和价格,连流媒体一个字都不提——这只代表没写进宣传,不代表不能用。
+          </p>
+          <p>
+            把下限设成 0 还会产生一个很坏的激励:文案写得越满,分数越高。 所以这一项的区间被压缩到
+            7–9.2 分,满分与最低分只差 2.2 分,乘以 15% 权重后
+            <strong>对总分的影响不超过 0.33 分</strong>——声明本来就只值这么多。
+            其余维度同理:没有一个维度的下限是 0,因为「资料缺失」不等于「能力为零」。
+          </p>
+
+          <h2 id="worked">完整算一遍:{sample.name}</h2>
+          <p>拿一家收录品牌走一遍,可以对着规则逐项核对:</p>
+          <div class="calc">
+            {
+              parts.map((p) => (
+                <div class="ca-row">
+                  <span class="ca-k">{p.label}</span>
+                  <span class="ca-v">{p.score.toFixed(1)}</span>
+                  <span class="ca-x">×</span>
+                  <span class="ca-w">{p.weight}</span>
+                  <span class="ca-r">= {round2(p.score * p.weight)}</span>
+                </div>
+              ))
+            }
+            <div class="ca-row is-total">
+              <span class="ca-k">加权总分(四舍五入到一位小数)</span>
+              <span class="ca-r">{s.overall.toFixed(1)}</span>
+            </div>
+          </div>
+          <p>
+            这就是<a href={`/reviews/${sample.slug}/`}>{sample.name}评测页</a>上的分数。
+          </p>
+
+          <h2 id="review-cycle">复查周期与更新标注</h2>
+          <ul class="notes">
+            <li><strong>每月</strong>:核对入门价格与月流量,以官网结算页为准而非首页宣传价。</li>
+            <li>
+              <strong>每季度</strong>:核对线路、协议、客户端支持等结构性字段,以及品牌是否仍在运营。
+            </li>
+            <li><strong>随时</strong>:收到有效纠错立即核对,属实则当次更新。</li>
+          </ul>
+          <p>
+            每次更新都会刷新页面的「最近更新」日期。若某家被判定停止运营, 会从推荐位撤下并在<a
+              href="/risk/">风险预警</a
+            >说明,而不是删页。
+          </p>
+
+          <h2 id="correction">纠错流程</h2>
+          <p>
+            顺序固定:<strong>核对官方来源 → 更新数据文件 → 页面标注更新时间</strong>。
+            不会仅凭一条反馈改数据,也不会因为修正会拉低某家分数就搁置。 提交方式写在<a
+              href="/contact/">联系与纠错</a
+            >。
+          </p>
+
+          <h2 id="commercial">商业合作如何被隔离在评分之外</h2>
+          <p>本站与收录的全部品牌都是推广合作关系。隔离不是靠承诺,是靠结构:</p>
+          <ul class="notes">
+            <li>
+              评分函数的输入只有 <code>vendor</code> 层字段(价格、流量、线路、开业年份、客户端、声明),
+              <strong>结构上访问不到 commercial 层</strong>——优惠码与分成比例不在参数范围内。
+            </li>
+            <li>没有人工调分入口。想让某家分数变高只能改公式,而公式公开在本页。</li>
+            <li>排序由分数决定,不设置「合作推荐位」这类可以花钱买的位置。</li>
+            <li>品牌页的结构化数据里没有 aggregateRating,因为没有真实用户评分。</li>
+          </ul>
+          <p>
+            这套机制保证<strong>分数不被商业因素扭曲</strong>,但不能保证收录名单没有商业倾向—— 全部 {
+              BRANDS.length
+            } 家都是合作方,这一点写在<a href="/disclaimer/">免责说明</a>里。
+          </p>
+        </div>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="看这套算法在 16 家上算出的结果"
+          href="/reviews/"
+          reason="公式看懂之后,最好的验证方式是对着评测页把分数复算一遍。评测页会同时列出五个维度的单项得分,方便你判断某家是均衡型还是偏科型。"
+          alt={{ label: '直接看横向对照表', href: '/compare/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .rubric {
+    display: grid;
+    gap: 10px;
+    margin: var(--s5) 0;
+  }
+  .rb {
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .rb-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .rb-head b {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .rb-w {
+    margin-left: auto;
+    font: 600 12px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .rb p {
+    margin: 7px 0 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+  .ladder {
+    list-style: none;
+    display: grid;
+    gap: 7px;
+    margin: var(--s3) 0 var(--s4);
+  }
+  .ladder li {
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    padding-left: 14px;
+    border-left: 1px solid var(--border);
+  }
+  .ladder b {
+    color: var(--text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .calc {
+    display: grid;
+    gap: 2px;
+    margin: var(--s4) 0 var(--s5);
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface-2);
+  }
+  .ca-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .ca-k {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .ca-v,
+  .ca-w,
+  .ca-r {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+  }
+  .ca-x {
+    color: var(--text-faint);
+    font-size: 12px;
+  }
+  .ca-r {
+    min-width: 62px;
+    text-align: right;
+    font-weight: 600;
+  }
+  .is-total {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-strong);
+    color: var(--text);
+  }
+  .is-total .ca-r {
+    color: var(--accent);
+    font-size: 17px;
+  }
+  .notes {
+    list-style: none;
+    display: grid;
+    gap: 11px;
+    margin: var(--s4) 0 var(--s5);
+  }
+  .notes li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+  .notes strong {
+    color: var(--text);
+  }
+</style>

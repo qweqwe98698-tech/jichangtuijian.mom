@@ -1,0 +1,127 @@
+/* ==========================================================================
+   机场实测室 —— 设计系统:信号与路径 (Signal & Route)
+   隐喻:网络拓扑。线 = 线路,节点 = 落地,流动 = 带宽质量。
+   骨架特征:左侧「路由主干」竖线贯穿全页 + 每个区块一个节点标记;
+             面板右上角切角(notch)构成硬件面板感;分隔全部用 1px 发丝线;
+             强调色只用于线、节点、刻度,绝不铺大色块。
+
+   主题策略(三态):
+     未设置 data-theme  → 跟随系统 prefers-color-scheme
+     data-theme="light" → 强制浅色
+     data-theme="dark"  → 强制深色
+   由 <head> 内的极小同步脚本在首帧前写入,避免深色用户看到白屏闪烁。
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+  --bg: #f1f5f9;
+  --bg-grid: rgba(15, 42, 71, 0.055);
+  --surface: #ffffff;
+  --surface-2: #e7edf4;
+  --surface-3: #dce5ef;
+  --border: #c3d0de;
+  --border-strong: #9baec3;
+  --hairline: rgba(15, 42, 71, 0.14);
+  --text: #0b1524;
+  --text-muted: #4a5a6e;
+  --text-faint: #5e6e82;
+  --accent: #0e6fa3;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(14, 111, 163, 0.08);
+  --accent-line: #1e8fc4;
+  --glow: rgba(14, 111, 163, 0.28);
+  --success: #0f7a52;
+  --success-soft: rgba(15, 122, 82, 0.1);
+  --warn: #8a5a00;
+  --warn-soft: rgba(138, 90, 0, 0.1);
+  --danger: #b3261e;
+  --danger-soft: rgba(179, 38, 30, 0.09);
+  --route-iepl: #5b3fd6;
+  --route-iplc: #0f6fa8;
+  --route-relay: #0d7a72;
+  --route-direct: #5b6b80;
+  --code-bg: #0c1626;
+  --code-fg: #d6e4f0;
+  --code-key: #7cd6f5;
+  --code-str: #8fd9a8;
+  --code-dim: #7c8fa6;
+  --rail: linear-gradient(
+    180deg,
+    transparent 0,
+    var(--border) 6%,
+    var(--border) 94%,
+    transparent 100%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #070c14;
+    --bg-grid: rgba(120, 180, 230, 0.055);
+    --surface: #0d141f;
+    --surface-2: #131c2a;
+    --surface-3: #1a2534;
+    --border: #25364b;
+    --border-strong: #3a4e68;
+    --hairline: rgba(140, 190, 235, 0.16);
+    --text: #e6edf5;
+    --text-muted: #9aabbe;
+    --text-faint: #8395aa;
+    --accent: #45c4e8;
+    --accent-fg: #04202b;
+    --accent-soft: rgba(69, 196, 232, 0.12);
+    --accent-line: #45c4e8;
+    --glow: rgba(69, 196, 232, 0.35);
+    --success: #3ed598;
+    --success-soft: rgba(62, 213, 152, 0.12);
+    --warn: #f5b843;
+    --warn-soft: rgba(245, 184, 67, 0.12);
+    --danger: #ff7a70;
+    --danger-soft: rgba(255, 122, 112, 0.12);
+    --route-iepl: #a78bfa;
+    --route-iplc: #5fb6ee;
+    --route-relay: #43c9bc;
+    --route-direct: #8fa2b8;
+    --code-bg: #050a12;
+    --code-fg: #d6e4f0;
+    --code-key: #7cd6f5;
+    --code-str: #8fd9a8;
+    --code-dim: #6e8299;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #070c14;
+  --bg-grid: rgba(120, 180, 230, 0.055);
+  --surface: #0d141f;
+  --surface-2: #131c2a;
+  --surface-3: #1a2534;
+  --border: #25364b;
+  --border-strong: #3a4e68;
+  --hairline: rgba(140, 190, 235, 0.16);
+  --text: #e6edf5;
+  --text-muted: #9aabbe;
+  --text-faint: #8395aa;
+  --accent: #45c4e8;
+  --accent-fg: #04202b;
+  --accent-soft: rgba(69, 196, 232, 0.12);
+  --accent-line: #45c4e8;
+  --glow: rgba(69, 196, 232, 0.35);
+  --success: #3ed598;
+  --success-soft: rgba(62, 213, 152, 0.12);
+  --warn: #f5b843;
+  --warn-soft: rgba(245, 184, 67, 0.12);
+  --danger: #ff7a70;
+  --danger-soft: rgba(255, 122, 112, 0.12);
+  --route-iepl: #a78bfa;
+  --route-iplc: #5fb6ee;
+  --route-relay: #43c9bc;
+  --route-direct: #8fa2b8;
+  --code-bg: #050a12;
+  --code-fg: #d6e4f0;
+  --code-key: #7cd6f5;
+  --code-str: #8fd9a8;
+  --code-dim: #6e8299;
+}

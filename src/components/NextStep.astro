@@ -1,0 +1,61 @@
+---
+/**
+ * 「下一步」区块。全站最高原则的实现:每个页面既解决一个问题,也为用户准备好最合理的下一步。
+ * 构建期脚本校验 href 可达、非自身、非 /search/ 与 /tags/(内链规则 R02、R15、R16)。
+ */
+interface Props {
+  label: string;
+  href: string;
+  reason: string;
+  /** 次要出口,给需求分叉的用户,例如「已经解决了」与「还是不行」 */
+  alt?: { label: string; href: string };
+}
+const { label, href, reason, alt } = Astro.props;
+---
+
+<aside class="nextstep rail-section is-live" aria-label="建议的下一步">
+  <span class="tag-en">Next Step</span>
+  <p class="ns-reason">{reason}</p>
+  <div class="ns-actions">
+    <a class="btn btn-primary" href={href}>
+      {label}
+      <svg class="arrow" width="15" height="11" viewBox="0 0 16 12" aria-hidden="true">
+        <path
+          d="M0 6h13M9 1.5 14.5 6 9 10.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </a>
+    {
+      alt && (
+        <a class="btn btn-ghost" href={alt.href}>
+          {alt.label}
+        </a>
+      )
+    }
+  </div>
+</aside>
+
+<style>
+  .nextstep {
+    margin-top: var(--s7);
+    padding-top: var(--s5);
+    padding-bottom: var(--s5);
+    border-top: 1px solid var(--hairline);
+  }
+  .ns-reason {
+    margin: 10px 0 16px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+    max-width: 62ch;
+  }
+  .ns-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+</style>

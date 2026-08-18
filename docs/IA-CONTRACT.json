@@ -1,0 +1,985 @@
+﻿{
+  "urlContract": [
+    {
+      "pattern": "/",
+      "pageType": "home",
+      "example": "/",
+      "primaryKeyword": "2026机场推荐",
+      "category": "global",
+      "intent": "commercial"
+    },
+    {
+      "pattern": "/rankings/",
+      "pageType": "rankings-index",
+      "example": "/rankings/",
+      "primaryKeyword": "机场排行榜",
+      "category": "global",
+      "intent": "commercial"
+    },
+    {
+      "pattern": "/rankings/[slug]/",
+      "pageType": "ranking",
+      "example": "/rankings/cheap/",
+      "primaryKeyword": "便宜机场推荐",
+      "category": "global",
+      "intent": "commercial"
+    },
+    {
+      "pattern": "/rankings/[slug]/  (受控 slug 白名单)",
+      "pageType": "ranking",
+      "example": "/rankings/iepl/",
+      "primaryKeyword": "IEPL机场推荐",
+      "category": "global",
+      "intent": "commercial"
+    },
+    {
+      "pattern": "/rankings/[slug]/  (场景榜)",
+      "pageType": "ranking-scenario",
+      "example": "/rankings/chatgpt/",
+      "primaryKeyword": "ChatGPT机场推荐",
+      "category": "global",
+      "intent": "commercial"
+    },
+    {
+      "pattern": "/reviews/",
+      "pageType": "category-index",
+      "example": "/reviews/",
+      "primaryKeyword": "机场评测",
+      "category": "reviews",
+      "intent": "comparison"
+    },
+    {
+      "pattern": "/reviews/[brand]/",
+      "pageType": "brand-review",
+      "example": "/reviews/guangsuyun/",
+      "primaryKeyword": "光速云怎么样",
+      "category": "reviews",
+      "intent": "comparison"
+    },
+    {
+      "pattern": "/compare/",
+      "pageType": "category-index",
+      "example": "/compare/",
+      "primaryKeyword": "机场对比",
+      "category": "compare",
+      "intent": "comparison"
+    },
+    {
+      "pattern": "/compare/[brandA]-vs-[brandB]/",
+      "pageType": "brand-versus",
+      "example": "/compare/guangsuyun-vs-xingdaomeng/",
+      "primaryKeyword": "光速云和星岛梦哪个好",
+      "category": "compare",
+      "intent": "comparison"
+    },
+    {
+      "pattern": "/compare/[slug]/",
+      "pageType": "topic-compare",
+      "example": "/compare/iepl-vs-iplc/",
+      "primaryKeyword": "IEPL和IPLC区别",
+      "category": "compare",
+      "intent": "comparison"
+    },
+    {
+      "pattern": "/guides/",
+      "pageType": "category-index",
+      "example": "/guides/",
+      "primaryKeyword": "客户端教程",
+      "category": "guides",
+      "intent": "tutorial"
+    },
+    {
+      "pattern": "/guides/[pillar]/",
+      "pageType": "pillar-hub",
+      "example": "/guides/clash/",
+      "primaryKeyword": "Clash教程",
+      "category": "guides",
+      "intent": "tutorial"
+    },
+    {
+      "pattern": "/guides/[pillar]/[slug]/",
+      "pageType": "tutorial-post",
+      "example": "/guides/clash/import-subscription/",
+      "primaryKeyword": "Clash导入订阅",
+      "category": "guides",
+      "intent": "tutorial"
+    },
+    {
+      "pattern": "/guides/[slug]/",
+      "pageType": "tutorial-post",
+      "example": "/guides/subscription-converter/",
+      "primaryKeyword": "机场订阅转换",
+      "category": "guides",
+      "intent": "tutorial"
+    },
+    {
+      "pattern": "/protocols/",
+      "pageType": "category-index",
+      "example": "/protocols/",
+      "primaryKeyword": "代理协议",
+      "category": "protocols",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/protocols/[pillar]/",
+      "pageType": "pillar-hub",
+      "example": "/protocols/dedicated-line/",
+      "primaryKeyword": "专线机场是什么",
+      "category": "protocols",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/protocols/[slug]/",
+      "pageType": "knowledge-post",
+      "example": "/protocols/vless/",
+      "primaryKeyword": "VLESS是什么",
+      "category": "protocols",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/troubleshooting/",
+      "pageType": "category-index",
+      "example": "/troubleshooting/",
+      "primaryKeyword": "机场连不上怎么办",
+      "category": "troubleshooting",
+      "intent": "problem"
+    },
+    {
+      "pattern": "/troubleshooting/[slug]/",
+      "pageType": "problem-post",
+      "example": "/troubleshooting/nodes-all-timeout/",
+      "primaryKeyword": "节点全部超时怎么办",
+      "category": "troubleshooting",
+      "intent": "problem"
+    },
+    {
+      "pattern": "/free-nodes/",
+      "pageType": "category-index",
+      "example": "/free-nodes/",
+      "primaryKeyword": "免费节点",
+      "category": "free-nodes",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/free-nodes/[slug]/",
+      "pageType": "free-node-safety-post",
+      "example": "/free-nodes/risks/",
+      "primaryKeyword": "免费节点安全吗",
+      "category": "free-nodes",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/unlock/",
+      "pageType": "category-index",
+      "example": "/unlock/",
+      "primaryKeyword": "流媒体解锁机场",
+      "category": "unlock",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/unlock/[pillar]/",
+      "pageType": "pillar-hub",
+      "example": "/unlock/chatgpt/",
+      "primaryKeyword": "ChatGPT国内怎么用",
+      "category": "unlock",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/unlock/[pillar]/[slug]/",
+      "pageType": "unlock-post",
+      "example": "/unlock/chatgpt/network-error/",
+      "primaryKeyword": "ChatGPT网络错误",
+      "category": "unlock",
+      "intent": "problem"
+    },
+    {
+      "pattern": "/unlock/[slug]/",
+      "pageType": "unlock-post",
+      "example": "/unlock/netflix-region-detection/",
+      "primaryKeyword": "Netflix地区判定",
+      "category": "unlock",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/risk/",
+      "pageType": "category-index",
+      "example": "/risk/",
+      "primaryKeyword": "机场避坑指南",
+      "category": "risk",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/risk/[slug]/",
+      "pageType": "risk-post",
+      "example": "/risk/how-to-spot-exit-scam/",
+      "primaryKeyword": "机场跑路征兆",
+      "category": "risk",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/basics/",
+      "pageType": "category-index",
+      "example": "/basics/",
+      "primaryKeyword": "机场是什么",
+      "category": "basics",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/basics/[pillar]/",
+      "pageType": "pillar-hub",
+      "example": "/basics/getting-started/",
+      "primaryKeyword": "新手怎么选机场",
+      "category": "basics",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/basics/[slug]/",
+      "pageType": "knowledge-post",
+      "example": "/basics/what-is-an-airport/",
+      "primaryKeyword": "机场是什么意思",
+      "category": "basics",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/[category]/[pillar]/  (通用规则,适用全部 9 个 category)",
+      "pageType": "pillar-hub",
+      "example": "/troubleshooting/connection-failed/",
+      "primaryKeyword": "代理连不上排查",
+      "category": "全部 9 个 category",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/[category]/[pillar]/[slug]/  (通用规则)",
+      "pageType": "cluster-post",
+      "example": "/guides/shadowrocket/qr-code-import/",
+      "primaryKeyword": "Shadowrocket二维码导入",
+      "category": "全部 9 个 category",
+      "intent": "tutorial"
+    },
+    {
+      "pattern": "/tags/",
+      "pageType": "tag-index",
+      "example": "/tags/",
+      "primaryKeyword": "标签索引",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/tags/[tag]/",
+      "pageType": "tag-archive",
+      "example": "/tags/hysteria2/",
+      "primaryKeyword": "Hysteria2相关内容",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/search/",
+      "pageType": "search",
+      "example": "/search/",
+      "primaryKeyword": "站内搜索",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/about/",
+      "pageType": "trust",
+      "example": "/about/",
+      "primaryKeyword": "关于机场实测室",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/editorial-policy/",
+      "pageType": "trust",
+      "example": "/editorial-policy/",
+      "primaryKeyword": "评测方法与编辑规范",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/authors/",
+      "pageType": "trust-index",
+      "example": "/authors/",
+      "primaryKeyword": "评测团队",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/authors/[slug]/",
+      "pageType": "author-profile",
+      "example": "/authors/editorial-team/",
+      "primaryKeyword": "作者简介",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/contact/",
+      "pageType": "trust",
+      "example": "/contact/",
+      "primaryKeyword": "联系与纠错",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/disclaimer/",
+      "pageType": "trust",
+      "example": "/disclaimer/",
+      "primaryKeyword": "免责声明与合作披露",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/404/",
+      "pageType": "not-found",
+      "example": "/404/",
+      "primaryKeyword": "无",
+      "category": "global",
+      "intent": "informational"
+    },
+    {
+      "pattern": "/rss.xml 与 /sitemap-index.xml",
+      "pageType": "feed",
+      "example": "/rss.xml",
+      "primaryKeyword": "无",
+      "category": "global",
+      "intent": "informational"
+    }
+  ],
+  "pageTemplates": [
+    {
+      "name": "HomeTemplate",
+      "usedBy": "/",
+      "blocks": [
+        "hero-answer(H1「2026 机场推荐」+ 3 句结论先行 + 最后复测日期 + 合作披露一行)",
+        "quick-picker(7 个场景按钮:新手/便宜/稳定/AI/流媒体/游戏/多设备)",
+        "top-ranking-table(总榜 Top 8,列:价格/月流量/每GB成本/线路类型/协议/客户端/AI/流媒体)",
+        "beginner-path(三步走:先懂概念 → 再选机场 → 再装客户端)",
+        "brand-grid-16(16 家一句话定位 + 适合谁 + 不适合谁)",
+        "how-we-test(实测口径摘要:哪些是厂商声明、哪些是本站实测)",
+        "scenario-hubs(AI / 流媒体 / 游戏 / 办公 四张卡)",
+        "client-tutorials(Clash / Shadowrocket / v2rayN 三入口 + 平台矩阵)",
+        "troubleshooting-triage(6 个最高频故障直达)",
+        "risk-and-free-nodes(免费节点风险 + 跑路预警双卡)",
+        "compare-entry(热门两两对比 6 条 + 主题对比 4 条)",
+        "protocol-primer(协议 30 秒速读表)",
+        "faq(10 问,FAQPage)",
+        "update-log(最近 8 条更新与复测记录)",
+        "final-cta(按人群三选一:新手榜 / 性价比榜 / 专线榜)"
+      ],
+      "ctaStrategy": "CTA 强度 L4(最强)。首屏 hero 下方即出现榜单表格,表格每行含「查看评测」站内链 + 「前往官网」外链(sponsored nofollow);正文中段 brand-grid 再出现一次;页尾 final-cta 收口。但外链按钮全站统一文案「前往官网」,不使用「立即注册」「限时优惠」等催单话术,合作披露必须在首屏可见。",
+      "nextStepRule": "首页不设单一 nextStep,而是按 quick-picker 的 7 个场景分流:新手 → /basics/getting-started/;便宜 → /rankings/cheap/;稳定 → /rankings/stable/;AI → /unlock/chatgpt/;流媒体 → /rankings/netflix/;游戏 → /rankings/gaming/;多设备 → /compare/。任何点击都必须落在站内页面,不允许首屏直接外跳。"
+    },
+    {
+      "name": "RankingTemplate",
+      "usedBy": "/rankings/ 与 /rankings/[slug]/(cheap / stable / premium / value / iepl / iplc / unlimited-duration / beginner / chatgpt / netflix / gaming)",
+      "blocks": [
+        "answer-box(30-80 字直答:这个榜第一名是谁、为什么)",
+        "criteria(本榜排序依据与权重,可核对)",
+        "ranking-table(可排序,列随榜种切换)",
+        "entry-cards(每名一卡:适合谁 / 不适合谁 / 关键规格 / 查看评测 / 前往官网)",
+        "counterpoint(这个榜的代价:便宜榜讲限速超售,高端榜讲价格门槛)",
+        "how-to-verify(自己验证的 4 个动作:试用、测晚高峰、测解锁、看退款条款)",
+        "faq(8-12 问)",
+        "related-rankings(横向 3 个其他榜)",
+        "next-step(单一主推下一步)"
+      ],
+      "ctaStrategy": "L4。首屏表格即含外链按钮,每张 entry-card 一个外链。硬约束:counterpoint 区块必须在 entry-cards 之后、faq 之前出现,不允许只讲优点;16 家一律标注「推广合作」,禁止「自营」。",
+      "nextStepRule": "默认指向本榜的「反面榜」形成横向闭环(cheap → stable,premium → value,iepl → iplc);若用户已在末端榜(beginner),则指向 /guides/ 让其完成安装。"
+    },
+    {
+      "name": "BrandReviewTemplate",
+      "usedBy": "/reviews/[brand]/,16 个固定 slug",
+      "blocks": [
+        "answer-box(一句话结论 + 推荐/谨慎/不推荐 三态标签 + 复测日期)",
+        "at-a-glance(规格速览表:价格档、流量、倍率、设备数、线路、协议、客户端)",
+        "who-is-it-for(适合谁 / 明确不适合谁)",
+        "plans-and-pricing(套餐与每GB成本换算)",
+        "lines-and-nodes(线路与节点:哪些是厂商声明、哪些实测)",
+        "client-support(客户端支持矩阵 + 对应教程链接)",
+        "streaming-and-ai(流媒体与 AI 场景实测结论)",
+        "how-to-use(购买后 4 步上手,链到对应教程)",
+        "pros-cons(优缺点,缺点不得少于 3 条)",
+        "risk-notes(风险信息:运营时长、退款条款、备用地址、已知投诉)",
+        "measurement-disclosure(数据来源与实测方法披露)",
+        "faq(10-15 问,含「XX 安全吗 / 靠谱吗 / 会跑路吗」)",
+        "alternatives(同价位替代 3 家 + 两两对比链接)",
+        "next-step"
+      ],
+      "ctaStrategy": "L3。外链出现 2 次:at-a-glance 表格右侧 1 次,页尾 alternatives 之前 1 次,均为「前往官网」并带 sponsored nofollow。禁止 AggregateRating(无真实用户评分数据),只输出本站署名 Review。合作披露必须在 answer-box 内。",
+      "nextStepRule": "按三态标签分流:推荐 → 该品牌所属场景榜 /rankings/[scene]/;谨慎 → 同价位 /compare/[this]-vs-[peer]/;不推荐 → /rankings/[同需求替代榜]/。永远不把「不推荐」页面的 nextStep 指向官网。"
+    },
+    {
+      "name": "VersusTemplate",
+      "usedBy": "/compare/[brandA]-vs-[brandB]/",
+      "blocks": [
+        "answer-box(直接给「多数情况下选谁」+ 例外条件)",
+        "verdict-by-scenario(6 个场景各判一次:新手/预算/晚高峰/AI/流媒体/多设备)",
+        "spec-diff-table(逐项差异,相同项折叠,只突出不同)",
+        "price-normalization(统一换算到每月每GB,消除套餐口径差异)",
+        "line-and-protocol-diff",
+        "measured-diff(实测差异,含未测项显式标注「未实测」)",
+        "pros-cons-pair(两栏对照)",
+        "who-should-pick-a / who-should-pick-b",
+        "faq(6-10 问)",
+        "third-option(如果两个都不合适,给第 3 家)",
+        "next-step"
+      ],
+      "ctaStrategy": "L3。两个品牌的外链严格对称出现(同样位置、同样文案、同样次数),不允许一方多曝光。verdict-by-scenario 必须至少有 1 个场景判给 B,否则视为伪对比,构建期人工审校标记。",
+      "nextStepRule": "nextStep 指向胜出方的 /reviews/[winner]/(而非官网),让用户先看完整评测再决定;若结论是「都不合适」,则指向 third-option 对应的榜单页。"
+    },
+    {
+      "name": "TopicCompareTemplate",
+      "usedBy": "/compare/[slug]/(如 iepl-vs-iplc、monthly-vs-annual、cheap-vs-stable、transit-vs-direct)",
+      "blocks": [
+        "answer-box",
+        "definition-pair(两个概念各 1 段中性定义)",
+        "diff-table(维度对照)",
+        "cost-implication(对钱包的实际影响)",
+        "who-needs-which(按人群给判断规则)",
+        "common-misconceptions(3-5 个误区)",
+        "brand-mapping(哪些家属于 A 类、哪些属于 B 类,只给分类不排序)",
+        "faq",
+        "next-step"
+      ],
+      "ctaStrategy": "L2。正文全程无外链;brand-mapping 只给站内 /reviews/[brand]/ 链接与分类归属,不出现价格按钮。页尾允许 1 个通向对应榜单的文字型引导。",
+      "nextStepRule": "指向与用户判断结果匹配的榜单页(如 iepl-vs-iplc → /rankings/iepl/);若该主题无对应榜,则指向 /compare/ 或同 pillar 的下一篇。"
+    },
+    {
+      "name": "CategoryIndexTemplate",
+      "usedBy": "/reviews/ /compare/ /guides/ /protocols/ /troubleshooting/ /free-nodes/ /unlock/ /risk/ /basics/",
+      "blocks": [
+        "category-answer(本栏目解决什么问题,60-120 字)",
+        "pillar-grid(本栏目全部 pillar hub,必须 100% 覆盖)",
+        "start-here(3 篇必读入口,按新手顺序排列)",
+        "post-list(按 updatedDate 倒序,分页,每条带 answer 摘要)",
+        "sibling-categories(相邻栏目 3 个,构成横向流动)",
+        "faq(5-8 问)",
+        "next-step"
+      ],
+      "ctaStrategy": "跟随栏目 intent:reviews / compare 为 L3(可出品牌卡);guides 为 L2;protocols / basics / unlock / risk 为 L1;free-nodes 为 L0(整页不出现任何品牌卡与外链)。",
+      "nextStepRule": "指向本栏目排序第一的 pillar hub;free-nodes 栏目固定指向 /free-nodes/risks/,risk 栏目固定指向 /risk/how-to-spot-exit-scam/。"
+    },
+    {
+      "name": "PillarHubTemplate",
+      "usedBy": "/[category]/[pillar]/(如 /guides/clash/、/unlock/chatgpt/、/basics/getting-started/、/protocols/dedicated-line/)",
+      "blocks": [
+        "answer-box(这个主题一次讲清的核心结论)",
+        "learning-path(有序步骤图:下载 → 安装 → 订阅 → 配置 → 使用 → 排障,每步链到 cluster 文章)",
+        "cluster-list(全部子文章,按 readingOrder,未列出的自动追加)",
+        "quick-reference(速查表:版本/平台/端口/常见参数)",
+        "common-errors(本主题 top 5 报错,链到 troubleshooting)",
+        "faq(10-15 问)",
+        "cross-pillar(相关 pillar 2-3 个)",
+        "next-step"
+      ],
+      "ctaStrategy": "按 pillar 所在栏目的 intent 取值,最高不超过 L2。pillar hub 是内链枢纽而非成交页:允许在 learning-path 的「订阅」这一步出现 1 个「还没有订阅链接?」的软引导卡片,指向站内榜单,不直接外链。",
+      "nextStepRule": "指向 learning-path 的第 1 篇 cluster 文章;若用户来自搜索且落在 hub,nextStep 保持为第 1 步,不跳步。"
+    },
+    {
+      "name": "TutorialTemplate",
+      "usedBy": "/guides/[slug]/ 与 /guides/[pillar]/[slug]/,intent=tutorial",
+      "blocks": [
+        "answer-box(这篇能让你完成什么,预计耗时)",
+        "prerequisites(开始前需要准备什么:设备、系统版本、订阅链接)",
+        "steps(编号步骤,每步 1 图 1 句校验点「此时你应该看到…」)",
+        "verify(怎么确认成功:3 条自检)",
+        "common-errors(本教程步骤对应的 5 个报错 + 一句话解法 + 深链 troubleshooting)",
+        "platform-variants(其他平台/版本差异)",
+        "faq(6-10 问)",
+        "related-in-pillar(同 pillar 上一步 / 下一步)",
+        "next-step"
+      ],
+      "ctaStrategy": "L2。仅在 prerequisites 区块出现一次「如果你还没有订阅链接」的条件式软引导(文字 + 最多 3 张品牌卡,不含价格按钮),正文步骤区严禁插入任何商业模块。页尾不再重复。",
+      "nextStepRule": "优先指向同 pillar 的下一步教程;若本篇已是最后一步,则指向本客户端的 /troubleshooting/ 对应 pillar;两者都不存在时指向所属 pillar hub。"
+    },
+    {
+      "name": "ProblemTemplate",
+      "usedBy": "/troubleshooting/[slug]/ 与 intent=problem 的 unlock 文章",
+      "blocks": [
+        "answer-box(最可能的原因 + 一句话先做什么)",
+        "symptom-match(你的现象是哪一种,3-5 个分支)",
+        "layered-checklist(分层排查:客户端设置 → 系统代理/DNS → 订阅 → 节点 → 线路本身,每层给判定条件)",
+        "fix-by-branch(每个分支的具体解法)",
+        "if-still-broken(仍未解决时的判定树:确认是机场侧问题的 3 个证据)",
+        "prevention(下次怎么避免)",
+        "faq(8-12 问)",
+        "related-problems(相邻故障 3 篇)",
+        "next-step"
+      ],
+      "ctaStrategy": "L2,且位置被严格约束:商业引导只允许出现在 if-still-broken 分支中「已确认是线路/机场侧问题」的那一支,此时可升到 L3(3 张品牌卡 + 稳定榜链接)。前面所有免费解法必须先给足;answer-box 与 layered-checklist 区块内出现任何品牌卡即构建失败。",
+      "nextStepRule": "解决路径 → 指向对应客户端教程完成剩余配置;未解决路径 → 指向 /risk/ 判断机场是否出问题,再由 risk 页导向 /rankings/stable/。默认 nextStep 取「解决路径」,不默认假设用户要换机场。"
+    },
+    {
+      "name": "KnowledgeTemplate",
+      "usedBy": "/basics/[slug]/ 与 /protocols/[slug]/,intent=informational",
+      "blocks": [
+        "answer-box(一句话定义 + 一句话为什么你需要知道)",
+        "plain-explanation(不用术语讲一遍)",
+        "technical-detail(进阶读者的准确描述)",
+        "analogy-or-diagram",
+        "when-it-matters(什么场景下这个知识影响你的选择)",
+        "misconceptions(常见误解 3-5 条)",
+        "term-links(相关术语内链,每个术语首次出现必须链到其定义页)",
+        "faq(6-10 问)",
+        "next-step"
+      ],
+      "ctaStrategy": "L1(最弱)。整页不出现品牌卡、不出现价格、不出现任何外链。只允许在页尾 next-step 出现一条纯文字的下一步链接。这是全站信任基座,商业污染即失效。",
+      "nextStepRule": "指向同 pillar 的下一篇知识文章,形成阅读链;pillar 读完后指向该 pillar 对应的 tutorial 或 compare 页(intent 每次只允许上升一级,informational → tutorial/comparison,不得直接跳到 commercial)。"
+    },
+    {
+      "name": "FreeNodeSafetyTemplate",
+      "usedBy": "/free-nodes/ 与 /free-nodes/[slug]/",
+      "blocks": [
+        "answer-box(直答:免费节点能不能用、代价是什么)",
+        "no-distribution-notice(本站不提供任何节点与订阅链接的明确声明,置于首屏)",
+        "how-they-work(免费节点从哪来:公益、试用引流、蜜罐、被入侵主机)",
+        "risk-breakdown(隐私 / 中间人 / 账号封禁 / 法律与合规 / 稳定性 五类风险分述)",
+        "what-not-to-do(绝对不要在免费节点上做的 6 件事:登录主力账号、支付、办公、下载敏感文件…)",
+        "self-check(如何自查你现在用的免费节点是否安全)",
+        "cost-comparison(免费的隐性成本 vs 最低档付费的显性成本,给数字)",
+        "faq(10-15 问)",
+        "next-step"
+      ],
+      "ctaStrategy": "正文区 L0:整页禁止出现订阅协议字符串(ss:// vmess:// trojan:// vless:// hysteria2:// clash://)、禁止外链任何机场官网、禁止品牌卡。仅在 cost-comparison 之后允许升到 L1:一条纯文字引导到 /rankings/cheap/,措辞为「如果你只是想省钱」,不得使用「推荐购买」。",
+      "nextStepRule": "固定指向 /basics/free-vs-paid/(若不存在则 /basics/getting-started/),让用户先完成认知转换;由那一页再决定是否进入 /rankings/cheap/。免费节点页永远不直接 nextStep 到榜单。"
+    },
+    {
+      "name": "UnlockTemplate",
+      "usedBy": "/unlock/[slug]/ 与 /unlock/[pillar]/[slug]/",
+      "blocks": [
+        "answer-box(能不能访问 + 关键前提是什么)",
+        "why-blocked(平台的地区判定逻辑:IP 类型、DNS、账号注册地、支付方式)",
+        "requirements(对网络环境的硬性要求:原生IP / 落地地区 / 是否容忍中转 / 延迟容忍度)",
+        "self-diagnosis(怎么判断你当前的失败原因属于哪一类)",
+        "step-by-step(可执行的验证与设置步骤)",
+        "airport-attribute-mapping(把上面的要求翻译成机场选购条款:该看规格表的哪一栏)",
+        "faq(8-12 问)",
+        "related-unlock(相关平台 3 篇)",
+        "next-step"
+      ],
+      "ctaStrategy": "L2,可在 airport-attribute-mapping 区块升到 L3(3 张符合该场景硬性要求的品牌卡,必须标注筛选条件,如「支持原生 IP 落地」)。前置的 why-blocked 与 self-diagnosis 必须完整给出免费可自查的内容,不允许把「换机场」当第一解法。",
+      "nextStepRule": "指向对应场景榜 /rankings/[chatgpt|netflix|gaming]/;若该平台无专属榜,则指向 /unlock/ 的 pillar hub。"
+    },
+    {
+      "name": "RiskAlertTemplate",
+      "usedBy": "/risk/[slug]/",
+      "blocks": [
+        "answer-box(风险结论 + 你现在该做的一件事)",
+        "signal-list(可观察的征兆清单,每条给判定标准而非感觉)",
+        "case-pattern(典型套路拆解,不点名未经核实的品牌)",
+        "damage-control(已经踩坑怎么止损:退款、换绑、数据清理)",
+        "payment-strategy(降低损失的付款策略:月付优先、避免长年付、支付方式选择)",
+        "backup-plan(备用方案:备用订阅、备用地址、多家并行的成本)",
+        "verification-policy(本站如何核实风险信息与更正机制)",
+        "faq(8-12 问)",
+        "next-step"
+      ],
+      "ctaStrategy": "L1。禁止用风险恐吓直接导购:整页不出现「立即更换为 XX」类话术,不出现品牌卡。仅 backup-plan 中允许 1 条通向 /rankings/stable/ 的文字链,措辞为中性的「稳定性优先的选择方法」。未经核实的跑路指控一律不写具体品牌名。",
+      "nextStepRule": "指向 /editorial-policy/(说明本站如何核实与更正)或 /basics/how-to-choose/,让用户带着判断标准回到选购流程,而不是直接进榜单。"
+    },
+    {
+      "name": "TagArchiveTemplate",
+      "usedBy": "/tags/ 与 /tags/[tag]/",
+      "blocks": [
+        "tag-title(标签名 + 一句话说明这个标签覆盖什么)",
+        "post-list(该标签下全部文章,按栏目分组)",
+        "related-tags(相关标签 5-8 个)",
+        "canonical-hub(指向该标签最接近的 pillar hub 或栏目页)"
+      ],
+      "ctaStrategy": "L0。纯索引页,无 FAQ、无品牌、无外链。全部 /tags/* 输出 noindex,follow。",
+      "nextStepRule": "固定指向 canonical-hub(该标签映射的 pillar hub;无映射时指向所属栏目页)。标签页不得作为任何页面的 nextStep 目标。"
+    },
+    {
+      "name": "SearchTemplate",
+      "usedBy": "/search/",
+      "blocks": [
+        "search-input(Pagefind)",
+        "hot-questions(预置 12 个高频问题,直接作为查询入口)",
+        "browse-by-category(9 个栏目直达)",
+        "browse-by-scenario(场景入口:新手/AI/流媒体/故障/免费节点)"
+      ],
+      "ctaStrategy": "L0。无商业模块。noindex, follow。",
+      "nextStepRule": "无结果时必须给出 3 条兜底路径:/basics/getting-started/、/troubleshooting/、/contact/(提问入口),严禁出现空白结果死胡同。"
+    },
+    {
+      "name": "TrustPageTemplate",
+      "usedBy": "/about/ /editorial-policy/ /disclaimer/ /contact/ /authors/",
+      "blocks": [
+        "page-answer(这个页面回答什么)",
+        "main-content(分节正文:about=我们是谁与做什么;editorial-policy=评测流程、数据口径、复测周期、更正机制;disclaimer=数据免责与推广合作披露;contact=纠错与反馈渠道)",
+        "affiliate-disclosure(统一披露模块:16 家均为推广合作,佣金不影响排序依据,排序依据可核对)",
+        "correction-log(更正记录,editorial-policy 与 disclaimer 必备)",
+        "team(评测人员与分工,链到 /authors/[slug]/)",
+        "next-step"
+      ],
+      "ctaStrategy": "L0。信任页出现任何品牌卡、任何外链按钮即构建失败。affiliate-disclosure 是本站可信度的锚,措辞必须与首页、榜单页、评测页的披露文案完全一致(同一常量渲染)。",
+      "nextStepRule": "/about/ → /editorial-policy/;/editorial-policy/ → /authors/;/authors/ → /reviews/;/disclaimer/ → /editorial-policy/;/contact/ → /search/。形成信任页内部闭环后回流内容区。"
+    },
+    {
+      "name": "AuthorProfileTemplate",
+      "usedBy": "/authors/[slug]/",
+      "blocks": [
+        "person-header(姓名、角色、专长领域)",
+        "bio",
+        "review-process(该作者负责的审核方式)",
+        "expertise-tags",
+        "authored-posts(该作者产出的文章列表)",
+        "contact-line(纠错联系方式)"
+      ],
+      "ctaStrategy": "L0。纯 E-E-A-T 页面,无商业模块。",
+      "nextStepRule": "指向该作者 expertise 覆盖面最广的那个 pillar hub;无法判定时指向 /editorial-policy/。"
+    }
+  ],
+  "internalLinkRules": [
+    "R01 relatedSlugs 下限与同 pillar 约束:每篇 post 的 relatedSlugs 长度 ≥ 2;若 post.pillar !== null,其中至少 1 条目标文章的 pillar 必须等于本篇 pillar;若 post.pillar === null,则 relatedSlugs 全部条目必须与本篇 category 相同。任一不满足 → build error。",
+    "R02 nextStep 可达性:post.nextStep.href 必须存在于构建产物的路由集合(dist 下同路径 index.html),必须以 / 开头且以 / 结尾,且不得等于本页自身 URL。指向 /search/、/tags/、/404/ 一律报错。",
+    "R03 商业强度爬升上限:定义 INTENT_RANK = {informational:0, tutorial:1, problem:1, comparison:2, commercial:3}。对每篇 post,rank(nextStep 目标页 intent) − rank(本页 intent) ≤ 1。即 informational 页不得直接 nextStep 到 /rankings/* 或 /(必须经 basics / compare / guides 中转)。",
+    "R04 孤儿页检测:构建后统计每个页面的站内入链数(排除全站导航、页脚、/tags/*、/search/、面包屑)。任何 post、pillar、brand-review、ranking 页入链数 \u003c 1 → build error。",
+    "R05 pillar 双向完整性:每个 pillar hub 的 cluster(readingOrder + 自动追加的同 pillar 文章)数量 ≥ 5;pillar hub 必须链接其全部 cluster 文章;每篇 cluster 文章必须通过面包屑第 2 级反链 pillar hub。数量不足或存在未被 hub 链接的 cluster 文章 → build error。",
+    "R06 品牌页曝光下限:每个 brand slug 的 /reviews/[brand]/ 页必须至少被 2 个 /compare/*-vs-*/ 页面和 1 个 /rankings/*/ 页面链接。16 家逐一校验,任一未达标 → build error(防止合作品牌覆盖不均)。",
+    "R07 对比页对称性:/compare/[a]-vs-[b]/ 的 frontmatter brands 数组必须恰好等于 [a, b];页面必须同时链接 /reviews/[a]/ 与 /reviews/[b]/ 各至少 1 次;两方的外部官网链接次数必须相等。不等 → build error。",
+    "R08 对比 slug 消歧:/compare/[slug]/ 中若 slug 匹配 /^([a-z0-9]+)-vs-([a-z0-9]+)$/ 且两侧均属于 BRAND_SLUGS,则必须由品牌对比数据管线生成(brand-versus 模板);若恰好一侧属于 BRAND_SLUGS → build error(歧义 URL);两侧均不属于 → 按 topic-compare 模板生成。",
+    "R09 免费节点栏目净化:category === \u0027free-nodes\u0027 的任何页面,其渲染后 HTML 中不得匹配 /(ss|ssr|vmess|vless|trojan|hysteria2?|clash|sub):\\/\\//i,不得出现任何 BRANDS[].vendor.url 的域名,不得包含品牌卡组件。命中任一 → build error。",
+    "R10 品牌外链合规:所有指向 16 家 vendor 域名的 \u003ca\u003e 必须由 BrandLink 组件渲染,输出 rel 同时包含 sponsored、nofollow、noopener,target=\"_blank\"。构建后扫描 dist 全部 HTML,任何指向 vendor 域名却缺少 sponsored 的 \u003ca\u003e → build error。同时校验该页面存在合作披露组件。",
+    "R11 品牌链接密度:同一 post 正文区(不含 related/next-step 区块)内指向同一 brand slug 的站内链接 ≤ 3 次;intent === \u0027informational\u0027 的页面 ≤ 1 次;category ∈ {basics, protocols, risk} 的页面正文区品牌卡数量 = 0。超限 → build error。",
+    "R12 栏目页覆盖完整性:每个 /[category]/ 索引页必须链接该 category 下全部 pillar hub(100% 覆盖)与最近更新的 ≥ 10 篇文章;pillar 数量与页面内链数量不一致 → build error。",
+    "R13 面包屑与 URL 逐段一致:页面 BreadcrumbList JSON-LD 的层级数必须等于 URL 路径分段数 + 1(首页),且每级 item 的 URL 必须是该 URL 的逐级前缀。不一致 → build error。",
+    "R14 slug 命名与冲突:所有 URL 段仅允许 /^[a-z0-9]+(-[a-z0-9]+)*$/;同一 category 下 post 的 slug 不得与该 category 的任一 pillar slug 相同;/reviews/ 下的一级 slug 必须且只能是 16 个 BRAND_SLUGS 之一(非品牌评测方法论内容归入 /editorial-policy/)。违反 → build error。",
+    "R15 索引页权重隔离:/tags/*、/search/、/404/ 必须输出 noindex,follow;且不得作为任何 post 的 nextStep 目标,也不得出现在正文区内链中(仅允许出现在文章 meta 标签区与页脚)。构建后扫描正文容器内的 href 前缀,命中 → build error。",
+    "R16 死胡同兜底:任何生成的页面必须至少包含 1 个站内出链(next-step 或 related 区块);构建后统计每页正文区站内出链数 = 0 → build error。这是全站最高原则「禁止内容死胡同」的机器可校验形式。"
+  ],
+  "schemaMap": [
+    {
+      "pageType": "home",
+      "jsonLdTypes": [
+        "WebSite(含 SearchAction)",
+        "Organization",
+        "ItemList(Top 榜单)",
+        "FAQPage",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "rankings-index / ranking / ranking-scenario",
+      "jsonLdTypes": [
+        "CollectionPage",
+        "ItemList(每项 Product 或 Service + Offer,价格取自 brands.ts)",
+        "FAQPage",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "brand-review",
+      "jsonLdTypes": [
+        "Review(author 为本站 Organization / Person,reviewRating 为本站评分)",
+        "Service(itemReviewed) 或 Product + Offer",
+        "FAQPage",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "brand-versus",
+      "jsonLdTypes": ["WebPage", "ItemList(两个 itemReviewed 对象)", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "topic-compare",
+      "jsonLdTypes": ["Article", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "category-index",
+      "jsonLdTypes": ["CollectionPage", "ItemList(文章列表)", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "pillar-hub",
+      "jsonLdTypes": [
+        "CollectionPage",
+        "Article",
+        "ItemList(cluster 阅读顺序)",
+        "FAQPage",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "tutorial-post",
+      "jsonLdTypes": [
+        "TechArticle",
+        "HowTo(steps 来自 frontmatter howTo)",
+        "FAQPage",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "problem-post",
+      "jsonLdTypes": [
+        "TechArticle",
+        "FAQPage",
+        "HowTo(仅当排查步骤有序且可执行时输出)",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "pageType": "knowledge-post",
+      "jsonLdTypes": ["Article", "DefinedTerm(协议/术语定义页)", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "free-node-safety-post",
+      "jsonLdTypes": ["Article", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "unlock-post",
+      "jsonLdTypes": ["Article", "FAQPage", "HowTo(仅验证/设置步骤页)", "BreadcrumbList"]
+    },
+    {
+      "pageType": "risk-post",
+      "jsonLdTypes": ["Article", "FAQPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "tag-index / tag-archive",
+      "jsonLdTypes": ["CollectionPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "search",
+      "jsonLdTypes": ["WebPage", "BreadcrumbList"]
+    },
+    {
+      "pageType": "trust(about / editorial-policy / disclaimer)",
+      "jsonLdTypes": ["AboutPage 或 WebPage", "Organization", "BreadcrumbList"]
+    },
+    {
+      "pageType": "trust(contact)",
+      "jsonLdTypes": ["ContactPage", "Organization", "BreadcrumbList"]
+    },
+    {
+      "pageType": "trust-index(authors)",
+      "jsonLdTypes": ["CollectionPage", "ItemList(Person)", "BreadcrumbList"]
+    },
+    {
+      "pageType": "author-profile",
+      "jsonLdTypes": ["ProfilePage", "Person", "BreadcrumbList"]
+    },
+    {
+      "pageType": "not-found / feed",
+      "jsonLdTypes": ["无(404 输出 noindex;rss.xml、sitemap-index.xml 不输出 JSON-LD)"]
+    }
+  ],
+  "homepageBlocks": [
+    {
+      "block": "hero-answer",
+      "purpose": "H1 直接吃「2026 机场推荐」,下方 3 句结论先行(今年怎么选、最值得注意的变化、本站数据口径),右上角显示最后复测日期与「16 家均为推广合作」披露。既满足商业词的直答需求,也让 GEO/AI 摘要能抓到完整答案。",
+      "linksTo": ["/rankings/", "/editorial-policy/", "/basics/what-is-an-airport/"]
+    },
+    {
+      "block": "quick-picker",
+      "purpose": "7 个场景按钮把混杂流量当场分流,避免新手被榜单吓退、也避免成熟用户被科普拖慢。这是首页承接两类需求的核心开关。",
+      "linksTo": [
+        "/basics/getting-started/",
+        "/rankings/cheap/",
+        "/rankings/stable/",
+        "/unlock/chatgpt/",
+        "/rankings/netflix/",
+        "/rankings/gaming/",
+        "/compare/"
+      ]
+    },
+    {
+      "block": "top-ranking-table",
+      "purpose": "承接商业词的核心区块:Top 8 可排序表格,列出价格、月流量、每GB成本、线路类型、协议、客户端支持、AI、流媒体。每行给「查看评测」站内链与「前往官网」外链,把排序依据写在表头附近保证可核对。",
+      "linksTo": [
+        "/reviews/guangsuyun/",
+        "/reviews/xingdaomeng/",
+        "/reviews/lingmao/",
+        "/reviews/feimaoyun/",
+        "/rankings/"
+      ]
+    },
+    {
+      "block": "beginner-path",
+      "purpose": "承接新手信息需求:明确写出「先懂概念 → 再选机场 → 再装客户端」三步,让完全没有知识的用户知道自己现在该看哪一页,而不是被迫先做购买决策。",
+      "linksTo": ["/basics/", "/basics/getting-started/", "/guides/"]
+    },
+    {
+      "block": "brand-grid-16",
+      "purpose": "16 家合作品牌一次性曝光,每家给「适合谁 / 不适合谁」一句话。保证权重均匀分发到全部品牌评测页,避免只有头部几家拿到内链(配合 R06)。",
+      "linksTo": [
+        "/reviews/guangsuyun/",
+        "/reviews/xingdaomeng/",
+        "/reviews/lingmao/",
+        "/reviews/feimaoyun/",
+        "/reviews/weituyun/",
+        "/reviews/yuzhouyun/",
+        "/reviews/u1s1/",
+        "/reviews/jilianyun/",
+        "/reviews/guangnianti/",
+        "/reviews/yifanyun/",
+        "/reviews/ermaoyun/",
+        "/reviews/sogoyun/",
+        "/reviews/kexinyun/",
+        "/reviews/sujie/",
+        "/reviews/kuaili/",
+        "/reviews/quanqiuyun/"
+      ]
+    },
+    {
+      "block": "how-we-test",
+      "purpose": "E-E-A-T 信任锚:摘要说明哪些数据是厂商声明、哪些是本站实测、复测周期多久一次、佣金如何不影响排序。放在榜单之后,先给结论再给依据,符合中文用户的阅读顺序。",
+      "linksTo": ["/editorial-policy/", "/authors/", "/disclaimer/"]
+    },
+    {
+      "block": "scenario-hubs",
+      "purpose": "把 AI、流媒体、游戏、办公四类高价值场景做成入口卡,承接「ChatGPT 机场 / Netflix 机场」这类既是信息需求又高度接近成交的中间词,权重导向 unlock 栏目。",
+      "linksTo": ["/unlock/chatgpt/", "/unlock/", "/rankings/netflix/", "/rankings/gaming/"]
+    },
+    {
+      "block": "client-tutorials",
+      "purpose": "承接内容矩阵第二到第四优先级(Clash / Shadowrocket / v2rayN)的巨量教程流量,并给出平台矩阵(Windows / macOS / iOS / Android)让用户自己定位。把首页权重稳定输送到 guides 栏目。",
+      "linksTo": ["/guides/clash/", "/guides/shadowrocket/", "/guides/v2rayn/", "/guides/"]
+    },
+    {
+      "block": "troubleshooting-triage",
+      "purpose": "6 个最高频故障(连不上、节点全超时、订阅失效、有节点上不了网、延迟高、官网打不开)直达,既服务已有用户,也让首页对问题型搜索有承接能力,权重导向 troubleshooting 栏目。",
+      "linksTo": [
+        "/troubleshooting/",
+        "/troubleshooting/nodes-all-timeout/",
+        "/troubleshooting/connection-failed/",
+        "/troubleshooting/subscription-failed/"
+      ]
+    },
+    {
+      "block": "risk-and-free-nodes",
+      "purpose": "双卡结构:左卡「免费节点到底能不能用」承接免费节点大流量并做安全教育,右卡「跑路征兆自查」承接避坑需求。两者都是纯信息型,负责在首页建立「这个站不只是推销」的观感。",
+      "linksTo": ["/free-nodes/", "/free-nodes/risks/", "/risk/", "/risk/how-to-spot-exit-scam/"]
+    },
+    {
+      "block": "compare-entry",
+      "purpose": "承接对比意图:6 条热门两两品牌对比 + 4 条主题对比(IEPL vs IPLC、月付 vs 年付、便宜 vs 稳定、中转 vs 直连)。这是首页到成交的第二条腿,服务已有候选名单的用户。",
+      "linksTo": [
+        "/compare/",
+        "/compare/guangsuyun-vs-xingdaomeng/",
+        "/compare/iepl-vs-iplc/",
+        "/compare/monthly-vs-annual/"
+      ]
+    },
+    {
+      "block": "protocol-primer",
+      "purpose": "协议 30 秒速读表(SS / Trojan / VMess / VLESS / Hysteria2 各一行:是什么、什么时候用、要注意什么),用最低成本把首页权重导向 protocols 知识库,同时提升整站的专业信号。",
+      "linksTo": [
+        "/protocols/",
+        "/protocols/vless/",
+        "/protocols/hysteria2/",
+        "/protocols/dedicated-line/"
+      ]
+    },
+    {
+      "block": "faq",
+      "purpose": "10 个覆盖全漏斗的问题(机场是什么、怎么选、要多少钱、安全吗、免费的行不行、买了怎么用、连不上怎么办、能不能开 ChatGPT、会不会跑路、你们怎么赚钱),输出 FAQPage 结构化数据,直接吃 GEO 与 AI 摘要位。",
+      "linksTo": ["/basics/", "/troubleshooting/", "/unlock/chatgpt/", "/disclaimer/"]
+    },
+    {
+      "block": "update-log",
+      "purpose": "最近 8 条更新与复测记录(含日期),向用户与搜索引擎证明内容在持续维护,也把首页权重分给最新文章,提升新页面收录速度。",
+      "linksTo": ["最近更新的 8 个 post URL(动态)"]
+    },
+    {
+      "block": "final-cta",
+      "purpose": "按人群三选一收口(第一次买 / 预算优先 / 稳定优先),不做统一的强推。已读到页尾的用户属于高意向,此时给分岔而非单一按钮,转化更自然也更精准。",
+      "linksTo": ["/rankings/beginner/", "/rankings/value/", "/rankings/stable/"]
+    }
+  ],
+  "conversionPaths": [
+    {
+      "entryIntent": "新手无知识入口(搜「机场是什么 / 机场怎么用 / 新手怎么选机场」)",
+      "path": [
+        "/basics/what-is-an-airport/",
+        "/basics/getting-started/",
+        "/basics/how-to-choose/",
+        "/rankings/beginner/",
+        "/reviews/[brand]/",
+        "品牌官网(sponsored)"
+      ],
+      "rationale": "前三页 CTA 强度 L1、零品牌卡、零外链,先把「机场 / 节点 / 订阅 / 客户端」的关系讲清楚,并在 how-to-choose 里交给用户一套自己的判断标准(看什么指标、怎么验证)。到达 /rankings/beginner/ 时,榜单是「你刚学会的标准的一次应用」,而不是外来的推销。用户此时已经知道自己在挑什么,推荐反而是他主动需要的下一步。intent 爬升为 0 → 0 → 0 → 3,唯一一次跳级发生在用户已具备判断力之后。"
+    },
+    {
+      "entryIntent": "教程入口(搜「Clash 教程 / Clash 导入订阅 / 小火箭怎么用」)",
+      "path": [
+        "/guides/clash/",
+        "/guides/clash/import-subscription/",
+        "prerequisites 区块的条件式软引导",
+        "/rankings/stable/ 或 /compare/",
+        "/reviews/[brand]/",
+        "品牌官网"
+      ],
+      "rationale": "教程走到「导入订阅」这一步在技术上就必须有一个订阅源,这是任务链条本身的硬缺口,不是我们制造的。软引导写成条件句「如果你还没有订阅链接」,已经有订阅的用户会直接跳过继续做步骤,不受打扰;没有的用户此刻正卡住,给出选项是帮忙而非推销。正文步骤区严禁插商业模块(R11 校验),保证教程本体的完整可用性。"
+    },
+    {
+      "entryIntent": "故障入口(搜「节点全部超时 / Clash 连不上 / 有节点但上不了网」)",
+      "path": [
+        "/troubleshooting/nodes-all-timeout/",
+        "layered-checklist(客户端 → 系统代理/DNS → 订阅 → 节点 → 线路)",
+        "分支 A:客户端侧解决 → /guides/clash/tun-mode/",
+        "分支 B:if-still-broken 判定为机场侧 → /risk/how-to-spot-exit-scam/",
+        "/rankings/stable/",
+        "/reviews/[brand]/"
+      ],
+      "rationale": "全部免费解法先给足,商业引导被模板硬性限制在「已确认是线路/机场侧问题」的那一支(answer-box 与 checklist 区块出现品牌卡即构建失败)。用户是自己一层层排查后得出「不是我的问题、是这家机场的问题」的结论,换服务的建议只是这个结论的自然延伸。默认 nextStep 取「已解决」路径,不预设用户要换机场——这一点决定了页面读起来像技术支持而不是导购。"
+    },
+    {
+      "entryIntent": "免费节点入口(搜「免费节点 / 免费 Clash 订阅 / 免费机场」)",
+      "path": [
+        "/free-nodes/",
+        "/free-nodes/risks/",
+        "/free-nodes/how-to-verify-safety/",
+        "/basics/free-vs-paid/",
+        "/rankings/cheap/",
+        "/reviews/[brand]/"
+      ],
+      "rationale": "全程不提供任何节点与订阅链接(R09 机器校验),先把风险讲透并给出可自查的方法——用户拿到了真实价值,信任成本先被支付。cost-comparison 用具体数字把「免费的隐性成本」和「10–20 元档的显性成本」并排放,价格锚点从 0 元平滑过渡而不是断崖。关键是落点选 /rankings/cheap/ 而不是稳定榜或高端榜:预算敏感的用户被引导到与其自我认知一致的价位段,不会产生「你在让我花不该花的钱」的抵触。免费节点页本身固定 nextStep 到 /basics/free-vs-paid/,让认知转换在中间页完成。"
+    },
+    {
+      "entryIntent": "AI / 流媒体入口(搜「ChatGPT 打不开 / ChatGPT 机场 / Netflix 解锁」)",
+      "path": [
+        "/unlock/chatgpt/",
+        "/unlock/chatgpt/why-blocked/",
+        "requirements(原生 IP / 落地地区 / 延迟容忍度)",
+        "airport-attribute-mapping(把要求翻译成规格表的哪一栏)",
+        "/rankings/chatgpt/",
+        "/reviews/[brand]/",
+        "品牌官网"
+      ],
+      "rationale": "用户的诉求本身是「让 ChatGPT 能用」,而能否解锁是机场的一项可核验属性(IP 类型、落地地区),不是主观偏好。airport-attribute-mapping 这个区块是关键设计:它先把用户需求翻译成客观的选购条款,再给符合条款的品牌卡并标注筛选条件。这样出现的推荐是「满足你刚确认的硬性要求的清单」,而不是「我们想卖的东西」。前置的 why-blocked 与自查步骤完整给出免费解法,不把换机场当第一解。"
+    },
+    {
+      "entryIntent": "对比入口(搜「A 和 B 哪个好 / 机场对比 / IEPL 和 IPLC 区别」)",
+      "path": [
+        "/compare/",
+        "/compare/[a]-vs-[b]/",
+        "verdict-by-scenario(6 场景逐项判定)",
+        "/reviews/[winner]/",
+        "品牌官网"
+      ],
+      "rationale": "comparison intent 的用户已经在选型末端,手上有候选名单,最需要的是差异表和明确结论——此时任何铺垫都是摩擦。所以这条路径允许 CTA 直接到 L3。可信度靠对称性守住:两方外链严格等量等位(R07),verdict-by-scenario 必须至少有一个场景判给 B,否则视为伪对比。nextStep 指向胜出方的完整评测页而不是官网,给用户最后一次核对的机会,这一步反而提高最终转化质量。"
+    },
+    {
+      "entryIntent": "长尾问答 / GEO 入口(从 AI 搜索或长尾问题直接落到某篇文章中部)",
+      "path": [
+        "任意 post 的 answer-box(30–80 字直答)",
+        "同 pillar 的 related 问题 2–3 条",
+        "pillar hub",
+        "所属栏目页",
+        "对应场景榜"
+      ],
+      "rationale": "这类用户没有经过首页,落点随机,所以每篇文章都必须自带完整的向上收敛路径。answer-box 先兑现承诺(用户来是为了一个答案),related 与面包屑把他从叶子节点提回主题枢纽,pillar hub 再按 intent 只允许上升一级(R03)导向栏目或榜单。全站禁止死胡同(R16)本质上就是为这条路径服务的:任何一篇文章都是一个可以独立开始的漏斗入口。"
+    },
+    {
+      "entryIntent": "榜单横向入口(搜「便宜机场推荐」但预算判断不成熟)",
+      "path": [
+        "/rankings/cheap/",
+        "counterpoint(便宜的代价:限速、超售、晚高峰、跑路概率)",
+        "/compare/cheap-vs-stable/",
+        "/rankings/stable/ 或返回 /rankings/cheap/",
+        "/reviews/[brand]/"
+      ],
+      "rationale": "榜单模板强制要求 counterpoint 区块出现在推荐卡之后:先满足搜索意图给出便宜的选项,再诚实地说明代价。愿意加预算的用户经由主题对比页升到稳定榜,不愿意的用户回到便宜榜按原意成交——两条路都完成转化,没有一条是被话术推着走的。这种「先给你要的,再告诉你代价」的顺序,是整站商业可信度和长期复访率的来源,也让便宜榜不至于变成劣质流量的垃圾桶。"
+    }
+  ],
+  "notes": "一、与已锁定工程事实的对齐:全部 URL 使用 trailingSlash=\u0027always\u0027、小写英文数字连字符;首页 / 直接承接「2026 机场推荐」,契约中不存在 /airport-recommendation/(源文件《机场长尾问题库》第 84 行建议的该路径已被 D8 决策废弃,若历史上生成过需 301 到 /);category 取值严格限于代码中已固定的 9 个;intent 取值严格限于 5 个;16 个品牌 slug 与 src/data/brands.ts 完全一致。\n\n二、本契约新增的两个顶层命名空间需要写入代码:\n1) /rankings/ —— 内容矩阵第一优先级里的「机场排行榜、便宜/稳定/高端/性价比/IEPL/IPLC/不限时机场推荐」是商业词主战场,但它们不属于 9 个 category 中的任何一个(compare 是横向比较,不是榜单)。因此 rankings 作为与 category 平行的受控路由存在,slug 走白名单常量 RANKING_SLUGS,建议初始值:cheap / stable / premium / value / iepl / iplc / unlimited-duration / beginner / chatgpt / netflix / gaming。\n2) 两级 pillar 路由 /[category]/[pillar]/[slug]/ —— 这是把「Pillar-Cluster 内链模型」直接编码进 URL 层级的做法,好处是面包屑、内链校验、权重归属三者天然一致(R05/R13 因此可机器校验)。代价是 post 的 slug 与同栏目 pillar 的 slug 不能重名,已写成 R14。\n\n三、需要在 content.config.ts 上补的字段(否则 R03/R06/R11 无法执行):\n- post 增加 ctaLevel: z.enum([\u0027L0\u0027,\u0027L1\u0027,\u0027L2\u0027,\u0027L3\u0027,\u0027L4\u0027]).optional(),由模板按 intent 自动推导,frontmatter 仅用于覆写与审计;\n- pillar 增加 pillarSlug 与 category 的组合唯一约束,以及 RANKING_SLUGS / BRAND_SLUGS 两个常量导出供校验脚本引用;\n- 建议新增 rankings 集合(或 src/data/rankings.ts),字段含 slug、title、criteria(排序依据与权重)、counterpoint(必填,强制反面信息)、brandOrder。\n\n四、CTA 五级强度定义(全站唯一口径,模板与校验脚本共用):\nL0 无任何商业模块(信任页、tags、search、free-nodes 正文区);\nL1 仅页尾一条纯文字下一步链接,无品牌卡、无价格、无外链(basics、protocols、risk);\nL2 页尾或条件式位置最多 3 张品牌卡,不含价格按钮、不含外链(guides、troubleshooting、topic-compare、unlock 主体);\nL3 正文中段与页尾各一个品牌模块,可出现价格与套餐,外链按钮文案统一为「前往官网」(reviews、compare、unlock 的 attribute-mapping 区块、troubleshooting 的已确认线路问题分支);\nL4 首屏即榜单/对比表 + 每行外链 + 页尾收口(首页、rankings)。\nintent → 默认 CTA 上限:informational=L1、tutorial=L2、problem=L2、comparison=L3、commercial=L4。free-nodes 栏目无视 intent 强制 L0(仅 cost-comparison 后允许一条 L1 文字链)。\n\n五、合规与内容红线(建议全部做成构建期扫描):\n- 全站禁止出现「自营」「我们的机场」「本站机场」等表述,16 家一律为推广合作,披露文案从单一常量渲染,首页、榜单页、评测页、对比页必须存在该组件;\n- 禁止输出 AggregateRating(无真实用户评分数据),brand-review 只输出本站署名 Review;\n- free-nodes 栏目禁止任何订阅协议字符串与机场官网外链(R09);\n- risk 栏目禁止对未经核实的具体品牌做跑路指控,案例一律去名化;\n- 所有实测数据必须标注采集时间与「厂商声明 / 本站实测 / 未实测」三态,measured 数据处于 review-required 状态时不得进入排行排序依据。\n\n六、关键词唯一归属:每条 urlContract 的 primaryKeyword 必须在 keyword-ledger 中唯一归属该 pattern,构建期跑一次 primaryKeyword 全站去重;/rankings/cheap/ 与 /compare/cheap-vs-stable/ 这类近义页面必须在 ledger 里明确切分(前者吃「便宜机场推荐」,后者吃「便宜机场和稳定机场怎么选」),避免自相蚕食。\n\n七、遗留路由处理:阶段 D 已产出的 37 个页面中,ranking / recommendation / knowledge / guide / troubleshooting / risk 等单数或非契约路径需按本契约重命名并配置 301(Cloudflare Pages _redirects 文件),重命名清单建议在实施前先跑一次 dist 路由 diff。"
+}

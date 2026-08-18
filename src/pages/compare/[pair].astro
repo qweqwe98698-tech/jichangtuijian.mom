@@ -1,0 +1,387 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import BrandLink from '@components/BrandLink.astro';
+import Disclosure from '@components/Disclosure.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import RouteMark from '@components/RouteMark.astro';
+import { getBrand } from '@data/brands';
+import { comparePairs, pairSlug, diffRows, scenarioVerdicts } from '@lib/compare';
+import { scoreBrand } from '@lib/scoring';
+import { articleSchema, faqSchema } from '@lib/schema';
+
+export const getStaticPaths: GetStaticPaths = () =>
+  comparePairs().map(([a, b]) => ({
+    params: { pair: pairSlug(a, b) },
+    props: { aSlug: a, bSlug: b },
+  }));
+
+interface Props {
+  aSlug: string;
+  bSlug: string;
+}
+
+const { aSlug, bSlug } = Astro.props;
+const a = getBrand(aSlug)!;
+const b = getBrand(bSlug)!;
+
+const rows = diffRows(a, b);
+const verdicts = scenarioVerdicts(a, b);
+const scoreA = scoreBrand(a);
+const scoreB = scoreBrand(b);
+
+const path = `/compare/${pairSlug(aSlug, bSlug)}/`;
+const title = `${a.name}和${b.name}哪个好?逐项对比`;
+const description = `${a.name}(${a.vendor.pricing.entryPriceCNY} 元 / ${a.vendor.pricing.trafficGB}GB)与 ${b.name}(${b.vendor.pricing.entryPriceCNY} 元 / ${b.vendor.pricing.trafficGB}GB)的价格、流量、线路、协议与场景表现逐项对照,并按 6 种使用场景分别给出该选谁的判断。`;
+
+const winsA = verdicts.filter((v) => v.winner === 'a').length;
+const winsB = verdicts.length - winsA;
+const overallWinner = scoreA.overall >= scoreB.overall ? a : b;
+
+const faq = [
+  {
+    question: `${a.name}和${b.name}到底该选哪个?`,
+    answer: `没有适用于所有人的答案。按使用场景分:${verdicts
+      .slice(0, 3)
+      .map((v) => `${v.scenario}选${v.winner === 'a' ? a.name : b.name}`)
+      .join(';')}。先确定自己属于哪一类,再回头看对照表更有效率。`,
+  },
+  {
+    question: `两者的价格能直接比较吗?`,
+    answer:
+      a.vendor.pricing.basis === b.vendor.pricing.basis
+        ? `可以。两者都是${a.vendor.pricing.basis === 'monthly' ? '月付' : '年付折算'}计价,价格口径一致。`
+        : `不能直接比。${(a.vendor.pricing.basis === 'annual-equivalent' ? a : b).name}的价格是年付折算价,前提是一次性支付一年费用;另一方是月付价,可以随时停。把两者放在一起比价会低估年付方的实际门槛。`,
+  },
+  {
+    question: `本站的对比结论是收钱写的吗?`,
+    answer: `两家都是本站的推广合作品牌,页面中的注册链接均为推广链接。正因为如此,我们把判断口径完全公开:逐项对照表只在存在客观可比口径的项目上判优劣,没有客观标准的项目一律标为持平并说明原因;场景判断也逐条给出理由。你可以按自己的需求推翻我们的结论。`,
+  },
+];
+
+const schemas = [
+  articleSchema({
+    title,
+    description,
+    path,
+    pubDate: new Date('2026-08-18'),
+    updatedDate: new Date('2026-08-18'),
+    authorName: '机场实测室编辑部',
+    authorPath: '/authors/editorial-team/',
+    section: '机场对比',
+    keywords: [`${a.name}和${b.name}`, `${a.name}对比`, `${b.name}对比`, '机场对比'],
+  }),
+  faqSchema(faq),
+];
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '机场对比', href: '/compare/' },
+  { name: `${a.name} vs ${b.name}`, href: path },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  schemas={schemas}
+  ogType="article"
+  publishedTime={new Date('2026-08-18')}
+  modifiedTime={new Date('2026-08-18')}
+>
+  <article class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Head to Head</span>
+          <h1>{title}</h1>
+          <p class="post-meta">
+            最近更新 2026-08-18 · 共 {rows.length} 项规格 · {verdicts.length} 个使用场景
+          </p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            按 {verdicts.length} 个使用场景分别判定,<strong>{a.name}</strong> 在 {winsA} 个场景中更合适,
+            <strong>{b.name}</strong> 在 {winsB} 个场景中更合适——这说明它们的差异是结构性的,不是一方全面更好。
+            如果只看综合规格的均衡程度,<strong>{overallWinner.name}</strong> 略占优 ({
+              scoreA.overall.toFixed(1)
+            } vs {scoreB.overall.toFixed(1)}),但你应该按自己的场景选,而不是按总分选。
+          </p>
+        </AnswerBox>
+
+        <div class="vs-head">
+          <div class="vs-side">
+            <RouteMark lines={a.vendor.lines} size={20} />
+            <a href={`/reviews/${a.slug}/`}>{a.name}</a>
+            <span>{a.vendor.pricing.entryPriceCNY} 元 · {a.vendor.pricing.trafficGB}GB</span>
+            <b>{scoreA.overall.toFixed(1)}</b>
+          </div>
+          <span class="vs-mark">VS</span>
+          <div class="vs-side">
+            <RouteMark lines={b.vendor.lines} size={20} />
+            <a href={`/reviews/${b.slug}/`}>{b.name}</a>
+            <span>{b.vendor.pricing.entryPriceCNY} 元 · {b.vendor.pricing.trafficGB}GB</span>
+            <b>{scoreB.overall.toFixed(1)}</b>
+          </div>
+        </div>
+
+        <h2 id="specs">逐项规格对照</h2>
+        <p>
+          「更优」只标在存在客观可比口径的项目上。协议、支付方式这类没有绝对优劣的项目一律标为持平,
+          并说明为什么不判优劣——这比强行分出胜负更有参考价值。
+        </p>
+        <div class="table-shell panel notch">
+          <div class="panel-in">
+            <div class="table-scroll">
+              <table>
+                <caption class="sr">{a.name}与{b.name}的逐项规格对照</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">对比项</th>
+                    <th scope="col">{a.name}</th>
+                    <th scope="col">{b.name}</th>
+                    <th scope="col">判定</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    rows.map((r) => (
+                      <tr>
+                        <th scope="row">{r.label}</th>
+                        <td class={r.winner === 'a' ? 'is-win' : ''}>{r.a}</td>
+                        <td class={r.winner === 'b' ? 'is-win' : ''}>{r.b}</td>
+                        <td class="verdict-cell">
+                          {r.winner === 'tie'
+                            ? '持平'
+                            : `${r.winner === 'a' ? a.name : b.name} 更优`}
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            <p class="scroll-hint">
+              <span class="line"></span>小屏可左右滑动查看完整字段<span class="line"></span>
+            </p>
+          </div>
+        </div>
+
+        <h3>为什么有些项目不判优劣</h3>
+        <ul class="note-list">
+          {
+            rows
+              .filter((r) => r.note)
+              .map((r) => (
+                <li>
+                  <strong>{r.label}:</strong>
+                  {r.note}
+                </li>
+              ))
+          }
+        </ul>
+
+        <h2 id="scenarios">按使用场景该选谁</h2>
+        <p>规格表告诉你差异在哪,但选择取决于你的用途。下面按场景逐条给出判断和理由:</p>
+        <div class="scenario-grid">
+          {
+            verdicts.map((v) => (
+              <div class="panel notch">
+                <div class="panel-in">
+                  <h3>{v.scenario}</h3>
+                  <p class="sc-winner">
+                    建议选{' '}
+                    <a href={`/reviews/${(v.winner === 'a' ? a : b).slug}/`}>
+                      {v.winner === 'a' ? a.name : b.name}
+                    </a>
+                  </p>
+                  <p class="sc-reason">{v.reason}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <h2 id="signup">两家的优惠与注册入口</h2>
+        <Disclosure />
+        <div class="signup-pair">
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>{a.name}</h3>
+              <p class="offer">{a.commercial.promoText ?? '暂无公开的新用户折扣'}</p>
+              {
+                a.commercial.promoCode && (
+                  <p class="code">
+                    优惠码 <code>{a.commercial.promoCode}</code>
+                  </p>
+                )
+              }
+              <BrandLink brand={a} label={`前往${a.name}官网`} />
+            </div>
+          </div>
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>{b.name}</h3>
+              <p class="offer">{b.commercial.promoText ?? '暂无公开的新用户折扣'}</p>
+              {
+                b.commercial.promoCode && (
+                  <p class="code">
+                    优惠码 <code>{b.commercial.promoCode}</code>
+                  </p>
+                )
+              }
+              <BrandLink brand={b} label={`前往${b.name}官网`} />
+            </div>
+          </div>
+        </div>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label={`看 ${overallWinner.name} 的完整评测`}
+          href={`/reviews/${overallWinner.slug}/`}
+          reason="对比页只能覆盖两者共有的规格维度。下单前建议再看一遍完整评测,那里有适合人群、需要权衡的地方,以及价格口径上的注意事项。"
+          alt={{ label: '再看看其他候选', href: '/compare/' }}
+        />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(24px, 3.6vw, 34px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+
+  .vs-head {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    margin: var(--s5) 0;
+    flex-wrap: wrap;
+  }
+  .vs-side {
+    flex: 1;
+    min-width: 220px;
+    display: grid;
+    gap: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .vs-side a {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .vs-side a:hover {
+    color: var(--accent);
+  }
+  .vs-side span {
+    font-size: 13.5px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .vs-side b {
+    font-size: 22px;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .vs-mark {
+    align-self: center;
+    font: 600 12px/1 var(--font-mono);
+    letter-spacing: 0.16em;
+    color: var(--text-faint);
+  }
+
+  td.is-win {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .verdict-cell {
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .note-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin: var(--s4) 0;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .note-list strong {
+    color: var(--text);
+  }
+
+  .scenario-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    margin: var(--s5) 0;
+  }
+  .scenario-grid .panel-in {
+    padding: 16px 18px;
+  }
+  .scenario-grid h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .sc-winner {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .sc-reason {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.85;
+  }
+
+  .signup-pair {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr 1fr;
+    margin: var(--s4) 0;
+  }
+  @media (max-width: 700px) {
+    .signup-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+  .signup-pair .panel-in {
+    padding: 18px 20px;
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+  }
+  .signup-pair h3 {
+    font-size: 16px;
+  }
+  .offer {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .code {
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .code code {
+    padding: 3px 8px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-chip);
+    background: var(--surface-2);
+  }
+</style>

@@ -1,0 +1,273 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import Faq from '@components/Faq.astro';
+import { BRANDS, annualEquivalentBrands, monthlyBrands, hasMeasuredData } from '@data/brands';
+import { faqSchema } from '@lib/schema';
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '数据与免责说明', href: '/disclaimer/' },
+];
+
+const total = BRANDS.length;
+const monthlyCount = monthlyBrands().length;
+const annual = annualEquivalentBrands();
+const measuredCount = BRANDS.filter(hasMeasuredData).length;
+
+/** 年付折算口径的品牌,连同一次性支付金额一起列出,避免读者只记住月度数字 */
+const annualRows = annual.map((b) => ({
+  name: b.name,
+  slug: b.slug,
+  monthly: b.vendor.pricing.entryPriceCNY,
+  traffic: b.vendor.pricing.trafficGB,
+  yearly: Math.round(b.vendor.pricing.entryPriceCNY * 12 * 100) / 100,
+}));
+
+const faq = [
+  {
+    question: '页面上的价格和我在官网看到的不一样,以哪个为准?',
+    answer:
+      '以品牌官网的结算页为准。本站的价格每月复查一次,但服务商随时可能调价、改套餐或调整活动,两次复查之间出现的变动我们不会立刻知道。下单前请务必在结算页确认最终金额、计费周期与流量额度,发现与本站不符,欢迎通过联系与纠错页告诉我们。',
+  },
+  {
+    question: '本站有没有发布过测速数据?',
+    answer:
+      '没有。数据结构里的实测层目前对全部 16 家都是 pending 状态,页面上会直接显示「尚未实测」。你在本站看到的任何速率、延迟、解锁相关表述,要么是厂商公开声明并已标注为声明,要么是方法层面的说明。我们宁可承认没测过,也不发布一次性的测速截图来充当结论。',
+  },
+  {
+    question: '通过本站链接注册,价格会更贵吗?',
+    answer:
+      '不会。推广链接不改变你的支付金额,分成由服务商从自己的收入中支付。部分品牌提供的优惠码会让实付金额低于原价,具体以结算页显示为准。需要说明的是,我们无法保证优惠码长期有效——它由服务商设置,随时可能被停用。',
+  },
+  {
+    question: '如果我买的机场跑路了,本站负责吗?',
+    answer:
+      '不负责,也没有能力负责。本站是内容站,不参与交易、不代收款项、不持有任何服务商的运营信息。我们能做的是在风险预警栏目说明常见的跑路征兆与降低损失的方法——比如不要一次性购买过长周期。购买决策与由此产生的后果由使用者自行承担。',
+  },
+];
+
+const description =
+  '说明机场实测室的数据口径:价格每月复查以官网结算页为准、年付折算价为何不能与月付价直接比较、实测层目前为空、推广链接的分成关系,以及本站不提供节点分发的边界。';
+---
+
+<BaseLayout
+  title="数据与免责说明:口径、时效与边界"
+  description={description}
+  crumbs={crumbs}
+  schemas={[faqSchema(faq)]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Disclaimer</span>
+          <h1>数据与免责说明</h1>
+          <p class="post-meta">
+            最近更新 2026-08-18 · 价格数据每月复查 · 已完成实测 {measuredCount} 家
+          </p>
+        </header>
+
+        <AnswerBox>
+          <p>
+            本站的数据有明确的边界,写在这里而不是折叠在页脚里:<strong
+              >价格每月复查,但以官网结算页为准</strong
+            >;
+            <strong>本站尚未发布任何测速与解锁实测数据</strong>,涉及这两项的表述全部是厂商声明;
+            <strong>站内品牌链接是推广链接</strong
+            >,你通过它注册我们可能获得分成,但不影响你的支付金额;
+            本站不提供任何节点或订阅地址,也不对第三方服务的可用性与持续经营负责。
+          </p>
+        </AnswerBox>
+
+        <div class="prose">
+          <h2 id="pricing">价格与套餐数据:来源、时效与口径</h2>
+          <p>
+            全部价格与流量数据来自品牌官网的公开定价页,统一取<strong>入门套餐</strong>——
+            该品牌最低档的正式套餐,不含限时秒杀、不含仅限新用户的一次性特价包。 这样取值是为了可比:A
+            家记活动价、B 家记常规价,放在一起就没有意义了。
+          </p>
+          <p>
+            复查周期是<strong>每月一次</strong
+            >。但请理解它的含义:保证的是「本站在一个月内至少核对过一次」,
+            不保证「此刻页面上的数字和官网一致」。服务商调价不会通知我们,两次复查之间存在时间差。
+            所以下单前请在结算页确认三件事——<strong>最终金额、计费周期、流量额度</strong>,
+            以结算页为准,不以本站页面、也不以官网首页的宣传价为准。
+          </p>
+          <p>
+            单位流量成本(元/GB)是本站计算的派生值,用入门价除以月流量,保留两位小数。
+            它把价格和流量压成一个可比数字,代价是完全不反映线路质量—— 什么时候会误导人,写在<a
+              href="/compare/">对照表页</a
+            >。
+          </p>
+
+          <h2 id="annual">年付折算价:最容易踩的口径陷阱</h2>
+          <p>
+            收录的 {total} 家里,{monthlyCount} 家是月付口径,{annual.length} 家是<strong
+              >年付折算口径</strong
+            >。 后者官网上写的那个很低的月度数字,前提是你<strong>一次性支付一整年</strong
+            >。当前情况是:
+          </p>
+          <ul class="notes">
+            {
+              annualRows.map((r) => (
+                <li>
+                  <strong>{r.name}</strong>:页面显示 {r.monthly} 元/月({r.traffic}GB),
+                  实际需要一次性支付约 <b>{r.yearly} 元</b>。
+                </li>
+              ))
+            }
+          </ul>
+          <p>
+            把折算后的月度数字放进月付价格排行,会让这几家显得比实际便宜得多, 而两者的<strong
+              >付款风险和资金占用完全不同</strong
+            >:月付随时可以停,年付一旦服务商跑路,
+            剩余月份的钱通常拿不回来。所以本站在所有排行与卡片里都<strong>强制分组</strong>——
+            月付一组、年付折算一组,不做混排,也不给把两种口径揉在一起的「总排行」。
+          </p>
+          <p>
+            退款条件、是否支持按月续费、中途升级如何计价,均以服务商官方说明为准,本站不作转述承诺。
+          </p>
+
+          <h2 id="measured">测速与解锁数据的性质</h2>
+          <p>
+            本站实测层对 {total} 家全部是 <code>pending</code> 状态,已完成实测的品牌数为 {
+              measuredCount
+            }。 也就是说:<strong>你在本站看不到任何速率、延迟或解锁结论</strong
+            >——没测过的东西不该出现在页面上。
+          </p>
+          <p>
+            涉及流媒体与 AI 工具的所有表述,一律标注为「厂商声明」。这类声明的可信度有天然上限,
+            原因不在厂商是否诚实,而在这件事本身就不稳定:同一条线路,出口 IP、账号注册地、
+            支付方式不同,结果可能完全不同,平台的判定策略也在持续变化。
+            <a href="/unlock/">这个栏目</a>写的是判定机制与自测方法,而不是一份「谁能解锁」的名单——
+            那种名单在写下来的当天就开始过期了。
+          </p>
+          <p>
+            将来发布实测数据时,每一条都会带上<strong>测试日期、节点区域与测试环境说明</strong>,
+            并标注是单次样本还是多次采样。一次测速代表一个时间点上的一条线路, 把它写成「实测速度 xx
+            Mbps」是对读者的误导。
+          </p>
+
+          <h2 id="affiliate">推广链接与分成关系</h2>
+          <p>
+            本站与收录的 <strong>{total} 家全部是推广合作关系</strong>,没有自营服务。
+            站内品牌注册链接是推广链接,你通过它注册我们可能获得分成。
+            这一点在每个出现此类链接的页面上都会以合作披露的形式说明,不藏在页脚。
+          </p>
+          <ul class="notes">
+            <li>
+              <strong>不影响你的价格</strong
+              >:分成由服务商从自身收入支付,你的实付金额与直接访问官网一致。
+            </li>
+            <li>
+              <strong>不影响评分</strong>:评分函数只读取厂商公开字段,结构上访问不到商业信息,
+              算法与权重全部公开在<a href="/editorial-policy/">编辑与评测规范</a>。
+            </li>
+            <li>
+              <strong>但会影响收录范围</strong
+              >:本站收录的品牌都是合作方,这意味着名单本身存在商业倾向。
+              我们不声称这份名单是全行业的穷举,只声称名单内的比较是按同一套规则做的。
+            </li>
+            <li>
+              <strong>优惠码可能失效</strong
+              >:优惠码与活动由服务商设置,随时可能调整或停用,以结算页显示为准。
+            </li>
+          </ul>
+
+          <h2 id="no-nodes">本站不提供节点分发</h2>
+          <p>
+            本站<strong>不提供、不转发、不生成</strong
+            >任何节点、订阅地址或可直接导入的配置,也没有免费共享池。
+            <a href="/free-nodes/">免费节点栏目</a
+            >写的是这类资源从哪来、为什么风险高、用过之后该做哪些检查,
+            整个栏目不会出现一条可用地址。
+          </p>
+          <p>
+            <a href="/guides/">客户端教程</a>讲的是软件怎么装、订阅怎么导入、连上没网怎么排查,
+            用的都是占位示例。
+          </p>
+
+          <h2 id="third-party">第三方服务的可用性与风险</h2>
+          <p>
+            本站是内容站:不参与交易、不代收款项、不接触服务商后台。因此对以下情况不承担责任——
+            服务商停止运营或跑路、线路劣化或节点减少、封号或限速、退款争议、支付纠纷,
+            以及任何因使用第三方服务产生的损失。
+          </p>
+          <p>
+            我们能做的只有两件事:在<a href="/risk/">风险预警</a>里说明常见的跑路征兆与降低损失的做法
+            (最实用的一条是不要一次性购买过长周期);以及在发现某家出现明显异常时,
+            把它从推荐位撤下并在页面上说明,而不是悄悄删掉。
+          </p>
+
+          <h2 id="scope">本站内容不构成什么</h2>
+          <p>
+            本站内容仅供参考,<strong>不构成任何形式的购买建议、法律意见或合规保证</strong>。
+            不同国家和地区对网络服务的规定不同,使用者应自行了解并遵守所在地的法律法规,
+            由此产生的后果自行承担。
+          </p>
+          <p>
+            最后一句最重要:本站的编辑评分衡量的是<strong>公开规格的均衡程度</strong
+            >,不是实际使用体验。
+            在实测数据补齐之前,请把本站当作一份整理过的、口径统一的资料,而不是一份验证过的结论。
+          </p>
+        </div>
+
+        <Faq items={faq} />
+
+        <NextStep
+          label="看常见的跑路征兆与避坑方法"
+          href="/risk/"
+          reason="免责说明界定的是本站的边界,而真正需要你自己防范的是服务商侧的风险。风险预警栏目写的是可以提前观察到的征兆,以及付款周期该怎么定才不至于一次亏太多。"
+          alt={{ label: '想先弄清分数怎么算的?', href: '/editorial-policy/' }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+  .notes {
+    list-style: none;
+    display: grid;
+    gap: 11px;
+    margin: var(--s4) 0 var(--s5);
+  }
+  .notes li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+  .notes strong {
+    color: var(--text);
+  }
+  .notes b {
+    color: var(--text);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+</style>

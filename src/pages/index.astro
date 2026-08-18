@@ -1,0 +1,403 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import HeroTopo from '@components/HeroTopo.astro';
+import BrandCard from '@components/BrandCard.astro';
+import FeaturedBrands from '@components/FeaturedBrands.astro';
+import { BRANDS, getBrand, annualEquivalentBrands } from '@data/brands';
+import { rankedBrands } from '@lib/scoring';
+import { itemListSchema } from '@lib/schema';
+
+/* 首页承接的最高商业价值词是「2026 机场推荐」,因此首页本身就是推荐总榜,不另建推荐页 */
+
+const monthlyRanked = rankedBrands({ basis: 'monthly' });
+
+/** 三张代表卡:分别覆盖低预算、专线稳定、大流量三种典型需求,而不是简单取总分前三 */
+const picks = [
+  { brand: getBrand('yuzhouyun')!, badge: '15 元档月付', dims: ['value', 'line'] as const },
+  { brand: getBrand('guangsuyun')!, badge: '老牌 · 年付低价', dims: ['track', 'line'] as const },
+  { brand: getBrand('yifanyun')!, badge: '月付大流量', dims: ['value', 'line'] as const },
+];
+
+const cheapestAnnual = annualEquivalentBrands().reduce((min, b) =>
+  b.vendor.pricing.entryPriceCNY < min.vendor.pricing.entryPriceCNY ? b : min
+);
+
+/* 结论段的数字全部从品牌数据派生。写死过一次价格,数据更新后正文就和规格表对不上了 */
+const budgetPicks = BRANDS.filter(
+  (b) => b.vendor.pricing.basis === 'monthly' && b.vendor.pricing.entryPriceCNY <= 15
+).sort((a, b) => a.vendor.pricing.entryPriceCNY - b.vendor.pricing.entryPriceCNY);
+
+const trafficPick = BRANDS.filter((b) => b.vendor.pricing.basis === 'monthly').reduce((max, b) =>
+  b.vendor.pricing.trafficGB > max.vendor.pricing.trafficGB ||
+  (b.vendor.pricing.trafficGB === max.vendor.pricing.trafficGB &&
+    b.vendor.pricing.entryPriceCNY < max.vendor.pricing.entryPriceCNY)
+    ? b
+    : max
+);
+
+const annualPicks = annualEquivalentBrands().sort(
+  (a, b) => a.vendor.pricing.entryPriceCNY - b.vendor.pricing.entryPriceCNY
+);
+const annualCheapest = annualPicks[0];
+const maxTrafficAt20 = Math.max(
+  ...BRANDS.filter(
+    (b) => b.vendor.pricing.basis === 'monthly' && b.vendor.pricing.entryPriceCNY <= 20
+  ).map((b) => b.vendor.pricing.trafficGB)
+);
+
+const updatedAt = new Date().toISOString().slice(0, 10);
+
+/** 首页按搜索意图分流,而不是把所有人都推向同一份榜单 */
+const PICKER = [
+  { q: '完全没接触过', a: '先搞懂机场、节点、订阅是什么', href: '/basics/' },
+  { q: '预算优先', a: '最低价档位与它们的代价', href: '/rankings/cheap/' },
+  { q: '在意晚高峰稳定', a: '专线线路与运营历史筛选', href: '/rankings/stable/' },
+  { q: '主要用 AI 工具', a: 'ChatGPT / Claude 的线路要求', href: '/rankings/chatgpt/' },
+  { q: '主要看流媒体', a: '地区判定逻辑与线路选择', href: '/rankings/streaming/' },
+  { q: '流量不够用', a: '130GB 以上的套餐对比', href: '/rankings/big-traffic/' },
+  { q: '想算清性价比', a: '按每 GB 成本重新排序', href: '/rankings/value/' },
+  { q: '已经有候选了', a: '两两逐项对比,按场景判定', href: '/compare/' },
+];
+
+/** 把首页权重分发到知识型栏目,同时承接非商业意图的搜索流量 */
+const LEARN = [
+  {
+    title: '客户端教程',
+    desc: 'Clash、Shadowrocket、v2rayN 从下载到分流的完整流程',
+    href: '/guides/',
+  },
+  {
+    title: '协议与线路知识',
+    desc: 'VLESS、Trojan、Hysteria2 的差别,IEPL 与 IPLC 到底指什么',
+    href: '/protocols/',
+  },
+  {
+    title: '故障排查',
+    desc: '连不上、节点超时、订阅失效的分层排查顺序',
+    href: '/troubleshooting/',
+  },
+  {
+    title: '流媒体与 AI 访问',
+    desc: '平台如何判定地区,AI 工具对网络环境的实际要求',
+    href: '/unlock/',
+  },
+  {
+    title: '免费节点风险',
+    desc: '免费节点从哪来、风险在哪,本站不做节点分发',
+    href: '/free-nodes/',
+  },
+  { title: '风险预警', desc: '跑路征兆、超售套路与虚假宣传话术的识别方法', href: '/risk/' },
+];
+
+const description =
+  '2026 年机场推荐总榜:把 16 家机场的价格、流量、协议与线路类型摊开对照,公开评分算法,并说明哪些是厂商声明、哪些是本站实测,帮你在付款前判断该选哪一家。';
+
+const listSchema = itemListSchema(
+  '2026 机场推荐总榜',
+  monthlyRanked.slice(0, 10).map(({ brand, score }) => ({
+    name: brand.name,
+    href: `/reviews/${brand.slug}/`,
+    description: `${brand.editorial.positioning} · 编辑评分 ${score.overall.toFixed(1)}`,
+  }))
+);
+---
+
+<BaseLayout title="2026 机场推荐" description={description} isHome schemas={[listSchema]}>
+  <section class="hero">
+    <HeroTopo />
+    <div class="wrap hero-in">
+      <div class="eyebrow">
+        <i class="dot" aria-hidden="true"></i>
+        <span>数据更新于 {updatedAt} · 收录 {BRANDS.length} 家品牌 · 价格与套餐每月复查</span>
+      </div>
+
+      <h1>2026 机场推荐:<br />把<span class="hl">线路结构</span>看清楚再付款</h1>
+
+      <p class="lede">
+        不做「全网最强」的排行,只把每家机场的价格、流量、协议与线路类型摊开对照,并且明确区分
+        哪些是厂商公开声明、哪些是本站可复现的实测记录。你自己判断哪条路径适合你。
+      </p>
+
+      <div class="answer panel notch">
+        <div class="panel-in">
+          <h2>一句话结论</h2>
+          <p>
+            月付预算 15 元以内先看 {
+              budgetPicks.map((b, i) => (
+                <>
+                  {i > 0 && ' 与 '}
+                  <a href={`/reviews/${b.slug}/`}>{b.name}</a>
+                </>
+              ))
+            }({budgetPicks[0].vendor.pricing.entryPriceCNY} 元 · {
+              budgetPicks[0].vendor.pricing.trafficGB
+            }GB); 月流量需求大的重度用户看 <a href={`/reviews/${trafficPick.slug}/`}
+              >{trafficPick.name}</a
+            >
+            ({trafficPick.vendor.pricing.entryPriceCNY} 元 · {
+              trafficPick.vendor.pricing.trafficGB
+            }GB)。 如果你已经确定会长期使用,{annualPicks.length} 家年付折算档能把月均压到
+            {annualCheapest.vendor.pricing.entryPriceCNY} 元起——{
+              annualPicks.map((b, i) => (
+                <>
+                  {i > 0 && '、'}
+                  <a href={`/reviews/${b.slug}/`}>{b.name}</a>
+                </>
+              ))
+            }——但前提是一次性支付一整年,流量规格也更小。
+          </p>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/compare/">
+          查看 {BRANDS.length} 家完整对照
+          <svg class="arrow" width="15" height="11" viewBox="0 0 16 12" aria-hidden="true">
+            <path
+              d="M0 6h13M9 1.5 14.5 6 9 10.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </a>
+        <a class="btn btn-ghost" href="/basics/">我是新手,先搞懂机场是什么</a>
+      </div>
+
+      <div class="hero-stats">
+        <div><b>{BRANDS.length}</b><small>收录品牌</small></div>
+        <div>
+          <b>{cheapestAnnual.vendor.pricing.entryPriceCNY.toFixed(1)}<i> 元起</i></b>
+          <small>年付折算最低月价</small>
+        </div>
+        <div><b>{maxTrafficAt20} GB</b><small>20 元内最高月流量</small></div>
+        <div><b>4</b><small>覆盖客户端平台</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="picker">
+    <div class="wrap">
+      <div class="rail-section">
+        <div class="sec-head">
+          <span class="tag-en">Start Here</span>
+          <h2>先说清你的情况,再看名单</h2>
+          <p>
+            同样 16 家机场,按价格排、按流量排、按线路等级排会得出三份完全不同的名单。
+            与其看一份「万能总榜」,不如直接进对应场景的榜单——每份都公开筛选口径,并写明这个选择的代价。
+          </p>
+        </div>
+        <div class="picker-grid">
+          {
+            PICKER.map((p) => (
+              <a class="picker-item" href={p.href}>
+                <span class="pi-q">{p.q}</span>
+                <span class="pi-a">{p.a}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeaturedBrands />
+
+  <section class="section" id="picks">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <div class="sec-head">
+          <span class="tag-en">Route Picks / 2026</span>
+          <h2>按线路结构挑机场,而不是按广告词</h2>
+          <p>
+            下面三张是不同需求档位的代表。评分由公开可核对的字段按固定公式算出,任何人都能复现,
+            不包含任何厂商赞助权重——算法公开在<a href="/editorial-policy/">编辑与评测规范</a>。
+          </p>
+        </div>
+
+        <div class="card-grid">
+          {picks.map((p) => <BrandCard brand={p.brand} badge={p.badge} dimensions={[...p.dims]} />)}
+        </div>
+
+        <p class="picks-more">
+          这三张只是不同档位的代表。<a href="/reviews/">看全部 {BRANDS.length} 家的单独评测</a>,
+          或者<a href="/compare/">用一张表把它们横向对照</a>。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="learn" style="padding-top:0">
+    <div class="wrap">
+      <div class="rail-section">
+        <div class="sec-head">
+          <span class="tag-en">Knowledge Base</span>
+          <h2>买之前值得先弄明白的事</h2>
+          <p>
+            选机场这件事,难点不在于哪一家更好,而在于你能不能判断别人说的话是不是真的。
+            下面这几个栏目讲的就是判断方法。
+          </p>
+        </div>
+        <div class="learn-grid">
+          {
+            LEARN.map((l) => (
+              <a class="learn-card" href={l.href}>
+                <span class="lc-title">{l.title}</span>
+                <span class="lc-desc">{l.desc}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="trust" style="padding-top:0">
+    <div class="wrap">
+      <div class="rail-section">
+        <div class="sec-head">
+          <span class="tag-en">How We Work</span>
+          <h2>这个站的结论是怎么来的</h2>
+        </div>
+        <div class="trust-grid">
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>数据分四层存放</h3>
+              <p>
+                厂商公开资料、本站实测、商业信息、编辑判断分开存储,页面上分别标注来源。
+                这样「厂商说支持 AI」永远不会被自动升级成「本站实测支持」。 目前 16 家的流媒体与 AI
+                能力<strong>都还是厂商声明,尚未完成统一实测</strong>。
+              </p>
+              <a href="/about/">关于本站的做法 →</a>
+            </div>
+          </div>
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>评分算法公开可复算</h3>
+              <p>
+                评分由五个维度按固定权重算出:流量性价比 30%、线路等级 25%、运营时长 15%、
+                客户端友好度 15%、场景覆盖
+                15%。全部基于公开字段,任何人拿同一份数据都能算出同一个分。
+              </p>
+              <a href="/editorial-policy/">评分算法与编辑规范 →</a>
+            </div>
+          </div>
+          <div class="panel notch">
+            <div class="panel-in">
+              <h3>合作关系如实披露</h3>
+              <p>
+                本站收录的 16 家均为推广合作关系,注册链接为推广链接。
+                正因如此我们把筛选口径和算法全部公开——如果排序被人为动过手脚,你按同样条件复算就会发现对不上。
+              </p>
+              <a href="/disclaimer/">数据与免责说明 →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .picker-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .picker-item {
+    display: grid;
+    gap: 5px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+    transition:
+      border-color 0.18s ease,
+      transform 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .picker-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .pi-q {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .picker-item:hover .pi-q {
+    color: var(--accent);
+  }
+  .pi-a {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .picks-more {
+    margin-top: var(--s5);
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .learn-card {
+    display: grid;
+    gap: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    background: var(--surface);
+  }
+  .learn-card:hover {
+    border-left-color: var(--route-iepl);
+  }
+  .lc-title {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .learn-card:hover .lc-title {
+    color: var(--accent);
+  }
+  .lc-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .trust-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .trust-grid .panel-in {
+    padding: 18px 20px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .trust-grid h3 {
+    font-size: 15.5px;
+  }
+  .trust-grid p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.85;
+  }
+  .trust-grid strong {
+    color: var(--text);
+  }
+  .trust-grid a {
+    font-size: 13.5px;
+  }
+</style>

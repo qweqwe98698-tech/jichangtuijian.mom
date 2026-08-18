@@ -1,0 +1,3386 @@
+[
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "stability-metrics",
+    "slug": "stability-metrics",
+    "file": "src/content/posts/compare/stability-metrics.md",
+    "url": "/compare/how-to-choose-airport/stability-metrics/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "稳定机场怎么判断？五项自己就能复测的指标",
+    "description": "“稳定”是机场宣传里出现频率最高也最模糊的词。本文把它拆成断流频率、丢包率、抖动、长连接存活时长和晚高峰衰减五项，给出每一项的自测方法、正常区间和记录格式，让你用一周时间得出可复核的结论。",
+    "primaryKeyword": "机场稳定性怎么衡量",
+    "secondaryKeywords": [
+      "机场稳定性怎么测试",
+      "晚高峰稳定机场",
+      "怎么测试机场长连接",
+      "机场节点丢包怎么测"
+    ],
+    "intent": "comparison",
+    "answer": "稳定和速度是两回事。判断稳定性至少要看五项：一小时内断流次数、持续 Ping 的丢包率、延迟抖动幅度、长连接能维持多久不掉、以及晚高峰相对白天的衰减比例。测速软件跑出的峰值带宽几乎不反映这五项，需要在工作日晚 20:00–23:00 连续记录多天才有参考价值。",
+    "outline": [
+      "速度快就等于稳定吗？两者到底差在哪里？",
+      "五项稳定性指标分别对应什么使用体验？",
+      "怎么用持续 Ping 记录丢包和抖动，正常区间是多少？",
+      "长连接存活测试怎么做，为什么它对 AI 工具特别关键？",
+      "晚高峰衰减比例怎么算，衰减多少算不能接受？",
+      "节点数量多、延迟低，是否就代表稳定？",
+      "同一份记录表怎么用来横向对比两家机场？",
+      "测出问题后，怎么区分是机场问题还是本地网络问题？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一一篇输出“可复现测量流程与记录表”的文章，落点是操作方法而非选购结论。与 ranking-methodology 的区别是后者讲权重与排名规则，与 trial-before-buying 的区别是本篇面向数天到一周的长期观测，后者面向试用期内的半小时快速验证。",
+    "relatedSlugs": ["cheap-airport-truth", "value-calculation", "monthly-vs-yearly"],
+    "nextStep": {
+      "label": "查看稳定性维度的机场排行榜",
+      "href": "/rankings/stable/",
+      "reason": "读者掌握了自测方法后，需要一份已按同套指标复测过的候选名单作为起点"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "cheap-airport-truth",
+    "slug": "cheap-airport-truth",
+    "file": "src/content/posts/compare/cheap-airport-truth.md",
+    "url": "/compare/how-to-choose-airport/cheap-airport-truth/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "便宜机场靠谱吗？一个月十几块的钱省在哪里",
+    "description": "低价机场并不神秘，价格压下来的位置基本固定：超售比例、节点倍率、共享出口 IP、限速策略和售后投入。本文逐项说明这些取舍会在什么场景下暴露出来，以及哪些低价套餐其实适合作为轻度或备用需求。",
+    "primaryKeyword": "便宜机场靠谱吗",
+    "secondaryKeywords": [
+      "低价机场为什么这么便宜",
+      "便宜机场会限速吗",
+      "10元机场值得买吗",
+      "便宜机场容易跑路吗"
+    ],
+    "intent": "comparison",
+    "answer": "月费十几元的机场不一定是骗局，但成本必须从某处省出来，常见的五个位置是：带宽超售、高倍率节点、共享出口 IP、限速阈值和几乎不存在的售后。这些取舍在轻度网页浏览时基本感觉不到，会在晚高峰、流媒体和长连接任务上集中暴露。判断的关键是看它省在哪，而不是省了多少。",
+    "outline": [
+      "低价机场把成本省在了哪五个地方？",
+      "超售是什么意思，用户端能观察到哪些迹象？",
+      "节点倍率如何让“大流量套餐”实际变小？",
+      "共享出口 IP 会影响哪些具体服务？",
+      "限速阈值一般卡在什么位置，怎么触发测试？",
+      "哪些用法用便宜机场完全够用，哪些一定不够？",
+      "低价套餐和跑路风险之间是必然关系吗？",
+      "买低价套餐时，付款周期该怎么设置才安全？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一一篇从供给侧成本结构解释价格的文章，回答“为什么能这么便宜”。与 value-calculation 的区别是后者给读者的是需求侧的单价计算公式，与 user-profile-matching 的区别是本篇不做人群匹配，只解释低价的代价落在哪些技术指标上。",
+    "relatedSlugs": ["value-calculation", "stability-metrics", "monthly-vs-yearly"],
+    "nextStep": {
+      "label": "查看低价档位的机场排行榜",
+      "href": "/rankings/cheap/",
+      "reason": "读者已经知道该盯哪些取舍点，可以带着检查项进入低价榜挑选"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "value-calculation",
+    "slug": "value-calculation",
+    "file": "src/content/posts/compare/value-calculation.md",
+    "url": "/compare/how-to-choose-airport/value-calculation/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "机场性价比怎么算：把套餐折成每 GB 单价",
+    "description": "比较套餐时直接看月费几乎必然选错，因为流量倍率、设备数限制和有效期都会改变实际可用量。本文给出一套换算公式和倍率折算表，把不同机场的套餐统一折成“每 GB 实际单价”，让价格第一次变得可比。",
+    "primaryKeyword": "机场性价比怎么算",
+    "secondaryKeywords": [
+      "高性价比机场怎么判断",
+      "机场每GB流量多少钱",
+      "机场流量倍率怎么算",
+      "套餐实际可用流量怎么估"
+    ],
+    "intent": "comparison",
+    "answer": "性价比不等于便宜。可用的算法是：先按你常用节点的倍率把标称流量折成实际可用流量，再把月费除以这个数字，得到每 GB 实际单价；然后按设备数上限和限速阈值做两次修正。同样标 100G 的两个套餐，折算后单价相差两三倍是常见结果。",
+    "outline": [
+      "为什么直接比月费几乎一定会选错？",
+      "标称流量和实际可用流量差在哪里？",
+      "常见倍率档位怎么折算，折算表怎么用？",
+      "每 GB 实际单价的完整计算步骤是什么？",
+      "设备数上限和限速阈值该怎么做修正？",
+      "免费流量、赠送流量和活动流量要不要计入？",
+      "算完之后，多少单价区间算合理？",
+      "同一份算法怎么用来判断年付是否真的更划算？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一一篇输出可套用计算公式与倍率折算表的文章，产出物是一个数字。与 cheap-airport-truth 的区别是本篇不解释低价成因，只做统一口径的换算；与 pay-as-you-go-vs-unlimited-time 的区别是后者比较计量模式，本篇比较单位价格。",
+    "relatedSlugs": ["cheap-airport-truth", "pay-as-you-go-vs-unlimited-time"],
+    "nextStep": {
+      "label": "查看按每 GB 单价排序的性价比榜",
+      "href": "/rankings/value/",
+      "reason": "读者手上已有换算方法，直接进入按同一算法排过序的榜单可以省掉重复计算"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "monthly-vs-yearly",
+    "slug": "monthly-vs-yearly",
+    "file": "src/content/posts/compare/monthly-vs-yearly.md",
+    "url": "/compare/how-to-choose-airport/monthly-vs-yearly/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "机场买月付还是年付？用风险敞口来决定",
+    "description": "年付通常能省下两到四成，代价是把资金和使用连续性一次性押在一家服务商身上。本文用“风险敞口 = 预付金额 × 剩余月数”的思路，给出何时该月付、何时可以升到年付，以及从月付切换到年付前应该观察多久。",
+    "primaryKeyword": "机场买月付还是年付",
+    "secondaryKeywords": [
+      "年付机场值得买吗",
+      "年付机场有哪些风险",
+      "机场季付划算吗",
+      "新机场适合买年付吗"
+    ],
+    "intent": "comparison",
+    "answer": "把付费周期看成风险敞口而不是折扣率：年付省下的钱，等于你为“这家机场未来十二个月都正常”这件事下的注。合理做法是先月付观察一到两个周期，确认晚高峰表现、公告频率和工单响应都稳定后，再考虑季付过渡，最后才上年付；对运营不足半年的新机场，不建议直接年付。",
+    "outline": [
+      "年付省下的折扣，实际相当于承担了什么？",
+      "风险敞口怎么估算，什么金额区间是可接受的？",
+      "月付、季付、半年付、年付分别适合什么阶段？",
+      "从月付升到年付前，应该观察哪几项信号多久？",
+      "运营时间多长的机场才值得考虑年付？",
+      "年付遇到降速或跑路，退款通常能追回多少？",
+      "同一家机场的年付和月付，节点与线路会有区别吗？",
+      "促销期的年付优惠，值不值得打破观察节奏？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一以“付费时间周期”为单一变量的文章，核心产出是风险敞口估算与升级节奏表。与 pay-as-you-go-vs-unlimited-time 的区别在于本篇讨论时间维度、后者讨论计量维度；与 veteran-vs-new-airport 的区别在于本篇评估的是合同长度，后者评估的是服务商年限。",
+    "relatedSlugs": ["veteran-vs-new-airport", "cheap-airport-truth", "single-vs-backup-airport"],
+    "nextStep": {
+      "label": "查看运营年限较长的老牌机场榜",
+      "href": "/rankings/long-running/",
+      "reason": "决定考虑年付的读者，首先要把候选范围限定在运营连续性可查的服务商上"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "pay-as-you-go-vs-unlimited-time",
+    "slug": "pay-as-you-go-vs-unlimited-time",
+    "file": "src/content/posts/compare/pay-as-you-go-vs-unlimited-time.md",
+    "url": "/compare/how-to-choose-airport/pay-as-you-go-vs-unlimited-time/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "按量计费机场和不限时机场哪个好？两种计量的取舍",
+    "description": "按量计费和不限时流量包看起来都是“用多少算多少”，实际风险完全不同：前者只承诺单价，后者承诺的是一段无法验证的服务寿命。本文比较两者的计费逻辑、适用场景，以及不限时套餐必须提前确认的条款。",
+    "primaryKeyword": "按量计费机场和不限时机场哪个好",
+    "secondaryKeywords": [
+      "按量计费机场是什么意思",
+      "不限时机场靠谱吗",
+      "一次性流量包机场",
+      "永久套餐机场值得买吗"
+    ],
+    "intent": "comparison",
+    "answer": "按量计费适合用量波动大、只在特定时段用的人，也很适合当备用；不限时流量包的性价比看起来更高，但它把价值全部押在“服务商能一直开下去”上，而这一点没有任何用户侧手段可以验证。用量低于每月 20G 且需求不连续时选按量，长期主力线路仍建议月付或季付。",
+    "outline": [
+      "按量计费和不限时套餐的计费逻辑差在哪？",
+      "两种套餐分别把风险转移给了谁？",
+      "什么用量特征适合按量计费？",
+      "不限时流量包的“不限时”通常受哪些条款限制？",
+      "永久套餐在服务商停运后还剩什么？",
+      "按量套餐当备用线路要注意哪些细节？",
+      "购买不限时套餐前必须确认的四项条款是什么？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一覆盖不限时与永久套餐承诺可持续性的选购文，落点在计量模式与条款审查。与 monthly-vs-yearly 的区别是本篇比较计量方式而非合同期限；与 value-calculation 的区别是本篇不做单价换算，而讨论两种模式各自把风险放在哪一端。",
+    "relatedSlugs": ["value-calculation", "monthly-vs-yearly", "single-vs-backup-airport"],
+    "nextStep": {
+      "label": "看单家的完整评测",
+      "href": "/reviews/",
+      "reason": "对比页放不下每家的适合人群与口径注意事项,下单前值得逐页看完。"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "review-credibility-check",
+    "slug": "review-credibility-check",
+    "file": "src/content/posts/compare/review-credibility-check.md",
+    "url": "/compare/how-to-choose-airport/review-credibility-check/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "机场推荐可信吗？六个可以自己核验的信号",
+    "description": "几乎所有机场推荐都带推广关系，问题不在于有没有佣金，而在于结论是否可核验。本文给出六个读者自己就能查的可信度信号：测试条件是否公开、是否写缺点、数据是否可复现、更新时间是否真实、披露是否显著、结论是否分人群。",
+    "primaryKeyword": "机场推荐可信吗",
+    "secondaryKeywords": [
+      "机场评测怎么判断真实",
+      "有推广链接的推荐可信吗",
+      "机场测速截图会造假吗",
+      "知乎的机场推荐可信吗"
+    ],
+    "intent": "comparison",
+    "answer": "带推广链接不等于不可信，只写优点才是。判断一份推荐是否值得参考，看六件事：有没有写清测试的时间、网络与设备；有没有明确写出缺点和不适合的人群；数据是否给了可复现的方法；更新时间是否与内容一致；商业关系是否显著披露；结论是否区分了不同使用场景。六项缺三项以上，就只当参考。",
+    "outline": [
+      "带佣金的推荐一定不可信吗？",
+      "测试条件缺失的评测，问题出在哪里？",
+      "为什么“只写优点”是最强的负面信号？",
+      "测速截图能造假到什么程度，怎么交叉验证？",
+      "更新时间和内容对不上，通常意味着什么？",
+      "结论不分人群的推荐，为什么参考价值有限？",
+      "同一批机场在多个来源出现矛盾结论时怎么办？",
+      "本站的推荐该怎么被你审查？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一站在读者一侧、把审查对象指向“推荐内容本身（含本站）”的元文章。与 ranking-methodology 恰好互为正反面：后者对外公开我们的排名规则，本篇给读者一套用来质疑任何推荐（包括我们）的核验清单。",
+    "relatedSlugs": ["veteran-vs-new-airport", "stability-metrics", "cheap-airport-truth"],
+    "nextStep": {
+      "label": "看单家的完整评测",
+      "href": "/reviews/",
+      "reason": "对比页放不下每家的适合人群与口径注意事项,下单前值得逐页看完。"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "veteran-vs-new-airport",
+    "slug": "veteran-vs-new-airport",
+    "file": "src/content/posts/compare/veteran-vs-new-airport.md",
+    "url": "/compare/how-to-choose-airport/veteran-vs-new-airport/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "老牌机场和新机场哪个好？把运营年限单独拎出来看",
+    "description": "运营年限常被当成稳定性的代名词，但它真正能证明的只有一件事：这家服务商此前挺过了多少次风险事件。本文把年限作为单一变量，分析老牌与新机场在稳定性、价格、线路投入和跑路概率上的实际差异。",
+    "primaryKeyword": "老牌机场和新机场哪个好",
+    "secondaryKeywords": [
+      "老牌机场推荐怎么看",
+      "新机场值得买吗",
+      "机场运营时间重要吗",
+      "机场运营多久算稳定"
+    ],
+    "intent": "comparison",
+    "answer": "运营年限证明的是抗风险记录，不是当前质量。老牌机场的优势在于售后流程成熟、遇到封锁时有备用方案；劣势是设备老化、超售累积和价格偏高。新机场往往线路更新、价格更激进，但缺少压力测试记录。折中做法是：主力线路选运营一年以上的，新机场只用月付试水。",
+    "outline": [
+      "运营年限到底能证明什么，不能证明什么？",
+      "老牌机场常见的三个隐性劣势是什么？",
+      "新机场为什么在价格和线路上更激进？",
+      "遇到大规模封锁时，两者的应对差别有多大？",
+      "运营多久才算过了高风险期？",
+      "怎么核实一家机场真实的运营起始时间？",
+      "主力线路和试水线路该分别怎么分配？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一以“服务商运营年限”为单一自变量做对照的文章。与 monthly-vs-yearly 的区别在于本篇评估的是服务商本身而非合同长度；与 cheap-airport-truth 的区别在于本篇不涉及成本结构，只讨论时间带来的记录与老化两种相反效应。",
+    "relatedSlugs": ["monthly-vs-yearly", "review-credibility-check", "single-vs-backup-airport"],
+    "nextStep": {
+      "label": "查看运营年限较长的老牌机场榜",
+      "href": "/rankings/long-running/",
+      "reason": "决定把主力线路交给运营记录较长的服务商后，需要一份按运营连续性筛选过的名单"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "single-vs-backup-airport",
+    "slug": "single-vs-backup-airport",
+    "file": "src/content/posts/compare/single-vs-backup-airport.md",
+    "url": "/compare/how-to-choose-airport/single-vs-backup-airport/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "需要买两个机场吗？主备冗余这笔账怎么算",
+    "description": "只买一家的问题不在于贵，而在于故障和跑路时没有退路。本文计算主备双线的实际增量成本，说明用低价按量套餐做备用位的配置方式，以及什么样的用户其实不需要冗余。",
+    "primaryKeyword": "主备机场怎么搭配",
+    "secondaryKeywords": [
+      "备用机场怎么配",
+      "主备机场搭配方案",
+      "机场跑路了怎么快速切换",
+      "按量计费适合当备用吗"
+    ],
+    "intent": "comparison",
+    "answer": "对把网络当生产工具的人，主备双线是必要的：主力用月付或季付的稳定线路，备用位用一份低价按量套餐，平时几乎不消耗，只在主力异常时顶上。增量成本通常只占主力的两三成，换来的是故障与跑路时不中断。纯娱乐用途且能接受停用一两天的，可以只买一家。",
+    "outline": [
+      "只买一家机场的真实风险是什么？",
+      "主备双线的增量成本大概是多少？",
+      "为什么备用位适合用按量计费套餐？",
+      "主备两家应该在哪些属性上刻意错开？",
+      "客户端里怎么安排主备切换才不用重配？",
+      "备用线路多久验证一次才不会“到用时才发现失效”？",
+      "哪些用户其实不需要冗余配置？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一讨论“组合购买策略”而非单一机场选择的文章，落点是主备配置与切换验证。与 pay-as-you-go-vs-unlimited-time 的区别在于后者比较两种计量模式本身，本篇把按量套餐当作冗余方案的一个部件来做成本核算。",
+    "relatedSlugs": [
+      "pay-as-you-go-vs-unlimited-time",
+      "monthly-vs-yearly",
+      "veteran-vs-new-airport"
+    ],
+    "nextStep": {
+      "label": "看单家的完整评测",
+      "href": "/reviews/",
+      "reason": "对比页放不下每家的适合人群与口径注意事项,下单前值得逐页看完。"
+    }
+  },
+  {
+    "clusterKey": "airport-recommendation-rankings",
+    "originalSlug": "2026-market-changes",
+    "slug": "2026-market-changes",
+    "file": "src/content/posts/compare/2026-market-changes.md",
+    "url": "/compare/how-to-choose-airport/2026-market-changes/",
+    "category": "compare",
+    "pillar": "how-to-choose-airport",
+    "pillarUrl": "/compare/how-to-choose-airport/",
+    "title": "2026年机场推荐有什么变化？和两年前的四点不同",
+    "description": "两年前有效的挑选经验，现在有一部分已经失效。本文梳理协议主流的更替、专线价格结构的变化、AI 工具带来的新需求，以及榜单更新节奏的加快，说明哪些旧标准仍然成立、哪些应该淘汰。",
+    "primaryKeyword": "2026年机场推荐有什么变化",
+    "secondaryKeywords": [
+      "2026年机场怎么选",
+      "机场推荐榜单多久更新一次",
+      "机场推荐内容过期了怎么办",
+      "2026值得购买的机场看什么"
+    ],
+    "intent": "comparison",
+    "answer": "相比两年前，四件事变了：主流协议从早期方案转向更抗封锁的组合，专线不再是高端机场的唯一卖点，AI 工具让长连接稳定性成为硬指标，榜单的有效期也从半年缩短到一个季度。仍然成立的是：晚高峰表现、每 GB 实际单价和售后响应，这三项永远是第一梯队的判断依据。",
+    "outline": [
+      "两年前的哪些挑选经验现在已经失效？",
+      "协议主流的更替对普通用户意味着什么？",
+      "专线价格结构发生了什么变化？",
+      "AI 工具为什么把长连接稳定性推成硬指标？",
+      "榜单的有效期为什么缩短了？",
+      "哪三项判断标准至今没有变？",
+      "看到一篇没标日期的机场推荐，该怎么处理？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一采用纵向时间轴视角的文章，比较对象是“过去的选购标准 vs 现在的选购标准”。其余文章都是同一时点下的横向维度比较，本篇为年份类关键词提供非榜单型承接，并负责标注哪些旧结论应被淘汰。",
+    "relatedSlugs": ["stability-metrics", "cheap-airport-truth", "value-calculation"],
+    "nextStep": {
+      "label": "查看 2026 年最新机场推荐总榜",
+      "href": "/",
+      "reason": "读者更新完判断标准后，直接进入按最新标准维护的年度总榜是最自然的落点"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "shadowsocks-vs-trojan",
+    "slug": "shadowsocks-vs-trojan",
+    "file": "src/content/posts/protocols/shadowsocks-vs-trojan.md",
+    "url": "/protocols/how-to-choose/shadowsocks-vs-trojan/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "Shadowsocks和Trojan区别:两种伪装思路的分水岭",
+    "description": "同样出现在订阅列表里,Shadowsocks 用自有加密加混淆隐藏特征,Trojan 则把流量整体套进标准 TLS 冒充普通 HTTPS 访问。本文对比二者的握手方式、识别风险、性能开销与客户端支持度。",
+    "primaryKeyword": "Shadowsocks和Trojan区别",
+    "secondaryKeywords": [
+      "Shadowsocks协议详解",
+      "Trojan协议原理",
+      "Trojan为什么像HTTPS",
+      "SS和Trojan哪个好"
+    ],
+    "intent": "comparison",
+    "answer": "Shadowsocks 用自有加密协议配合混淆隐藏流量特征,Trojan 则把数据塞进标准 TLS 通道,让流量看起来就是访问一个普通 HTTPS 网站。前者握手更轻、延迟略低,后者在审查更严格的网络里更不容易被单独挑出来。机场同时提供两种,是为了覆盖不同网络环境。",
+    "outline": [
+      "一句话说清:两者分别把流量伪装成了什么?",
+      "握手过程有什么不同?为什么 Trojan 必须有域名和证书?",
+      "在校园网、公司网这类严格环境里谁更不容易被拦?",
+      "延迟和 CPU 开销的差距,普通用户真的能感知吗?",
+      "客户端支持度:哪些工具对两者的兼容更完整?",
+      "机场为什么在同一批服务器上同时开 SS 和 Trojan?",
+      "什么情况下应该主动换到另一种协议?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一做\"跨协议家族伪装思路\"对比的一篇:只讲自有加密+混淆与套 TLS 两条路线的分歧。与 vless-vs-vmess 的家族代际演进不同,与 hysteria2-vs-tuic 的 UDP 拥塞控制维度不同,也不涉及 reality-explained 的证书借用机制。",
+    "relatedSlugs": ["vless-vs-vmess", "protocol-speed-myth", "reality-explained"],
+    "nextStep": {
+      "label": "接着看 V 系列协议的代际差异",
+      "href": "/protocols/how-to-choose/vless-vs-vmess/",
+      "reason": "读者搞清跨家族的伪装差异后,下一个自然疑问是同一家族内 VMess 与 VLESS 为何又分两代。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "vless-vs-vmess",
+    "slug": "vless-vs-vmess",
+    "file": "src/content/posts/protocols/vless-vs-vmess.md",
+    "url": "/protocols/how-to-choose/vless-vs-vmess/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "VLESS和VMess区别:为什么新协议砍掉了加密",
+    "description": "VMess 的 alterId、时间校验和内层加密曾是标配,VLESS 却把它们几乎全部去掉。本文沿着同一协议家族的演进路线,解释这些取舍换来了什么,以及订阅里两种节点并存时该优先用哪一个。",
+    "primaryKeyword": "VLESS和VMess区别",
+    "secondaryKeywords": [
+      "VLESS是什么",
+      "VMess协议是什么",
+      "alterId是什么意思",
+      "VLESS和VMess哪个好"
+    ],
+    "intent": "comparison",
+    "answer": "VMess 自带一层加密和基于时间的校验,握手复杂、对系统时间敏感;VLESS 把这层加密交给外层 TLS,自身只做轻量的身份识别与转发。结果是 CPU 开销和延迟更低,但必须搭配可靠的传输层,单独裸用并不合适。",
+    "outline": [
+      "两者最核心的差别落在哪一层?",
+      "VMess 的 alterId 和时间校验为什么被淘汰?",
+      "去掉内层加密之后,安全性由谁来兜底?",
+      "WS、gRPC、TLS 这些传输层怎么和协议搭配?",
+      "老客户端连不上新 VLESS 节点,通常卡在哪一步?",
+      "同一台服务器上,两者的性能差距有多大?",
+      "订阅里同时给了 VMess 和 VLESS,该优先用哪个?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一讲同一协议家族代际取舍的一篇,焦点是 alterId、时间校验与内层加密的取消。与 shadowsocks-vs-trojan 的跨家族伪装对比不同,与 reality-explained 只讲 TLS 握手层不同,不涉及任何速度归因分析。",
+    "relatedSlugs": ["reality-explained", "shadowsocks-vs-trojan", "protocol-speed-myth"],
+    "nextStep": {
+      "label": "了解依附于 VLESS 的 Reality 伪装",
+      "href": "/protocols/how-to-choose/reality-explained/",
+      "reason": "VLESS 把安全性交给外层,而 Reality 正是当下最常见的那一层,顺着读逻辑连贯。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "reality-explained",
+    "slug": "reality-explained",
+    "file": "src/content/posts/protocols/reality-explained.md",
+    "url": "/protocols/how-to-choose/reality-explained/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "Reality协议是什么:借用真实证书的伪装原理",
+    "description": "很多机场把 Reality 单列成一种协议,实际上它是 VLESS 之上的一层握手伪装。本文解释它如何借用真实网站的证书完成 TLS 握手、主动探测时会看到什么,以及它能与不能解决的问题边界。",
+    "primaryKeyword": "Reality协议是什么",
+    "secondaryKeywords": [
+      "Reality和VLESS关系",
+      "Reality节点是什么意思",
+      "TLS指纹是什么",
+      "Reality需要域名吗"
+    ],
+    "intent": "informational",
+    "answer": "Reality 不是独立协议,而是 VLESS 使用的一种握手伪装方式:它在建立连接时借用某个真实大站的证书完成 TLS 握手,因此不需要自己申请域名和证书。被主动探测时,对方看到的是那个真实网站的响应。",
+    "outline": [
+      "Reality 到底是独立协议,还是 VLESS 的一种握手方式?",
+      "\"借用\"别人网站证书的握手过程是怎样的?",
+      "为什么用 Reality 就不必自己申请域名和证书?",
+      "被主动探测时,一个 Reality 节点会表现成什么?",
+      "哪些客户端版本才真正支持它?旧版本会怎样报错?",
+      "机场在节点名里通常怎么标记 Reality?",
+      "Reality 解决不了的问题有哪些?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一解释 TLS 指纹与证书借用机制的一篇,并纠正\"Reality 是独立协议\"的普遍误解。与 vless-vs-vmess 讲协议层字段设计不同,与 shadowsocks-vs-trojan 讲两条伪装路线的整体对比不同。",
+    "relatedSlugs": ["vless-vs-vmess", "protocol-speed-myth", "shadowsocks-vs-trojan"],
+    "nextStep": {
+      "label": "看看协议到底影响多少速度",
+      "href": "/protocols/how-to-choose/protocol-speed-myth/",
+      "reason": "读完伪装机制后,读者最容易产生\"换成 Reality 会不会更快\"的误解,需要立刻用归因文章纠偏。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "hysteria2-vs-tuic",
+    "slug": "hysteria2-vs-tuic",
+    "file": "src/content/posts/protocols/hysteria2-vs-tuic.md",
+    "url": "/protocols/how-to-choose/hysteria2-vs-tuic/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "Hysteria2和TUIC区别:丢包网络该选谁",
+    "description": "两者都建立在 QUIC 之上,分歧却出在拥塞控制策略:一个靠激进发包抢带宽,一个更看重连接迁移与公平性。本文按丢包率、移动网络切换和流量消耗三条线给出选择依据。",
+    "primaryKeyword": "Hysteria2和TUIC区别",
+    "secondaryKeywords": [
+      "Hysteria2优缺点",
+      "TUIC协议是什么",
+      "QUIC协议代理",
+      "丢包严重用什么协议"
+    ],
+    "intent": "comparison",
+    "answer": "两者都跑在 QUIC/UDP 上,差别主要在拥塞控制:Hysteria2 采用较激进的发包策略,在高丢包链路上更容易把带宽跑满;TUIC 更贴近标准 QUIC 行为,在移动网络频繁切换时连接更平滑。丢包高选前者,网络频繁切换选后者。",
+    "outline": [
+      "都基于 QUIC,分歧点究竟在哪里?",
+      "激进的拥塞控制适合什么样的链路?",
+      "手机在 Wi-Fi 与流量之间切换时,谁恢复得更快?",
+      "丢包率到多少,才值得从 TCP 系协议切过来?",
+      "为什么有人换了 Hysteria2 反而更卡?",
+      "UDP 类协议会让流量消耗更快吗?",
+      "手机和电脑分别更适合哪一个?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一从 QUIC 拥塞控制与连接迁移维度对比协议的一篇,覆盖丢包率与网络切换这两个独有变量。与 shadowsocks-vs-trojan、vless-vs-vmess 的 TCP 系伪装讨论完全不重叠,也不承担 udp-quic-blocked 的故障排查职责。",
+    "relatedSlugs": ["udp-quic-blocked", "protocol-speed-myth", "shadowsocks-vs-trojan"],
+    "nextStep": {
+      "label": "先排查 UDP 是否被运营商限速",
+      "href": "/protocols/how-to-choose/udp-quic-blocked/",
+      "reason": "选定 UDP 类协议后最常见的翻车点就是本地 UDP 被限速,提前给出判断流程可以避免误判协议本身。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "udp-quic-blocked",
+    "slug": "udp-quic-blocked",
+    "file": "src/content/posts/protocols/udp-quic-blocked.md",
+    "url": "/protocols/how-to-choose/udp-quic-blocked/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "Hysteria2不稳定怎么办:UDP被限速的判断与回退",
+    "description": "选了号称最快的协议却更卡,多半不是协议的锅,而是本地网络对 UDP 做了限速或阻断。本文给出三步验证 UDP 通道状态的方法,以及什么时候该干脆回退到 Trojan 或 VLESS。",
+    "primaryKeyword": "Hysteria2不稳定怎么办",
+    "secondaryKeywords": [
+      "UDP被限速怎么办",
+      "QUIC被阻断",
+      "校园网用不了Hysteria2",
+      "UDP节点连不上"
+    ],
+    "intent": "problem",
+    "answer": "先确认问题出在协议还是链路:如果同一节点的 TCP 系协议正常、只有 UDP 类协议时快时断,基本可以判断本地网络对 UDP 做了限速或阻断。校园网、公司网和部分移动网络最常见,此时换端口、换节点作用有限,回退到 Trojan 或 VLESS 更现实。",
+    "outline": [
+      "先分清:是协议本身的问题,还是运营商在限 UDP?",
+      "三步验证 UDP 通道到底通不通",
+      "换端口、换地区节点还有没有用?",
+      "什么时候应该直接回退到 TCP 系协议?",
+      "校园网、公司网和家庭宽带的典型表现有什么不同?",
+      "客户端里哪些设置会放大这个问题?",
+      "看到什么现象才算问题真正解决?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一的故障判断型文章,处理\"本地网络对 UDP 做 QoS\"这一独立变量并给出回退决策。与 hysteria2-vs-tuic 讲协议设计对比不同,与 protocol-speed-myth 讲速度归因不同,不重复任何协议原理讲解。",
+    "relatedSlugs": ["hysteria2-vs-tuic", "protocol-speed-myth"],
+    "nextStep": {
+      "label": "把协议知识用到实际选购上",
+      "href": "/compare/",
+      "reason": "搞懂线路与协议的差别之后,对照表里的那两列才真正读得懂。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "protocol-speed-myth",
+    "slug": "protocol-speed-myth",
+    "file": "src/content/posts/protocols/protocol-speed-myth.md",
+    "url": "/protocols/how-to-choose/protocol-speed-myth/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "哪种协议速度最快?先搞清速度由什么决定",
+    "description": "论坛里经常出现\"换个协议速度翻倍\"的说法。本文把速度拆成带宽、线路路径、落地负载和协议开销四块,量化各自的权重,并给出一套能自己复现的控制变量测试方法。",
+    "primaryKeyword": "哪种协议速度最快",
+    "secondaryKeywords": ["换协议会变快吗", "协议影响速度吗", "节点测速方法", "延迟和速度区别"],
+    "intent": "informational",
+    "answer": "在同一条线路和同一台落地服务器上,协议之间的速度差通常远小于线路差异带来的影响。真正决定速度的依次是套餐带宽上限、跨境线路质量、落地节点负载,协议只在高丢包或高延迟链路上才会明显拉开差距。",
+    "outline": [
+      "先说结论:协议在最终速度里占多大权重?",
+      "带宽上限、线路路径、落地负载各自贡献了什么?",
+      "为什么换协议之后的\"变快\"多半是错觉?",
+      "怎么做一次真正控制变量的对比测试?",
+      "哪些场景下协议确实会带来肉眼可见的差异?",
+      "测速数值和实际体验为什么经常对不上?",
+      "遇到速度慢,应该按什么顺序往下排查?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一做速度归因拆解与测试方法论的一篇,不讲任何单一协议的实现细节,而是给出权重排序与控制变量测法。它也是协议半区通向线路半区的过渡节点,与所有\"A vs B\"式对比文定位不同。",
+    "relatedSlugs": ["transit-vs-direct", "hysteria2-vs-tuic", "shadowsocks-vs-trojan"],
+    "nextStep": {
+      "label": "去看真正决定速度的那一层:线路",
+      "href": "/protocols/how-to-choose/transit-vs-direct/",
+      "reason": "既然协议不是速度主因,读者的下一步应该转向线路结构,这也是本簇从协议半区跨到线路半区的桥梁。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "transit-vs-direct",
+    "slug": "transit-vs-direct",
+    "file": "src/content/posts/protocols/transit-vs-direct.md",
+    "url": "/protocols/how-to-choose/transit-vs-direct/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "中转机场和直连机场区别:晚高峰差距从哪来",
+    "description": "同样标着香港节点,有的白天很快、一到晚上就废掉。本文按数据包实际走过的路段拆解直连与中转的结构差异,解释晚高峰劣化到底发生在哪一段,以及怎么从延迟曲线反推节点类型。",
+    "primaryKeyword": "中转机场和直连机场区别",
+    "secondaryKeywords": [
+      "中转线路是什么意思",
+      "直连机场为什么便宜",
+      "入口和落地是什么意思",
+      "晚高峰为什么变慢"
+    ],
+    "intent": "informational",
+    "answer": "直连是设备直接连到境外落地服务器,全程走公网国际出口;中转则先连到境内或优质入口机器,再由它转发到落地。晚高峰的劣化几乎都发生在国际出口那一段,中转通过换一条更好的跨境路径绕开拥堵,所以延迟反而可能更低。",
+    "outline": [
+      "直连和中转的数据包分别走了哪几段路?",
+      "为什么多绕一跳的中转反而延迟更低?",
+      "晚高峰的卡顿具体发生在哪一段?",
+      "入口在哪、落地在哪,普通用户怎么看出来?",
+      "直连节点更便宜的成本原因是什么?",
+      "什么用途适合直连,什么用途必须上中转?",
+      "从节点名和延迟曲线怎么初步判断类型?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一按\"数据包路段\"拆解直连与中转结构的一篇,把晚高峰劣化定位到具体路段。与 iepl-iplc-explained 讲跨境专线定义不同,与 bgp-multi-entry 讲入口侧接入不同,与 line-name-decoder 的速查定位也不同。",
+    "relatedSlugs": ["iepl-iplc-explained", "bgp-multi-entry"],
+    "nextStep": {
+      "label": "继续往上一档看:专线到底是什么",
+      "href": "/protocols/how-to-choose/iepl-iplc-explained/",
+      "reason": "中转之上是专线,读者理解了公网中转的瓶颈后,才能正确理解专线卖的是什么。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "iepl-iplc-explained",
+    "slug": "iepl-iplc-explained",
+    "file": "src/content/posts/protocols/iepl-iplc-explained.md",
+    "url": "/protocols/how-to-choose/iepl-iplc-explained/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "IEPL是什么意思?一并讲清IPLC与专线的真实定义",
+    "description": "IEPL 和 IPLC 原本是电信运营商的企业专线产品名,进入机场语境后含义被拉扯得很宽。本文回到产品定义本身,说明两者的技术差别、为何倍率更高,以及\"号称专线却晚高峰崩掉\"的常见成因。",
+    "primaryKeyword": "IEPL是什么意思",
+    "secondaryKeywords": ["IPLC是什么意思", "专线机场是什么", "专线为什么倍率高", "真专线怎么判断"],
+    "intent": "informational",
+    "answer": "IEPL 和 IPLC 都是电信运营商面向企业销售的跨境专线产品:线路不经过公网国际出口,因此不受晚高峰拥堵和常规干扰影响。机场把这类线路切给用户使用,成本远高于普通中转,所以流量倍率通常也更高。",
+    "outline": [
+      "IEPL 和 IPLC 在运营商产品目录里原本指什么?",
+      "进入机场语境后,这两个词被用歪了多少?",
+      "为什么专线不过公网,稳定性就明显不同?",
+      "专线和\"高质量中转\"在技术上到底差在哪?",
+      "为什么专线节点的流量倍率普遍更高?",
+      "号称专线却晚高峰崩掉,可能是哪几种情况?",
+      "选购时应该怎样正确理解这两个词?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一从运营商产品定义出发解释两个缩写本义、并指出机场语境偏差的一篇。它只做定义与技术边界,不做\"值不值得买\"的付费决策(交给 dedicated-line-worth-it),也不承担节点名速查功能。",
+    "relatedSlugs": ["transit-vs-direct", "shadowsocks-vs-trojan", "vless-vs-vmess"],
+    "nextStep": {
+      "label": "学会读懂节点名里的线路标记",
+      "href": "/protocols/how-to-choose/line-name-decoder/",
+      "reason": "知道专线定义之后,读者面对的实际场景是一长串节点名,需要一份速查表把概念落到界面上。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "native-ip-vs-broadcast-ip",
+    "slug": "native-ip-vs-broadcast-ip",
+    "file": "src/content/posts/protocols/native-ip-vs-broadcast-ip.md",
+    "url": "/protocols/how-to-choose/native-ip-vs-broadcast-ip/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "原生IP和广播IP区别:同一节点解锁结果为何不同",
+    "description": "同一个日本节点,有人能看流媒体、有人却被拦。差别往往不在带宽,而在出口 IP 的注册归属与信誉。本文讲清原生、广播、住宅三类 IP 的判定逻辑及其对账号风控的实际影响。",
+    "primaryKeyword": "原生IP和广播IP区别",
+    "secondaryKeywords": [
+      "原生IP是什么意思",
+      "住宅IP节点是什么",
+      "独享IP和共享IP区别",
+      "怎么判断原生IP"
+    ],
+    "intent": "informational",
+    "answer": "原生 IP 指注册地与节点所在地一致的 IP,广播 IP 则是把其他地区的 IP 段广播到本地机房使用,注册地与物理位置不一致;住宅 IP 归属于民用宽带运营商。平台主要依据 ASN 与 IP 注册信息判定归属,因此同一节点在不同平台上的解锁结果可能完全不同。",
+    "outline": [
+      "原生 IP、广播 IP、住宅 IP 分别怎么定义?",
+      "平台到底靠什么判断一个 IP 属于哪里?",
+      "为什么同一节点在不同平台解锁结果不一样?",
+      "独享和共享对账号风控的影响有多大?",
+      "出口 IP 频繁变化会带来什么后果?",
+      "哪些场景真的需要原生 IP,哪些完全不需要?",
+      "怎么快速自查一个节点的 IP 类型?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一讲出口 IP 归属判定(ASN、注册地、信誉)及其风控影响的一篇。它处理的是链路终点,与 transit-vs-direct 讲中间路径、bgp-multi-entry 讲接入入口构成完整三段;不重复 line-name-decoder 的标签速查。",
+    "relatedSlugs": ["transit-vs-direct", "shadowsocks-vs-trojan", "vless-vs-vmess"],
+    "nextStep": {
+      "label": "把协议知识用到实际选购上",
+      "href": "/compare/",
+      "reason": "搞懂线路与协议的差别之后,对照表里的那两列才真正读得懂。"
+    }
+  },
+  {
+    "clusterKey": "protocols-line-and-protocol",
+    "originalSlug": "bgp-multi-entry",
+    "slug": "bgp-multi-entry",
+    "file": "src/content/posts/protocols/bgp-multi-entry.md",
+    "url": "/protocols/how-to-choose/bgp-multi-entry/",
+    "category": "protocols",
+    "pillar": "how-to-choose",
+    "pillarUrl": "/protocols/how-to-choose/",
+    "title": "多入口机场是什么意思:BGP接入如何决定连接质量",
+    "description": "同一个账号在家里好用、去了外地就卡,问题多半出在接入入口而非落地节点。本文讲解入口机、BGP 接入与三网优化的关系,以及智能接入在实际运营中通常意味着什么。",
+    "primaryKeyword": "多入口机场是什么意思",
+    "secondaryKeywords": [
+      "BGP入口是什么意思",
+      "三网优化机场",
+      "智能接入机场",
+      "移动联通电信节点差异"
+    ],
+    "intent": "informational",
+    "answer": "多入口指机场在境内或边缘部署了多台接入机器,你的设备先连到最近或最优的那一台再转发出去。BGP 接入让入口机可以同时对接多家运营商,因此移动、电信、联通用户都能走到相对优质的路径,换城市换运营商时体验波动更小。",
+    "outline": [
+      "入口、中间段和落地分别决定了什么?",
+      "多入口和单入口的体验差别体现在哪里?",
+      "BGP 接入怎么影响三网用户的连接质量?",
+      "\"智能接入\"是真智能,还是负载分配的说法?",
+      "为什么换个城市或换个运营商,体验就变了?",
+      "移动、电信、联通用户各自要重点看什么?",
+      "怎么判断一家机场是不是真做了多入口?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一讲接入侧(入口机、BGP 接入、三网优化)的一篇,补齐链路三段中的第一段。与 transit-vs-direct 讲中间跨境段、native-ip-vs-broadcast-ip 讲落地出口 IP 形成互补而非重叠。",
+    "relatedSlugs": ["transit-vs-direct", "shadowsocks-vs-trojan", "vless-vs-vmess"],
+    "nextStep": {
+      "label": "回到中间路段:中转与直连的结构差异",
+      "href": "/protocols/how-to-choose/transit-vs-direct/",
+      "reason": "入口只是三段链路中的第一段,读者需要接着理解中间跨境段才能形成完整的线路认知。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "overseas-apple-id",
+    "slug": "overseas-apple-id",
+    "file": "src/content/posts/guides/overseas-apple-id.md",
+    "url": "/guides/shadowrocket/overseas-apple-id/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "小火箭外区Apple ID怎么弄:购买渠道、支付与共享风险",
+    "description": "买小火箭卡在账号这一步的人比卡在软件本身的多。本文对比自行注册海外区账号与购买「成品账号」两条路的成本与风险,并说明付款方式、地区资格和账号被锁后 App 会发生什么。",
+    "primaryKeyword": "小火箭外区Apple ID",
+    "secondaryKeywords": [
+      "Shadowrocket 美区账号",
+      "苹果外区账号买小火箭",
+      "Apple ID切换地区",
+      "小火箭付款方式"
+    ],
+    "intent": "tutorial",
+    "answer": "购买 Shadowrocket 需要一个地区不是中国大陆的 Apple ID。可行路径有两条:把现有 Apple ID 的地区改为海外区(需清空余额并更换付款方式),或新建一个海外区账号专门用于购买。网络上大量流通的「现成美区账号」属于共享账号,随时可能被原持有者改密或被苹果风控锁定,一旦锁定,已购 App 无法重新下载,不建议作为长期方案。",
+    "outline": [
+      "改地区还是新建账号,两条路分别适合谁?",
+      "海外区账号需要绑定什么付款方式才能付费购买?",
+      "买来的「成品美区账号」为什么算高风险资产?",
+      "账号被锁定后,已经装好的小火箭还能用吗?",
+      "为什么建议把「购买账号」和「日常 iCloud 账号」分开?",
+      "买完之后怎么把 App 装回日常使用的 iPhone?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一一篇不讲软件界面、只讲 Apple 账号体系的文章:地区切换、付款资格、共享账号风控、已购内容归属。与 download-and-install 的区别在于那篇回答「去哪下」,本篇回答「用什么身份才能下」;与其余所有文章的区别在于本篇的失败点全部发生在 App Store 而非 Shadowrocket 内部。",
+    "relatedSlugs": ["qr-code-import", "update-subscription", "choose-node"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "qr-code-import",
+    "slug": "qr-code-import",
+    "file": "src/content/posts/guides/qr-code-import.md",
+    "url": "/guides/shadowrocket/qr-code-import/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "扫一下就能用?Shadowrocket二维码导入的正确顺序",
+    "description": "二维码是小火箭最快的导入方式,也是最容易导入错东西的一种。本文讲清扫码入口在哪、相册里的二维码怎么识别、以及二维码里装的到底是单节点还是整份订阅。",
+    "primaryKeyword": "Shadowrocket二维码导入",
+    "secondaryKeywords": [
+      "小火箭扫码添加节点",
+      "Shadowrocket扫描二维码",
+      "小火箭相册识别二维码",
+      "Shadowrocket二维码失效"
+    ],
+    "intent": "tutorial",
+    "answer": "小火箭的扫码入口在右上角加号旁的扫描图标,可直接调用摄像头,也可以从相册中选取截图识别。关键在于分辨二维码承载的内容:机场后台生成的「订阅二维码」扫完会出现一整组节点,而群里流传的「节点二维码」扫完只会新增一条。二维码本身没有有效期,失效通常是背后的订阅地址被重置或套餐到期,重新扫旧图不会恢复。",
+    "outline": [
+      "扫码入口藏在哪一层菜单里?",
+      "相册里的二维码截图怎么让小火箭识别?",
+      "扫出来只有一个节点,是二维码的问题还是订阅的问题?",
+      "二维码提示「无效」或「无法识别」通常是什么原因?",
+      "扫码导入和粘贴链接导入,后续更新行为一样吗?",
+      "别人发来的节点二维码为什么不建议随手扫?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一聚焦图像入口的文章:摄像头扫描、相册识别、二维码内容类型判别、二维码「失效」的真实成因。与 import-subscription 的区别在于那篇处理文本链接的三种入口,本篇处理图像入口,并额外承担「扫来路不明的二维码有什么风险」这一安全提示。",
+    "relatedSlugs": ["update-subscription", "overseas-apple-id", "choose-node"],
+    "nextStep": {
+      "label": "了解订阅后续怎么刷新",
+      "href": "/guides/shadowrocket/update-subscription/",
+      "reason": "扫码只完成了第一次导入,节点变动要靠更新机制才能同步过来。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "update-subscription",
+    "slug": "update-subscription",
+    "file": "src/content/posts/guides/update-subscription.md",
+    "url": "/guides/shadowrocket/update-subscription/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "Shadowrocket更新订阅后节点变了?先看这套刷新机制",
+    "description": "机场加了新节点但手机里看不到、更新一次反而少了几个节点、流量数字长时间不动——这些都指向小火箭的订阅刷新逻辑。本文说明手动更新、后台自动更新与流量信息的来源。",
+    "primaryKeyword": "Shadowrocket更新订阅",
+    "secondaryKeywords": [
+      "小火箭订阅怎么更新",
+      "Shadowrocket自动更新订阅",
+      "小火箭更新后节点消失",
+      "Shadowrocket流量显示不刷新"
+    ],
+    "intent": "tutorial",
+    "answer": "小火箭不会实时同步机场的节点列表,它只在你手动下拉刷新订阅、或后台自动更新周期触发时才重新拉取一次。因此机场上线新节点、下线故障节点、调整倍率之后,手机端要更新过才会体现。更新后节点数量减少往往是机场主动下线,而不是客户端出错;流量与到期日显示同样来自订阅响应头,机场没有返回时会长期空白。",
+    "outline": [
+      "手动更新订阅具体点哪里,多久做一次合适?",
+      "后台自动更新为什么经常不生效?",
+      "更新后节点变少了,是我的问题还是机场的问题?",
+      "流量余额和到期时间为什么一直不刷新?",
+      "更新会不会把我自己改过的设置覆盖掉?",
+      "机场重置订阅地址后,旧链接还能更新吗?",
+      "什么情况下应该删掉重导而不是继续更新?"
+    ],
+    "brands": [],
+    "differentiator": "本篇讲的是「订阅的时间维度」:刷新触发条件、自动更新失效、节点增减与流量信息的数据来源。与 import-subscription 的区别在于那篇只覆盖第一次添加;与 shadowrocket-subscription-import-failed 的区别在于本篇假设更新能完成,解释的是结果为何与预期不符,而非报错处理。",
+    "relatedSlugs": [
+      "shadowrocket-subscription-import-failed",
+      "overseas-apple-id",
+      "qr-code-import"
+    ],
+    "nextStep": {
+      "label": "更新时报错就看这里",
+      "href": "/guides/shadowrocket/shadowrocket-subscription-import-failed/",
+      "reason": "更新失败与首次导入失败共用同一套报错体系,直接按报错文本定位原因更快。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "choose-node",
+    "slug": "choose-node",
+    "file": "src/content/posts/guides/choose-node.md",
+    "url": "/guides/shadowrocket/choose-node/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "几十个节点该点哪一个:Shadowrocket怎么选节点",
+    "description": "订阅导入后节点列表动辄几十条,名字里的地区、编号和倍率各代表什么?本文给出一套按用途选节点的顺序,并说明延迟测试结果为什么不能直接等同于实际体验。",
+    "primaryKeyword": "Shadowrocket怎么选节点",
+    "secondaryKeywords": [
+      "小火箭节点怎么选",
+      "Shadowrocket测延迟",
+      "小火箭节点倍率",
+      "Shadowrocket节点地区选择"
+    ],
+    "intent": "tutorial",
+    "answer": "选节点的顺序是:先按用途定地区(看港台内容选港台、用 AI 工具优先原生 IP 的美日节点、日常浏览选延迟最低的香港或日本),再在同地区内用延迟测试筛掉不通的,最后看节点名里的倍率标记控制流量消耗。延迟低只说明握手快,不代表带宽足,晚高峰应以实际打开网页和视频的流畅度为准,而不是只看那串毫秒数。",
+    "outline": [
+      "节点名字里的地区、编号、倍率分别怎么读?",
+      "延迟测试要按哪个按钮,结果多少算正常?",
+      "为什么延迟最低的节点不一定最好用?",
+      "看流媒体、用 AI 工具、日常浏览各该选哪类节点?",
+      "倍率是什么,选错会多扣多少流量?",
+      "自动选择组和手动指定节点,哪种更适合新手?",
+      "晚高峰卡顿时应该换节点还是换模式?"
+    ],
+    "brands": [],
+    "differentiator": "本篇只讨论「在节点列表里做选择」这一动作:命名规则、延迟测试的解读边界、倍率、按用途匹配地区。与 routing-modes 的区别在于那篇决定「哪些流量走代理」,本篇决定「走代理的流量从哪个出口出去」;与协议支持篇的区别在于本篇不讨论协议本身的技术差异。",
+    "relatedSlugs": ["routing-modes", "overseas-apple-id", "qr-code-import"],
+    "nextStep": {
+      "label": "选好节点后再调路由模式",
+      "href": "/guides/shadowrocket/routing-modes/",
+      "reason": "节点对了但路由模式选错,国内网站会一起绕出去,速度体验依然不对。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "routing-modes",
+    "slug": "routing-modes",
+    "file": "src/content/posts/guides/routing-modes.md",
+    "url": "/guides/shadowrocket/routing-modes/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "配置、代理、直连三选一:Shadowrocket全局路由怎么切",
+    "description": "小火箭首页那几个路由选项决定了哪些流量被送出国。本文逐一解释配置、代理、直连与全局路由的行为差异,并指出各自适合的场景与最常见的误用后果。",
+    "primaryKeyword": "Shadowrocket全局路由",
+    "secondaryKeywords": [
+      "小火箭全局模式",
+      "Shadowrocket代理模式区别",
+      "小火箭配置模式是什么",
+      "Shadowrocket直连模式"
+    ],
+    "intent": "tutorial",
+    "answer": "小火箭的路由选项决定流量分配方式:「配置」按规则分流,国内直连、国外走节点,是日常推荐值;「代理」把几乎所有流量都送进节点,等同全局;「直连」不走代理只保留 App 运行;全局路由则是覆盖前述判断的强制项。默认长期使用建议保持「配置」,只有在某个境外服务被规则误判为国内时,才临时切到代理模式验证。",
+    "outline": [
+      "首页这几个选项到底改变了什么?",
+      "「配置」模式下,判断走不走代理的依据是什么?",
+      "什么时候必须切到全局,什么时候切了反而更糟?",
+      "直连模式还开着 App 有什么意义?",
+      "全局路由会不会把国内银行、支付类 App 一起送出去?",
+      "切换模式需要重新连接吗,会断流吗?",
+      "怎么快速验证当前模式是否真的生效?"
+    ],
+    "brands": [],
+    "differentiator": "本篇讲的是四个内置模式之间的取舍,属于粗粒度开关层。与 rules-and-split-tunneling 的区别在于本篇不教写规则,只教在既有模式里选一个;与 shadowrocket-connected-no-internet 的区别在于本篇是正常状态下的配置指导,不处理故障现象。",
+    "relatedSlugs": ["choose-node", "rules-and-split-tunneling"],
+    "nextStep": {
+      "label": "想更细地控制就动规则",
+      "href": "/guides/shadowrocket/rules-and-split-tunneling/",
+      "reason": "路由模式是粗粒度开关,单个域名走哪条路要靠分流规则来指定。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "rules-and-split-tunneling",
+    "slug": "rules-and-split-tunneling",
+    "file": "src/content/posts/guides/rules-and-split-tunneling.md",
+    "url": "/guides/shadowrocket/rules-and-split-tunneling/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "让国内App走直连:Shadowrocket分流规则读懂与自定义",
+    "description": "分流规则决定了哪些域名走节点、哪些直连。本文讲清规则的匹配顺序、DOMAIN 与 IP-CIDR 等常见类型的差别,以及怎么为某个被误判的网站手动补一条规则。",
+    "primaryKeyword": "Shadowrocket分流规则",
+    "secondaryKeywords": [
+      "小火箭分流设置",
+      "Shadowrocket规则怎么加",
+      "小火箭国内直连规则",
+      "Shadowrocket自定义规则"
+    ],
+    "intent": "tutorial",
+    "answer": "分流规则是一张自上而下匹配的清单,每条指定「符合某个域名或 IP 范围的流量,走代理、走直连还是拒绝」,第一条命中即生效,末尾的 FINAL 规则兜底。多数机场提供的配置已内置国内直连规则组,用户通常只需要在某个网站被误判时,手工在列表靠前的位置补一条 DOMAIN-SUFFIX 规则,而不必重写整份规则集。",
+    "outline": [
+      "规则是按什么顺序匹配的,为什么位置很重要?",
+      "DOMAIN、DOMAIN-SUFFIX、DOMAIN-KEYWORD 有什么区别?",
+      "IP-CIDR 和 GEOIP 什么时候才用得上?",
+      "某个网站被误判成国内,怎么手工补一条规则?",
+      "FINAL 这一条改错了会发生什么?",
+      "机场自带规则和自己加的规则冲突了听谁的?",
+      "改完规则怎么验证某个域名到底走了哪条路?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一深入规则语法层的文章:匹配顺序、规则类型语义、FINAL 兜底、手工插入位置。与 routing-modes 的区别在于那篇选整体模式,本篇改单条规则;与 config-file 的区别在于本篇讲规则内容本身,不讲文件的存放、备份与迁移。",
+    "relatedSlugs": ["routing-modes", "config-file"],
+    "nextStep": {
+      "label": "分流没生效导致国内变慢?",
+      "href": "/guides/shadowrocket/shadowrocket-slows-domestic-sites/",
+      "reason": "规则写了却没效果是最常见的后续问题,那篇按现象逐条反查。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "config-file",
+    "slug": "config-file",
+    "file": "src/content/posts/guides/config-file.md",
+    "url": "/guides/shadowrocket/config-file/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "换手机也不用重配:Shadowrocket配置文件的备份与迁移",
+    "description": "小火箭的配置文件把节点、规则和偏好打包在一起。本文说明配置文件与订阅的分工、本地配置怎么导出备份,以及换新 iPhone 时怎样一次搬完而不用从头再设一遍。",
+    "primaryKeyword": "Shadowrocket配置文件",
+    "secondaryKeywords": [
+      "小火箭配置文件在哪",
+      "Shadowrocket配置导入",
+      "小火箭换手机迁移",
+      "Shadowrocket备份配置"
+    ],
+    "intent": "tutorial",
+    "answer": "配置文件是一份包含节点组、分流规则和全局设置的文本,和订阅的关系是:订阅只负责节点列表,配置文件负责这些节点怎么被组织和使用。它可以从远程地址拉取,也可以本地编辑保存。换机时,重新用同一个 Apple ID 装回 App、导入原订阅并恢复配置文件,即可还原原有状态,不需要逐条重设规则。",
+    "outline": [
+      "配置文件和订阅链接分别管什么?",
+      "远程配置和本地配置该用哪一种?",
+      "配置文件里到底存了哪些东西?",
+      "怎么把当前配置导出成一份可保存的备份?",
+      "换新 iPhone 的完整搬家顺序是什么?",
+      "配置文件损坏或加载失败时怎么回退?",
+      "从别人那拿来的配置文件为什么要先检查一遍?"
+    ],
+    "brands": [],
+    "differentiator": "本篇处理「配置作为一个文件」的生命周期:远程与本地来源、导出备份、换机迁移、损坏回退。与 rules-and-split-tunneling 的区别在于那篇讲文件内部的规则语义,本篇讲文件本身的存取与搬运;与 import-subscription 的区别在于本篇明确区分配置文件与订阅这两个易混概念。",
+    "relatedSlugs": ["rules-and-split-tunneling", "protocol-support"],
+    "nextStep": {
+      "label": "确认手里的协议它都支持吗",
+      "href": "/guides/shadowrocket/protocol-support/",
+      "reason": "迁移后节点报错,常见原因是新订阅用了当前版本不支持的协议。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "protocol-support",
+    "slug": "protocol-support",
+    "file": "src/content/posts/guides/protocol-support.md",
+    "url": "/guides/shadowrocket/protocol-support/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "Hysteria2和TUIC能用吗:Shadowrocket支持哪些协议",
+    "description": "机场给的节点用不了,有时不是节点坏了,而是小火箭这一版本不认这种协议。本文梳理常见协议在 Shadowrocket 中的支持情况,并给出挑机场时该确认的兼容性清单。",
+    "primaryKeyword": "Shadowrocket支持哪些协议",
+    "secondaryKeywords": [
+      "小火箭支持Hysteria2吗",
+      "Shadowrocket支持VLESS吗",
+      "小火箭TUIC",
+      "Shadowrocket协议兼容"
+    ],
+    "intent": "tutorial",
+    "answer": "Shadowrocket 对 Shadowsocks、Trojan、VMess、VLESS 等主流协议支持较早也较完整,对 Hysteria 系列、TUIC 等较新的 UDP 类协议则依赖版本更新,老版本可能直接无法解析该类节点。因此导入订阅后个别节点缺失或报错,应先确认 App 版本与协议支持范围,再判断是否为机场问题;选机场时也应确认其订阅能否输出 Shadowrocket 可读的格式。",
+    "outline": [
+      "同一份订阅在小火箭里比在电脑上少了几个节点,为什么?",
+      "哪些协议属于「装上就能用」的稳妥选择?",
+      "较新的 UDP 类协议在 iOS 上有什么额外限制?",
+      "App 版本过旧会造成哪些具体现象?",
+      "订阅转换能不能解决协议不兼容的问题?",
+      "挑机场时该向客服确认哪几件事?",
+      "只支持一种协议的机场值不值得选?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一从「客户端能力边界」出发的文章,讨论协议解析支持与版本差异,并把「节点缺失」这类现象归因到兼容性而非故障。与 choose-node 的区别在于那篇在可用节点里挑,本篇解释为什么有些节点根本没出现;它也是本簇通向评测栏目的商业衔接点。",
+    "relatedSlugs": ["config-file", "choose-node"],
+    "nextStep": {
+      "label": "看看哪些机场的兼容性经得起实测",
+      "href": "/reviews/",
+      "reason": "协议兼容性最终取决于机场提供什么,评测栏目里能对照各家实际输出的节点类型。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "shadowrocket-subscription-import-failed",
+    "slug": "shadowrocket-subscription-import-failed",
+    "file": "src/content/posts/guides/shadowrocket-subscription-import-failed.md",
+    "url": "/guides/shadowrocket/shadowrocket-subscription-import-failed/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "Shadowrocket订阅导入失败:六类报错各自对应什么",
+    "description": "导入订阅时弹出的提示语其实已经说明了原因。本文按报错文本分组,把「地址无效」「无可用节点」「403 未授权」「流量不足」等情况逐一对应到订阅、账号还是网络层面的问题。",
+    "primaryKeyword": "Shadowrocket订阅导入失败",
+    "secondaryKeywords": [
+      "小火箭订阅添加失败",
+      "Shadowrocket订阅无法解析",
+      "小火箭导入后没有节点",
+      "Shadowrocket订阅地址无效"
+    ],
+    "intent": "problem",
+    "answer": "小火箭导入订阅失败可归为六类:链接被截断或多了空格导致地址无效、订阅返回的是网页而非节点数据、账号未授权返回 403、套餐到期或流量耗尽被拒绝、订阅地址已被机场重置、以及本地网络无法访问订阅域名。前四类需要回机场后台核对,第五类需重新复制新地址,第六类可通过换用蜂窝数据或先手动连一个节点再更新来绕开。",
+    "outline": [
+      "粘贴进去提示「地址无效」,先检查哪两处?",
+      "导入成功却一个节点都没有,数据去哪了?",
+      "提示 403、401 或「未授权」说明什么?",
+      "「流量不足」「套餐过期」是不是一定要续费才能恢复?",
+      "订阅地址被重置后,旧链接为什么彻底失效?",
+      "订阅域名本身打不开怎么办,先有鸡还是先有蛋?",
+      "什么时候该联系机场客服,该提供哪些信息?"
+    ],
+    "brands": [],
+    "differentiator": "本篇按「报错文本」而非「现象」分类,覆盖的是订阅还没成功落地时的失败。与 shadowrocket-nodes-timeout 的区别在于那篇的前提是节点已经在列表里;与 update-subscription 的区别在于那篇解释更新成功但结果异常,本篇解释更新与导入根本没完成。",
+    "relatedSlugs": ["shadowrocket-nodes-timeout", "overseas-apple-id", "qr-code-import"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "shadowrocket-nodes-timeout",
+    "slug": "shadowrocket-nodes-timeout",
+    "file": "src/content/posts/guides/shadowrocket-nodes-timeout.md",
+    "url": "/guides/shadowrocket/shadowrocket-nodes-timeout/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "节点全红一片:Shadowrocket节点超时先排iOS五个开关",
+    "description": "节点列表整片超时,多数人第一反应是换机场。本文给出一条 iOS 专属的排查顺序,从低电量模式、蜂窝数据权限、VPN 描述文件到系统时间,把设备端因素先排干净再谈服务端。",
+    "primaryKeyword": "Shadowrocket节点超时",
+    "secondaryKeywords": [
+      "小火箭节点全红",
+      "Shadowrocket测速全部超时",
+      "小火箭连接超时",
+      "iPhone节点timeout"
+    ],
+    "intent": "problem",
+    "answer": "小火箭里所有节点同时超时,通常不是节点全坏,而是设备侧把连接掐掉了。iOS 上按顺序排查五处:低电量模式是否限制了后台网络、是否关闭了小火箭的蜂窝数据权限、VPN 描述文件是否被系统撤销需要重新授权、系统时间是否自动同步(时间偏差会导致握手失败)、以及当前 Wi-Fi 是否有额外限制。五项都正常仍全红,再考虑订阅或机场服务端。",
+    "outline": [
+      "为什么「全部超时」比「个别超时」更像本地问题?",
+      "低电量模式和后台刷新会掐掉代理连接吗?",
+      "蜂窝数据下不能用、Wi-Fi 下正常,该看哪个开关?",
+      "VPN 描述文件被撤销是什么表现,怎么重新授权?",
+      "系统时间差几分钟为什么就连不上了?",
+      "换个 Wi-Fi、开热点分别能验证什么?",
+      "本地全部正常仍然全红,接下来该怀疑谁?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的独有维度是 iOS 系统层的限制项(低电量模式、蜂窝权限、VPN 描述文件授权、时间同步),这些在 Windows/安卓客户端上并不存在。与 shadowrocket-connected-no-internet 的区别在于本篇节点根本连不上、延迟测不出;与订阅导入失败篇的区别在于本篇订阅已正常落地。",
+    "relatedSlugs": [
+      "shadowrocket-subscription-import-failed",
+      "overseas-apple-id",
+      "qr-code-import"
+    ],
+    "nextStep": {
+      "label": "确认是服务端问题就该重新选服务",
+      "href": "/reviews/",
+      "reason": "设备侧五项排查全部通过仍长期全红,问题多在机场服务端,可对照评测判断是否更换。"
+    }
+  },
+  {
+    "clusterKey": "shadowrocket-ios",
+    "originalSlug": "shadowrocket-slows-domestic-sites",
+    "slug": "shadowrocket-slows-domestic-sites",
+    "file": "src/content/posts/guides/shadowrocket-slows-domestic-sites.md",
+    "url": "/guides/shadowrocket/shadowrocket-slows-domestic-sites/",
+    "category": "guides",
+    "pillar": "shadowrocket",
+    "pillarUrl": "/guides/shadowrocket/",
+    "title": "开着代理刷不动微博:Shadowrocket国内网站变慢排查",
+    "description": "打开小火箭后国内网站、外卖和视频 App 明显变卡,说明本该直连的流量被送出了国。本文列出分流未生效的四个可观察信号,并给出逐层收敛的定位方法。",
+    "primaryKeyword": "Shadowrocket国内网站变慢",
+    "secondaryKeywords": [
+      "小火箭开了国内网站卡",
+      "Shadowrocket影响国内App",
+      "小火箭分流不生效",
+      "开代理后国内视频卡顿"
+    ],
+    "intent": "problem",
+    "answer": "开启小火箭后国内服务变慢,基本可以确定国内流量也走进了节点。四个信号可以确认:当前处于代理或全局模式、配置里缺少国内直连规则组、FINAL 规则被写成了代理、或某个自定义规则位置靠前把国内域名一并匹配了。定位顺序是先切回「配置」模式观察,再检查规则清单里国内规则组是否存在且位于 FINAL 之前。",
+    "outline": [
+      "怎么快速确认「国内流量确实被送出去了」?",
+      "第一步为什么是切回配置模式而不是改规则?",
+      "配置里缺少国内直连规则组会怎样?",
+      "FINAL 写成代理和写成直连,后果差在哪?",
+      "自己加的规则太靠前会误伤哪些服务?",
+      "银行、支付、打车类 App 受影响时要额外注意什么?",
+      "改完之后怎么验证国内域名确实走了直连?"
+    ],
+    "brands": [],
+    "differentiator": "本篇处理的是「国内方向」的性能退化,而非境外访问失败,这在全簇独此一篇。与 shadowrocket-connected-no-internet 的区别在于那篇是境外站点完全打不开,本篇是国内站点变慢且境外正常;与 rules-and-split-tunneling 的区别在于那篇是主动配置教程,本篇是由现象反查配置错误。",
+    "relatedSlugs": ["shadowrocket-nodes-timeout", "overseas-apple-id", "qr-code-import"],
+    "nextStep": {
+      "label": "动手改分流规则",
+      "href": "/guides/shadowrocket/rules-and-split-tunneling/",
+      "reason": "定位到是规则问题后,需要按规则语法补齐国内直连规则组并调整顺序。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "download-and-install",
+    "slug": "download-and-install",
+    "file": "src/content/posts/guides/download-and-install.md",
+    "url": "/guides/v2rayn/download-and-install/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "v2rayN 下载安装：认准官方版本与运行环境",
+    "description": "讲清 v2rayN 该从哪里下载、with-core 与无核心包怎么选、解压目录有什么讲究，以及被 SmartScreen 拦截、缺运行库闪退时的处理，帮你在导入订阅前先把程序稳稳跑起来。",
+    "primaryKeyword": "v2rayN下载",
+    "secondaryKeywords": ["v2rayN安装", "v2rayN官网", "v2rayN Windows", "v2rayN闪退"],
+    "intent": "tutorial",
+    "answer": "v2rayN 只从 GitHub 的 2dust/v2rayN 发布页下载，Windows 用户优先选带内核的 with-core 压缩包，解压到非系统盘的独立英文路径即可运行。首次启动被 SmartScreen 或杀毒软件拦截属常见现象，放行后再继续；不要使用搜索广告位、网盘转载包或所谓汉化增强版。",
+    "outline": [
+      "官方发布页长什么样，怎么一眼认出转载包",
+      "该下哪个包：with-core、无核心版与 64 位/ARM 怎么挑",
+      "解压到哪个目录才不会出权限问题",
+      "被 SmartScreen 和杀毒软件拦截时怎么放行",
+      "缺运行库导致启动即闪退，要补装什么",
+      "升级到新版本，配置和订阅会不会丢",
+      "卸载时哪些残留文件需要手动清理"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一只处理「把软件装起来」的一篇。与《第一次打开 v2rayN，先把这 6 项设置调好》的边界是本篇止于程序能正常启动，完全不碰参数面板；与《v2rayN 节点全部超时：四层定位法》的区别是本篇处理安装期的拦截、权限与运行库缺失，而非连接期故障。",
+    "relatedSlugs": [
+      "first-run-setup",
+      "v2rayn-update-subscription",
+      "protocol-config-vless-vmess"
+    ],
+    "nextStep": {
+      "label": "接着把首启的 6 项设置调好",
+      "href": "/guides/v2rayn/first-run-setup/",
+      "reason": "程序能启动只是第一步，参数面板不调好，后面导入订阅很容易出现看似连上却不生效的情况。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "first-run-setup",
+    "slug": "first-run-setup",
+    "file": "src/content/posts/guides/first-run-setup.md",
+    "url": "/guides/v2rayn/first-run-setup/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "第一次打开 v2rayN，先把这 6 项设置调好",
+    "description": "逐项解释 v2rayN 参数设置面板：界面语言、内核选择、本地监听端口、系统代理模式、开机自启与日志级别，说明每一项改与不改分别会带来什么后果，以及配置文件放在哪、换机怎么迁移。",
+    "primaryKeyword": "v2rayN怎么配置",
+    "secondaryKeywords": ["v2rayN参数设置", "v2rayN内核选择", "v2rayN监听端口", "v2rayN日志级别"],
+    "intent": "tutorial",
+    "answer": "装好之后先确认六项：界面语言、开机自启、内核选择（Xray 或 sing-box）、本地监听端口、系统代理模式、日志级别。这六项决定后续所有操作的默认行为，先改完再导入订阅，可以避开大部分「看起来能连但没生效」的误判。",
+    "outline": [
+      "参数设置面板里，哪几项新手必须先改",
+      "Xray 内核和 sing-box 内核该选哪个",
+      "10808 与 10809 两个本地端口分别在管什么",
+      "系统代理设成 PAC、全局还是不启用",
+      "开机自启和自动检查更新要不要打开",
+      "日志级别调到什么程度才方便日后排错",
+      "配置文件存在哪，换电脑怎么整体迁移"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一按「参数面板逐项含义」组织的一篇。与《v2rayN 下载安装》的分界是本篇假设程序已能启动；与《系统代理和 TUN 模式该选哪个》的区别是本篇只说明各选项在哪、默认值是什么，不展开两种流量接管方式的机制对比。",
+    "relatedSlugs": [
+      "download-and-install",
+      "v2rayn-update-subscription",
+      "protocol-config-vless-vmess"
+    ],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "update-subscription",
+    "slug": "v2rayn-update-subscription",
+    "file": "src/content/posts/guides/v2rayn-update-subscription.md",
+    "url": "/guides/v2rayn/v2rayn-update-subscription/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "订阅更新与自动更新周期，v2rayN 该怎么设",
+    "description": "手动更新当前订阅、更新全部订阅、按周期自动更新，三种触发方式各自的适用时机。重点解释「更新时使用代理」这个开关为什么关键，以及更新后自定义节点会不会被覆盖。",
+    "primaryKeyword": "v2rayN更新订阅",
+    "secondaryKeywords": [
+      "v2rayN自动更新订阅",
+      "v2rayN订阅周期",
+      "v2rayN更新时使用代理",
+      "v2rayN节点消失"
+    ],
+    "intent": "tutorial",
+    "answer": "v2rayN 的订阅更新分三种触发：更新当前订阅、更新全部订阅、按设定周期自动更新。机场换节点、加线路后必须更新才能看到新节点；建议开启自动更新并勾选「更新时使用代理」，否则订阅地址本身可能就拉不动。",
+    "outline": [
+      "什么情况下必须立刻手动更新一次订阅",
+      "自动更新周期设多久比较合适",
+      "「更新时使用代理」这个开关为什么是关键",
+      "更新之后手动添加的节点会被覆盖掉吗",
+      "订阅更新、内核更新、软件更新是三回事",
+      "多个机场订阅一起更新，失败一个会拖累其他吗",
+      "更新完节点反而变少甚至清空，说明了什么"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一处理「订阅的长期维护」的一篇，核心是时间与覆盖策略。与《把机场订阅导入 v2rayN 的四种方式》按「首次导入 vs 后续同步」切分；与《订阅更新失败》的区别是本篇讲设置项如何配，后者讲配好了仍失败时怎么定位。",
+    "relatedSlugs": ["speed-test-and-node-choice", "download-and-install", "first-run-setup"],
+    "nextStep": {
+      "label": "节点拉齐后，学会读测速结果",
+      "href": "/guides/v2rayn/speed-test-and-node-choice/",
+      "reason": "订阅同步正常之后，真正影响体验的是从几十个节点里挑出哪几个常用，这一步需要先看懂测试数字。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "protocol-config-vless-vmess",
+    "slug": "protocol-config-vless-vmess",
+    "file": "src/content/posts/guides/protocol-config-vless-vmess.md",
+    "url": "/guides/v2rayn/protocol-config-vless-vmess/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "手动添加 VLESS 与 VMess 节点：字段逐项对照",
+    "description": "把一条 VLESS 或 VMess 分享链接拆开，对照 v2rayN 的每一个输入框：UUID、flow、传输方式、伪装 host 与 path、TLS 与 Reality 的公钥指纹，并说明哪些字段填错会直接握手失败。",
+    "primaryKeyword": "v2rayN VLESS配置",
+    "secondaryKeywords": [
+      "v2rayN VMess配置",
+      "v2rayN Reality设置",
+      "v2rayN手动添加节点",
+      "v2rayN alterId"
+    ],
+    "intent": "tutorial",
+    "answer": "手动添加 VLESS/VMess，关键字段是地址、端口、UUID、传输方式与 TLS 部分。VMess 的 alterId 现已废弃应填 0；VLESS 要正确填写 flow、SNI 以及 Reality 的公钥与指纹。这类字段填错的表现是直接握手失败，而不是变慢，因此排查方向和速度问题完全不同。",
+    "outline": [
+      "一条 VLESS 分享链接，各段参数对应哪个输入框",
+      "UUID、加密方式和 flow 分别该填什么",
+      "传输协议选 tcp、ws 还是 grpc",
+      "伪装域名 host 与路径 path 什么时候必须填",
+      "Reality 的 publicKey、shortId 和指纹怎么对上",
+      "VMess 的 alterId 为什么现在统一填 0",
+      "保存后不生效，优先检查哪两处"
+    ],
+    "brands": [],
+    "differentiator": "与《Trojan 与 Hysteria 2 节点在 v2rayN 怎么填》按「是否依赖额外内核」划分：本篇覆盖 Xray 内核原生支持的 V 系协议，字段争议集中在 flow 与 Reality；后者的协议需要切内核且带宽参数会直接影响吞吐。与《v2rayN 证书错误对照表》的区别是本篇讲怎么填对，后者按报错文本反查。",
+    "relatedSlugs": ["protocol-config-trojan-hysteria2", "download-and-install", "first-run-setup"],
+    "nextStep": {
+      "label": "再看 Trojan 与 Hysteria 2 的填法",
+      "href": "/guides/v2rayn/protocol-config-trojan-hysteria2/",
+      "reason": "这两类协议对内核和带宽参数有额外要求，和 V 系协议的填写逻辑不同，需要单独对照一遍。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "protocol-config-trojan-hysteria2",
+    "slug": "protocol-config-trojan-hysteria2",
+    "file": "src/content/posts/guides/protocol-config-trojan-hysteria2.md",
+    "url": "/guides/v2rayn/protocol-config-trojan-hysteria2/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "Trojan 与 Hysteria 2 节点在 v2rayN 怎么填",
+    "description": "Trojan 字段最少却最容易在 SNI 上翻车，Hysteria 2 则要先切换内核并填写上下行带宽与 obfs。本文对照两种协议的必填项、端口跳跃写法，以及 allowInsecure 打开后放弃了什么。",
+    "primaryKeyword": "v2rayN Hysteria2配置",
+    "secondaryKeywords": [
+      "v2rayN Trojan配置",
+      "v2rayN支持Hysteria2吗",
+      "v2rayN sing-box内核",
+      "v2rayN端口跳跃"
+    ],
+    "intent": "tutorial",
+    "answer": "Trojan 在 v2rayN 里只需地址、端口、密码与 SNI；Hysteria 2 则必须先把内核切到 sing-box 或安装对应内核，再填密码、obfs 混淆与上下行带宽。带宽参数填得离谱会直接拖垮实际速度，这是 Hysteria 2 与其他协议最不一样的地方。",
+    "outline": [
+      "Trojan 字段最少，为什么反而常在 SNI 上出错",
+      "想用 Hysteria 2，v2rayN 需要先具备哪个内核",
+      "上下行带宽按机场标注填还是按自家宽带填",
+      "obfs 混淆密码不填会出现什么现象",
+      "端口跳跃在客户端这一侧怎么写",
+      "allowInsecure 打开之后，风险具体在哪",
+      "同一机场里 Trojan 和 Hysteria 2 节点怎么分工"
+    ],
+    "brands": [],
+    "differentiator": "与《手动添加 VLESS 与 VMess 节点》的划分依据是内核依赖与调参逻辑：本篇两种协议一个吃 SNI 精确度、一个吃带宽估值，且 Hysteria 2 需要额外内核。与《v2rayN 测速结果怎么读》的区别是本篇讲参数填写导致的速度问题，后者讲测试方法本身的解读。",
+    "relatedSlugs": ["protocol-config-vless-vmess", "speed-test-and-node-choice"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "speed-test-and-node-choice",
+    "slug": "speed-test-and-node-choice",
+    "file": "src/content/posts/guides/speed-test-and-node-choice.md",
+    "url": "/guides/v2rayn/speed-test-and-node-choice/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "v2rayN 测速结果怎么读，节点又该怎么挑",
+    "description": "测试延迟只是握手时间，多线程测速常常虚高，两者都说明不了晚高峰表现。本文给出一套挑节点顺序：先排除不可用，再做带宽测试，最后结合流量倍率与晚高峰复测定下常用节点。",
+    "primaryKeyword": "v2rayN测速",
+    "secondaryKeywords": ["v2rayN测试延迟", "v2rayN节点怎么选", "v2rayN真连接延迟", "v2rayN倍率"],
+    "intent": "tutorial",
+    "answer": "v2rayN 的测试延迟只是 TCP 握手时间，测速才反映实际带宽，两者都无法说明节点在晚高峰是否稳定。挑节点的合理顺序是：先用真连接延迟排除不可用节点，再对候选做测速，最后在晚高峰复测一次，并结合流量倍率决定长期常用哪几个。",
+    "outline": [
+      "测试延迟和测试真连接延迟差在哪",
+      "显示 -1 或 timeout，一定是节点坏了吗",
+      "多线程测速的数字为什么常常虚高",
+      "延迟低就一定看视频不卡吗",
+      "倍率高的节点值不值得当日常主力",
+      "晚高峰复测怎么做才有参考价值",
+      "一次固定几个常用节点比较合理"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一讲「如何解读测试数字」的一篇，落点在指标含义与选节点方法论。与《v2rayN 节点全部超时》的分界是本篇假设节点可用只是快慢之分；与《能测速却打不开网页》的分界是本篇不涉及测速通过后仍不通的情况。",
+    "relatedSlugs": ["routing-rules", "v2rayn-update-subscription"],
+    "nextStep": {
+      "label": "节点选好了，去配路由分流",
+      "href": "/guides/v2rayn/routing-rules/",
+      "reason": "确定常用节点之后，下一步是决定哪些流量走它、哪些直连，否则国内站点绕一圈反而更慢。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "routing-rules",
+    "slug": "routing-rules",
+    "file": "src/content/posts/guides/routing-rules.md",
+    "url": "/guides/v2rayn/routing-rules/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "v2rayN 路由设置：国内直连、国外走代理",
+    "description": "从预定义规则集讲到自定义规则的匹配顺序，说明 proxy/direct/block 三种出站的用法、geosite 与 geoip 的差别，以及为什么规则改完常常不生效、内网地址该怎么排除。",
+    "primaryKeyword": "v2rayN路由设置",
+    "secondaryKeywords": ["v2rayN分流规则", "v2rayN绕过大陆", "v2rayN geosite", "v2rayN自定义规则"],
+    "intent": "tutorial",
+    "answer": "路由设置决定每条流量走代理、直连还是被拒绝。日常配置只要启用绕过大陆的预定义规则集，让 geosite:cn 与 geoip:cn 走 direct、其余走 proxy 即可。自定义规则按从上到下匹配，越具体的规则越要放在靠前位置，否则会被前面的宽泛规则提前吃掉。",
+    "outline": [
+      "路由规则和代理模式是同一回事吗",
+      "预定义规则集选哪一套最省心",
+      "proxy、direct、block 分别什么时候用",
+      "geosite 和 geoip 的判定依据差在哪",
+      "想让某个网站强制走代理，规则该写在第几行",
+      "局域网地址与内网服务怎么保证不被代理",
+      "规则改完不生效，通常漏了哪一步"
+    ],
+    "brands": [],
+    "differentiator": "与《系统代理和 TUN 模式该选哪个》按机制层级严格切分：本篇回答「流量走哪条出站」，后者回答「哪些程序的流量能被接管」。与《能测速却打不开网页》的区别是本篇讲规则怎么写，后者讲规则误判后的现象与定位。",
+    "relatedSlugs": ["tun-mode-and-system-proxy", "speed-test-and-node-choice"],
+    "nextStep": {
+      "label": "再决定用系统代理还是 TUN 模式",
+      "href": "/guides/v2rayn/tun-mode-and-system-proxy/",
+      "reason": "路由决定流量走不走代理，接管方式决定哪些程序的流量能被路由规则看到，两者要配套才完整。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "tun-mode-and-system-proxy",
+    "slug": "tun-mode-and-system-proxy",
+    "file": "src/content/posts/guides/tun-mode-and-system-proxy.md",
+    "url": "/guides/v2rayn/tun-mode-and-system-proxy/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "系统代理和 TUN 模式，v2rayN 用户该选哪个",
+    "description": "解释为什么浏览器能上网而游戏、命令行工具却不行：系统代理只覆盖遵循 Windows 代理设置的程序。文中对比 TUN 虚拟网卡的覆盖范围、权限与驱动要求，以及它和虚拟机、远程桌面的冲突。",
+    "primaryKeyword": "v2rayN TUN模式",
+    "secondaryKeywords": [
+      "v2rayN系统代理",
+      "v2rayN全局模式",
+      "v2rayN开了TUN断网",
+      "TUN网卡安装失败"
+    ],
+    "intent": "tutorial",
+    "answer": "系统代理只对遵循 Windows 代理设置的程序生效，浏览器能用而游戏、命令行工具、部分桌面软件不能用，多半就是这个原因。TUN 模式通过虚拟网卡接管整机流量，覆盖面更广，但需要管理员权限与驱动，也更容易和虚拟机、远程桌面、其他代理工具冲突。",
+    "outline": [
+      "系统代理到底改动了 Windows 的哪项设置",
+      "哪些程序天生不吃系统代理",
+      "开启 TUN 模式前需要满足什么条件",
+      "开了 TUN 之后，路由规则还管用吗",
+      "TUN 与虚拟机、远程桌面为什么会互相打架",
+      "退出 v2rayN 后上不了网，怎么恢复网络",
+      "什么场景下老老实实用系统代理就够了"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一解释「流量接管机制」的一篇，回答的是覆盖范围问题。与《v2rayN 路由设置》互补而不重叠：路由管走向、接管管范围。与《第一次打开 v2rayN 先把这 6 项设置调好》的区别是那篇只告诉你开关在哪，本篇讲两种模式的原理代价与冲突场景。",
+    "relatedSlugs": ["routing-rules", "first-run-setup"],
+    "nextStep": {
+      "label": "若还是有网站打不开，按这套流程查",
+      "href": "/guides/v2rayn/v2rayn-connected-but-no-internet/",
+      "reason": "接管方式和路由都配好后仍打不开网页，问题通常落在 DNS 或规则误判上，需要换一套排查思路。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "v2rayn-connected-but-no-internet",
+    "slug": "v2rayn-connected-but-no-internet",
+    "file": "src/content/posts/guides/v2rayn-connected-but-no-internet.md",
+    "url": "/guides/v2rayn/v2rayn-connected-but-no-internet/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "v2rayN 能测速却打不开网页，问题出在哪",
+    "description": "测速通过说明节点与加密握手都正常，故障落在流量没被送进代理或域名解析异常。依次核对系统代理是否真生效、路由是否误判直连、DNS 是否污染泄漏，以及浏览器插件与 IPv6 抢路。",
+    "primaryKeyword": "v2rayN能测速但打不开网页",
+    "secondaryKeywords": [
+      "v2rayN系统代理无法开启",
+      "v2rayN DNS污染",
+      "v2rayN连接成功打不开网站",
+      "代理生效但网页转圈"
+    ],
+    "intent": "problem",
+    "answer": "能测速说明节点和加密握手都正常，问题出在流量没被送进代理或域名解析异常。依次检查：系统代理开关是否真的生效、路由规则是否把目标域名判成了直连、DNS 是否被污染或泄漏，以及浏览器代理插件与 IPv6 是否在抢路。",
+    "outline": [
+      "测速通过，意味着哪些环节已经可以排除",
+      "系统代理显示已开启却没生效，怎么验证",
+      "PAC 模式下漏掉的域名是怎么产生的",
+      "路由规则把网站误判成直连有什么典型表现",
+      "DNS 污染和 DNS 泄漏分别怎么看出来",
+      "浏览器扩展、IPv6 抢路该怎么处理",
+      "只有某一个网站打不开时，单独怎么查"
+    ],
+    "brands": [],
+    "differentiator": "与《节点全部超时》按 OSI 层级切分：那篇断在传输层，本篇传输层已通、断在代理接管与 DNS 解析。与《v2rayN 路由设置》的区别是本篇从故障现象倒推原因，路由篇从配置正向讲写法。",
+    "relatedSlugs": ["v2rayn-tls-certificate-error", "v2rayn-subscription-update-failed"],
+    "nextStep": {
+      "label": "回头把路由分流规则理顺",
+      "href": "/guides/v2rayn/routing-rules/",
+      "reason": "确认是规则误判导致的直连之后，需要系统地重排匹配顺序，这在路由设置那篇有完整写法。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "v2rayn-subscription-update-failed",
+    "slug": "v2rayn-subscription-update-failed",
+    "file": "src/content/posts/guides/v2rayn-subscription-update-failed.md",
+    "url": "/guides/v2rayn/v2rayn-subscription-update-failed/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "订阅更新失败、导入后没节点，怎么逐段排查",
+    "description": "更新失败意味着客户端根本没拿到节点列表，与节点好坏无关。沿订阅链路逐段核对：更新时有无可用代理、地址是否被重置、机场是否按 UA 下发、返回内容能否解码、账号流量是否已耗尽。",
+    "primaryKeyword": "v2rayN订阅更新失败",
+    "secondaryKeywords": [
+      "v2rayN导入订阅没有节点",
+      "v2rayN订阅地址无效",
+      "订阅更新后节点消失",
+      "v2rayN订阅解析失败"
+    ],
+    "intent": "problem",
+    "answer": "订阅更新失败说明客户端根本没拿到节点列表，和节点质量无关。按订阅链路排查：更新时是否有可用代理、订阅地址是否被重置或过期、机场是否限制了 User-Agent、返回内容能否正常解码，以及账号流量是否已耗尽被停用。",
+    "outline": [
+      "更新失败和节点超时，是两类完全不同的问题",
+      "没有可用代理时，怎么把订阅先拉下来",
+      "订阅地址被重置，通常由哪些操作触发",
+      "机场按 UA 下发不同配置，会造成什么现象",
+      "返回内容解析失败时，日志长什么样",
+      "更新成功但节点数为零，多半是账号侧原因",
+      "换一个客户端试，能验证出什么"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一处理「节点列表根本没拿到」的一篇，排查对象是订阅获取链路（网络可达性、UA、编码、账号状态）。另两篇故障文都以已有节点为前提。与《订阅更新与自动更新周期》的分界是那篇讲怎么设，本篇讲设完仍失败时怎么查。",
+    "relatedSlugs": ["v2rayn-connected-but-no-internet", "v2rayn-tls-certificate-error"],
+    "nextStep": {
+      "label": "把订阅更新机制重新设一遍",
+      "href": "/guides/v2rayn/v2rayn-update-subscription/",
+      "reason": "定位到更新策略配置不当后，需要按正确方式重设自动更新周期与更新时使用代理，避免同类问题反复出现。"
+    }
+  },
+  {
+    "clusterKey": "guides-v2rayn",
+    "originalSlug": "v2rayn-tls-certificate-error",
+    "slug": "v2rayn-tls-certificate-error",
+    "file": "src/content/posts/guides/v2rayn-tls-certificate-error.md",
+    "url": "/guides/v2rayn/v2rayn-tls-certificate-error/",
+    "category": "guides",
+    "pillar": "v2rayn",
+    "pillarUrl": "/guides/v2rayn/",
+    "title": "v2rayN 证书错误与 TLS 握手失败对照表",
+    "description": "按报错文本反查原因：系统时间偏差、SNI 与伪装域名填错、安全软件的 HTTPS 扫描替换证书链、Reality 指纹不匹配。同时说明打开 allowInsecure 究竟放弃了哪一层保护。",
+    "primaryKeyword": "v2rayN证书错误",
+    "secondaryKeywords": [
+      "v2rayN TLS错误",
+      "v2rayN握手失败",
+      "allowInsecure风险",
+      "v2rayN SNI填什么"
+    ],
+    "intent": "problem",
+    "answer": "v2rayN 报证书错误或 TLS 握手失败，绝大多数指向三件事：系统时间不准导致证书被判过期、SNI 与伪装域名填错、本机安全软件的 HTTPS 扫描替换了证书链。打开 allowInsecure 只是掩盖问题，会让加密失去校验能力，不建议长期开启。",
+    "outline": [
+      "常见报错文本，分别对应哪一类原因",
+      "时间偏差到多少就会导致证书校验失败",
+      "SNI、host 与真实域名三者是什么关系",
+      "杀毒软件和企业根证书如何干扰握手",
+      "Reality 指纹不匹配时会报出什么",
+      "allowInsecure 到底放弃了哪一层保护",
+      "确认是服务端证书过期，该怎么处理"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一按「错误日志文本」组织的一篇，定位对象是加密握手环节，横跨各协议。与《节点全部超时》的区别是那篇的节点连不上连接都建立不了，本篇是连接已建立但加密协商失败；与两篇协议配置教程的区别是本篇从报错倒查而非正向填写。",
+    "relatedSlugs": ["v2rayn-connected-but-no-internet", "v2rayn-subscription-update-failed"],
+    "nextStep": {
+      "label": "逐项核对协议字段的正确填法",
+      "href": "/guides/v2rayn/protocol-config-vless-vmess/",
+      "reason": "多数握手失败源于 SNI、指纹等字段填错，回到字段对照表逐项核对是最直接的修复路径。"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "native-ip-unlock-truth",
+    "slug": "native-ip-unlock-truth",
+    "file": "src/content/posts/unlock/native-ip-unlock-truth.md",
+    "url": "/unlock/region-lock/native-ip-unlock-truth/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "原生 IP 不等于万能钥匙：它到底解决了什么问题",
+    "description": "原生 IP、广播 IP、家宽 IP、数据中心 IP 在解锁场景里各管一段。这篇用「AI 风控要什么、流媒体版权要什么」两条线分开讲，说明为什么原生 IP 对 Netflix 有效、对 ChatGPT 风控却未必够用。",
+    "primaryKeyword": "原生IP到底能解锁什么",
+    "secondaryKeywords": [
+      "原生IP和广播IP区别",
+      "家宽IP节点",
+      "住宅IP节点",
+      "数据中心IP",
+      "原生IP机场推荐"
+    ],
+    "intent": "informational",
+    "answer": "原生 IP 的核心价值是让 IP 的归属地和 ASN 类型看起来像「当地真实用户」，它主要解决判定链条的第一、二层。流媒体的版权片库判定对这一层最敏感，所以原生 IP 效果明显；而 AI 工具的风控还会叠加 IP 复用密度和出口稳定性，原生 IP 只是必要条件之一，不是充分条件。",
+    "outline": [
+      "原生 IP、广播 IP、家宽 IP、数据中心 IP 分别是什么？",
+      "为什么流媒体对 IP 归属地这么敏感？",
+      "为什么 AI 工具光有原生 IP 还不够？",
+      "「原生 IP 节点」这个标签在机场里可能被怎么用？",
+      "怎么自己查一个节点的 ASN 与 IP 类型？",
+      "什么场景值得为原生 IP 多付钱，什么场景不值得？",
+      "常见误解：独享 IP、静态 IP 和原生 IP 不是一回事"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一从「IP 属性」这一个变量切入的文章，回答的是「买什么样的 IP 有用」。与 how-platforms-detect-region 的区别：那篇讲判定链条全貌，本篇只深挖其中的 IP 层并拆穿营销术语；与 ai-exit-ip-drift 的区别：那篇讲 IP 的时间维度（会不会跳变），本篇讲 IP 的属性维度（是什么类型）。",
+    "relatedSlugs": ["ai-exit-ip-drift", "chatgpt-region-unsupported", "claude-region-limit"],
+    "nextStep": {
+      "label": "学一套自己验证节点解锁能力的方法",
+      "href": "/unlock/region-lock/how-to-test-unlock/",
+      "reason": "知道 IP 类型的作用边界之后，正确动作是自己验证而不是相信标签，这篇给出可复现的测试流程"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "ai-exit-ip-drift",
+    "slug": "ai-exit-ip-drift",
+    "file": "src/content/posts/unlock/ai-exit-ip-drift.md",
+    "url": "/unlock/region-lock/ai-exit-ip-drift/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "AI 工具频繁要你验证，多半是出口 IP 在漂",
+    "description": "刚登录就掉线、每隔几分钟弹一次人机验证、换个节点又要重新登录——这些症状指向同一个原因：出口 IP 不稳定或被高密度复用。这篇讲怎么判断节点是否在漂，以及哪些客户端设置会加剧漂移。",
+    "primaryKeyword": "AI工具频繁验证码",
+    "secondaryKeywords": [
+      "ChatGPT频繁要求验证",
+      "AI工具账号被风控",
+      "固定出口IP",
+      "节点负载均衡",
+      "共享IP风险"
+    ],
+    "intent": "problem",
+    "answer": "AI 平台会把「同一会话期间出口 IP 反复变化」和「同一 IP 后面挂着大量账号」都当成异常信号。机场的负载均衡、多落地轮询、客户端的自动切换与故障转移，都会让你的出口 IP 在一次对话里换好几个。先固定到单一节点观察十分钟，如果验证频率明显下降，问题就在漂移而不在地区。",
+    "outline": [
+      "先做一件事：把自动选择改成手动固定节点",
+      "怎么确认自己的出口 IP 到底在不在变？",
+      "机场侧的三种漂移来源：负载均衡、多落地、故障转移",
+      "客户端侧的两种漂移来源：自动测速切换与规则回退",
+      "共享 IP 的账号密度为什么也会触发验证？",
+      "固定出口 IP 对哪些场景是刚需，对哪些是浪费？",
+      "调整之后应该观察多久才算有效？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一处理「出口 IP 时间稳定性」这一维度的文章，症状是验证码与掉登录而不是打不开。与 chatgpt-region-unsupported 的区别：那篇处理「进不去」的地区报错，本篇处理「进得去但一直被打断」；与 openai-api-long-session 的区别：那篇是 API 与流式长连接的传输层断流，本篇是账号风控层的信号问题。",
+    "relatedSlugs": [
+      "chatgpt-region-unsupported",
+      "openai-api-long-session",
+      "ai-node-requirements"
+    ],
+    "nextStep": {
+      "label": "对照一份 AI 节点的硬指标清单",
+      "href": "/unlock/region-lock/ai-node-requirements/",
+      "reason": "确认问题出在节点特性之后，读者需要一份可对照的选型标准来决定换不换、换成什么"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "chatgpt-region-unsupported",
+    "slug": "chatgpt-region-unsupported",
+    "file": "src/content/posts/unlock/chatgpt-region-unsupported.md",
+    "url": "/unlock/region-lock/chatgpt-region-unsupported/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "ChatGPT 地区不支持：先分清账号、出口 IP 还是应用商店",
+    "description": "同样一句「你所在的地区不支持」，可能来自网页出口 IP、账号注册资料，也可能来自 App Store 的地区限制。这篇给出一条 30 秒内分流的判断路径，并说明哪几种情况换再多节点也不会好。",
+    "primaryKeyword": "ChatGPT地区不支持",
+    "secondaryKeywords": [
+      "ChatGPT提示地区不可用",
+      "ChatGPT打不开",
+      "ChatGPT网络错误",
+      "OpenAI官网打不开",
+      "ChatGPT登录不了"
+    ],
+    "intent": "problem",
+    "answer": "先用同一节点分别打开网页版和官网状态页：网页能开而 App 不能，多半是应用商店地区问题；两者都提示地区不支持，先看出口 IP 归属；如果换了多个地区节点仍然只对你的账号报错，问题在账号注册资料与支付方式，这部分换节点无效。分清这三条线，才不会白花钱换服务。",
+    "outline": [
+      "三种「地区不支持」长得很像，先怎么区分？",
+      "网页版能开、App 打不开，问题在哪？",
+      "怎么快速确认当前出口 IP 的归属地与类型？",
+      "换了好几个地区节点还是报错，说明什么？",
+      "哪些原因属于账号侧，换节点一定无效？",
+      "确认是网络路径问题后，节点该满足哪些条件？",
+      "排查完还是不行时，值得做和不值得做的事"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一专门做 ChatGPT 报错归因分流的文章，核心产出是一张「三条线分诊表」。与 claude-region-limit、gemini-region-block 的区别在于判定机制不同：ChatGPT 更依赖出口 IP 与应用商店地区，Claude 侧重会话态，Gemini 侧重 Google 账号地区；三篇不是换关键词的重复，而是三套不同的排查顺序。",
+    "relatedSlugs": ["ai-exit-ip-drift", "claude-region-limit"],
+    "nextStep": {
+      "label": "如果能进但一直弹验证，看这一篇",
+      "href": "/unlock/region-lock/ai-exit-ip-drift/",
+      "reason": "地区报错解决后最常见的后续症状就是反复验证与掉登录，这是同一场景的下一个卡点"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "claude-region-limit",
+    "slug": "claude-region-limit",
+    "file": "src/content/posts/unlock/claude-region-limit.md",
+    "url": "/unlock/region-lock/claude-region-limit/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "Claude 地区限制和掉登录：两种报错要用两套办法",
+    "description": "Claude 的「当前地区不可用」和「频繁退出登录」是两个不同问题：前者卡在出口地区判定，后者往往是会话态与 IP 变化冲突。这篇分开给排查顺序，并单独说明 Claude Code 长任务的额外要求。",
+    "primaryKeyword": "Claude地区限制",
+    "secondaryKeywords": [
+      "Claude打不开",
+      "Claude登录不了",
+      "Claude国内怎么用",
+      "Claude Code断开",
+      "Claude节点推荐"
+    ],
+    "intent": "problem",
+    "answer": "Claude 的地区提示通常在建立会话前就出现，和出口 IP 归属直接相关；而登录状态频繁失效多半发生在会话建立之后，是出口 IP 中途变化或多出口并发导致会话态对不上。先看报错出现在登录前还是登录后，再决定是换地区还是固定节点，两者的解法几乎不重叠。",
+    "outline": [
+      "报错出现在登录前还是登录后，为什么这个区分最重要？",
+      "登录前的地区提示：该看出口 IP 的哪两项？",
+      "登录后频繁掉线：会话态和 IP 变化是怎么打架的？",
+      "Claude Code 跑长任务时，为什么比网页版更容易断？",
+      "浏览器直连和客户端走代理，表现为什么不同？",
+      "哪些设置改动会立刻降低掉登录频率？",
+      "什么情况说明该换节点而不是继续调参数？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一按「报错发生在登录前 / 登录后」二分来组织的文章，并且是唯一覆盖 Claude Code 长任务场景的一篇。与 chatgpt-region-unsupported 的区别：ChatGPT 那篇的分流轴是网页 / App / 账号三条线，本篇的分流轴是会话建立的时间点；与 openai-api-long-session 的区别：本篇讲客户端会话态失效，那篇讲 API 流式传输中断。",
+    "relatedSlugs": ["chatgpt-region-unsupported", "ai-exit-ip-drift", "openai-api-long-session"],
+    "nextStep": {
+      "label": "去看 AI 节点的选型硬指标",
+      "href": "/unlock/region-lock/ai-node-requirements/",
+      "reason": "确认是节点侧限制后，需要一份可对照的指标清单来判断换成什么样的节点才有意义"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "gemini-region-block",
+    "slug": "gemini-region-block",
+    "file": "src/content/posts/unlock/gemini-region-block.md",
+    "url": "/unlock/region-lock/gemini-region-block/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "Gemini 地区不支持为什么换节点也没用：它先看账号",
+    "description": "Gemini 的可用性主要跟随 Google 账号的地区属性，其次才是当前网络出口。这篇解释为什么很多人换了一圈节点仍然打不开，以及哪些环节确实由网络决定、哪些属于账号侧无法通过换节点改变。",
+    "primaryKeyword": "Gemini地区不支持",
+    "secondaryKeywords": [
+      "Gemini打不开",
+      "Gemini登录不了",
+      "Gemini国内怎么用",
+      "Google账号改地区",
+      "Google AI Studio访问"
+    ],
+    "intent": "problem",
+    "answer": "Gemini 与 Google 账号强绑定，账号的地区属性在很大程度上决定了功能可用范围，网络出口只影响能不能连通与是否触发安全验证。所以「换了七八个地区节点还是不可用」是很正常的结果，说明卡点在账号侧而不是线路侧，继续换机场不会有帮助。",
+    "outline": [
+      "为什么 Gemini 和 ChatGPT 的地区逻辑完全不是一回事？",
+      "Google 账号的地区属性从哪里来、什么时候会变？",
+      "网络出口在这里只决定哪两件事？",
+      "换节点无效的三种典型表现",
+      "Google AI Studio、Gemini 网页与 App 的可用性为什么不同步？",
+      "触发安全验证时，节点该怎么调？",
+      "什么时候应该停止折腾网络、去处理账号"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一以「换节点无效」为核心结论的文章，主动劝退无效消费，是站点信任度的支点。与 chatgpt-region-unsupported、claude-region-limit 的关键区别：那两篇最终都会导向节点条件，本篇论证的是网络方案的能力边界，判定权重落在账号属性而非出口 IP。",
+    "relatedSlugs": ["chatgpt-region-unsupported", "perplexity-access"],
+    "nextStep": {
+      "label": "回到判定原理，理解账号层为什么最难改",
+      "href": "/unlock/region-lock/how-platforms-detect-region/",
+      "reason": "本篇的结论「卡在账号层」需要底层模型来支撑，回到判定五层能让读者自行推断其他平台"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "openai-api-long-session",
+    "slug": "openai-api-long-session",
+    "file": "src/content/posts/unlock/openai-api-long-session.md",
+    "url": "/unlock/region-lock/openai-api-long-session/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "OpenAI API 连接超时：长连接、流式输出与节点的三角关系",
+    "description": "网页版聊天正常、API 和 Codex 却动不动断开，是因为流式输出与长连接对节点的要求完全不同。这篇讲 MTU、空闲超时、协议选择和中转跳数怎么共同决定一条长连接能撑多久。",
+    "primaryKeyword": "OpenAI API连接超时",
+    "secondaryKeywords": [
+      "Codex长任务断开",
+      "ChatGPT WebSocket连接失败",
+      "流式输出中断",
+      "长连接被重置",
+      "AI节点稳定性"
+    ],
+    "intent": "problem",
+    "answer": "普通聊天是短请求，断一次几乎无感；API 的流式输出和 Codex 的长任务是持续数分钟的单条连接，中途任何一次链路抖动、空闲超时或中转切换都会直接中断。所以问题往往不在「能不能访问」，而在链路的连续性：跳数越多、空闲回收越激进的线路，越容易在长任务上翻车。",
+    "outline": [
+      "为什么网页版好好的，API 一跑长任务就断？",
+      "流式输出到底对链路提了什么额外要求？",
+      "空闲超时与连接回收：谁在中途把连接掐了？",
+      "中转跳数、负载均衡和长连接为什么天然冲突？",
+      "协议选择会影响长连接的存活时间吗？",
+      "客户端侧可以先调的四个参数",
+      "怎么用一次可复现的长任务测试对比两条线路？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一面向开发者 / API 场景、以「连接持续时间」为主轴的文章。与 ai-exit-ip-drift 的区别：那篇是账号风控信号（症状是验证码），本篇是传输层连续性（症状是流式输出中途截断）；与其他 AI 文章的区别在于它讨论的是网页版用户完全遇不到的失败模式。",
+    "relatedSlugs": ["ai-exit-ip-drift", "claude-region-limit", "ai-node-requirements"],
+    "nextStep": {
+      "label": "把长连接要求并入节点选型清单",
+      "href": "/unlock/region-lock/ai-node-requirements/",
+      "reason": "长连接稳定性是 AI 节点五项硬指标之一，读者需要把它和其他指标放在一起权衡"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "perplexity-access",
+    "slug": "perplexity-access",
+    "file": "src/content/posts/unlock/perplexity-access.md",
+    "url": "/unlock/region-lock/perplexity-access/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "Perplexity 国内怎么用：一个对节点最宽容的 AI 搜索工具",
+    "description": "相比 ChatGPT 和 Gemini，Perplexity 的地区门槛低得多，但对数据中心 IP 的搜索限流更敏感。这篇说明它的可用性边界在哪、为什么可以当作判断节点是否「彻底不通」的对照组。",
+    "primaryKeyword": "Perplexity国内怎么用",
+    "secondaryKeywords": [
+      "Perplexity打不开",
+      "Perplexity登录不了",
+      "Perplexity网络错误",
+      "AI搜索工具访问",
+      "Perplexity节点选择"
+    ],
+    "intent": "informational",
+    "answer": "Perplexity 对出口地区的要求比多数 AI 平台宽松，大部分常见地区节点都能正常打开和提问，主要卡点在两处：登录环节的邮箱与验证送达，以及高密度数据中心 IP 下的搜索限流。正因为门槛低，它很适合当对照组——如果连它都打不开，问题多半在链路本身而不在地区判定。",
+    "outline": [
+      "Perplexity 的可用门槛为什么比 ChatGPT 低？",
+      "登录环节最容易卡在哪两步？",
+      "搜索结果加载失败和网页打不开，是两回事",
+      "为什么高密度共享 IP 会触发搜索限流？",
+      "把它当对照组：一分钟判断链路是否彻底不通",
+      "同时使用多个 AI 工具时，Perplexity 适合放在哪条规则里？",
+      "哪些表现说明该换节点，哪些只是平台侧波动"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一给出「对照组用法」的文章——用一个低门槛平台反推链路是否可用，这是其他平台文章都不能承担的诊断角色。与 gemini-region-block 的对比是刻意的：一个是账号强绑定的极端，一个是几乎不绑定的另一极端，两篇合起来划出 AI 平台地区判定的取值区间。",
+    "relatedSlugs": ["gemini-region-block", "multi-ai-one-node", "chatgpt-region-unsupported"],
+    "nextStep": {
+      "label": "把多个 AI 工具的分流规则配到一起",
+      "href": "/unlock/region-lock/multi-ai-one-node/",
+      "reason": "读者通常同时用好几个 AI 工具，把 Perplexity 纳入统一分流是自然的下一步操作"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "multi-ai-one-node",
+    "slug": "multi-ai-one-node",
+    "file": "src/content/posts/unlock/multi-ai-one-node.md",
+    "url": "/unlock/region-lock/multi-ai-one-node/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "一个节点能同时跑几个 AI 工具：分流规则怎么配",
+    "description": "ChatGPT、Claude、Gemini、Perplexity 的域名分散在多个服务商，配错一条规则就会出现「能登录不能对话」。这篇给出按平台归组的分流思路、常见踩坑点，以及验证规则是否生效的检查方法。",
+    "primaryKeyword": "AI工具共用节点",
+    "secondaryKeywords": [
+      "ChatGPT分流规则",
+      "Clash规则配置",
+      "AI域名分流",
+      "同一出口IP",
+      "规则模式和全局模式"
+    ],
+    "intent": "tutorial",
+    "answer": "技术上一个节点可以同时承载多个 AI 工具，前提是把同一平台的全部相关域名归到同一条规则、走同一个出口。最常见的失败是登录域名和对话接口被分到不同出口，导致能登录却发不出消息。配置顺序是：先按平台归组，再统一出口，最后逐平台验证。",
+    "outline": [
+      "为什么「能登录但发不出消息」几乎都是分流问题？",
+      "按平台归组：一个 AI 工具通常涉及哪几类域名？",
+      "统一出口：为什么同平台必须共用一个落地？",
+      "规则顺序踩坑：更宽的规则写在前面会吃掉后面的",
+      "全局模式能解决问题，但代价是什么？",
+      "改完之后怎么逐平台验证规则真的生效了？",
+      "多平台混用时，哪些工具适合单独拆出一条规则？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一的配置操作类文章，产出是可执行的分流步骤而非诊断结论。与所有平台报错文章的区别：那些回答「为什么不行」，本篇回答「怎么配才行」；与 ai-exit-ip-drift 的区别：那篇解决出口在时间上跳变，本篇解决同一时刻不同域名走了不同出口的空间问题。",
+    "relatedSlugs": ["ai-exit-ip-drift", "perplexity-access", "ai-node-requirements"],
+    "nextStep": {
+      "label": "再看节点本身该满足什么条件",
+      "href": "/unlock/region-lock/ai-node-requirements/",
+      "reason": "规则配对之后，剩下的变量就是节点质量本身，这篇把选型标准补齐"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "netflix-region-detection",
+    "slug": "netflix-region-detection",
+    "file": "src/content/posts/unlock/netflix-region-detection.md",
+    "url": "/unlock/region-lock/netflix-region-detection/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "Netflix 地区判定是怎么算的：片库、自制剧与代理提示",
+    "description": "Netflix 不是简单的「能看 / 不能看」，而是一套按 IP 归属决定片库、按版权决定条目、按检测决定是否弹代理提示的三层机制。这篇解释为什么自制剧总能播，别的剧却时灵时不灵。",
+    "primaryKeyword": "Netflix地区判定",
+    "secondaryKeywords": [
+      "Netflix只能看自制剧",
+      "Netflix提示使用代理",
+      "Netflix片库不同",
+      "奈飞解锁",
+      "Netflix地区不可用"
+    ],
+    "intent": "informational",
+    "answer": "Netflix 先用出口 IP 判定你属于哪个地区片库，再按版权逐条决定这个片库里有什么，最后用代理检测决定是否拦截。自制剧全球版权归自己，所以最容易播；第三方版权剧受地区授权约束，最先受影响。「只能看自制剧」不是解锁失败，而是判定到了但片库受限。",
+    "outline": [
+      "三层机制：地区片库、条目版权、代理检测分别管什么？",
+      "为什么自制剧几乎总能播，别的剧却看不到？",
+      "「似乎正在使用代理」这句提示到底在检测什么？",
+      "同一个地区为什么不同节点片库不一样？",
+      "网页端和 App 端的判定结果为什么会不同步？",
+      "4K 播放失败和地区判定其实是两个问题",
+      "怎么用最少的步骤判断是片库问题还是节点问题？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一拆解「片库 ≠ 解锁」这一常见误解的文章，把 Netflix 的结果分成判定成功但内容受限、判定失败、被检测拦截三种状态。与 disney-plus-region-lock 的区别是判定依据不同（IP 优先 vs 账号优先）；与 streaming-node-failure 的区别：那篇讲节点为什么会从可用变不可用，本篇讲节点可用时结果为什么仍然不同。",
+    "relatedSlugs": ["disney-plus-region-lock", "streaming-node-failure"],
+    "nextStep": {
+      "label": "对比 Disney+ 完全不同的一套逻辑",
+      "href": "/unlock/region-lock/disney-plus-region-lock/",
+      "reason": "两大流媒体的判定机制差异极大，读完一套再看另一套才能形成可迁移的判断力"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "disney-plus-region-lock",
+    "slug": "disney-plus-region-lock",
+    "file": "src/content/posts/unlock/disney-plus-region-lock.md",
+    "url": "/unlock/region-lock/disney-plus-region-lock/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "Disney+ 地区限制跟着账号走，和 Netflix 是两套逻辑",
+    "description": "很多人拿看 Netflix 的经验去试 Disney+，结果发现换节点几乎不改变可见内容。原因是 Disney+ 的地区更多由账号注册地与订阅归属决定。这篇讲清两者差异，以及各自能靠节点改变什么。",
+    "primaryKeyword": "Disney+地区限制",
+    "secondaryKeywords": [
+      "Disney Plus国内怎么看",
+      "Disney Plus打不开",
+      "Disney+地区不可用",
+      "HBO Max解锁",
+      "流媒体账号注册地"
+    ],
+    "intent": "informational",
+    "answer": "Disney+ 把订阅与账号注册地绑定得比 Netflix 紧得多，出口 IP 主要影响能否连通与播放质量，而不是你能看到哪一版内容。所以在 Netflix 上「换个地区就换一套片库」的经验搬过来通常无效。判断顺序应该反过来：先确认账号归属，再谈节点。",
+    "outline": [
+      "同样是流媒体，为什么两家判定权重差这么多？",
+      "账号注册地在 Disney+ 里决定了哪些事？",
+      "出口 IP 在这里还能影响什么？",
+      "跨区播放常见的三种失败表现",
+      "HBO Max、Hulu、Apple TV+ 更接近哪一种模式？",
+      "买节点前应该先确认的账号侧信息",
+      "什么情况下换节点确实有用？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一以「账号优先型平台」为主角的流媒体文章，并顺带给出 HBO Max、Hulu、Apple TV+ 的归类方法。与 netflix-region-detection 是刻意配对的对照篇：一篇 IP 权重高、一篇账号权重高，读者由此获得判断任意新平台的分类框架，而不是逐个平台记结论。",
+    "relatedSlugs": ["netflix-region-detection", "native-ip-unlock-truth", "ai-exit-ip-drift"],
+    "nextStep": {
+      "label": "学会自己验证一个节点的解锁结果",
+      "href": "/unlock/region-lock/how-to-test-unlock/",
+      "reason": "两套逻辑讲完之后，读者需要一套统一的验证方法来判断自己手上的节点属于哪种情况"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "streaming-node-failure",
+    "slug": "streaming-node-failure",
+    "file": "src/content/posts/unlock/streaming-node-failure.md",
+    "url": "/unlock/region-lock/streaming-node-failure/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "流媒体节点为什么这么容易失效：封禁、复用与倍率的账",
+    "description": "昨天还能看的节点今天就不行了，这在流媒体场景里是常态而非事故。这篇从 IP 被标记、单 IP 用户密度、机场轮换成本三个角度解释失效周期，并说明倍率高背后的实际成本结构。",
+    "primaryKeyword": "流媒体节点失效",
+    "secondaryKeywords": [
+      "流媒体节点为什么经常失效",
+      "流媒体节点倍率",
+      "解锁节点被封",
+      "节点IP被识别",
+      "机场流媒体节点"
+    ],
+    "intent": "problem",
+    "answer": "流媒体平台会持续标记被大量账号共用的 IP，一旦标记生效，整段 IP 上的用户会同时失去解锁能力。机场只能通过更换 IP 段来恢复，而干净 IP 成本高、消耗快，这就是流媒体节点倍率普遍更高、且需要周期性轮换的根本原因。失效本身是机制性的，不等于机场出问题。",
+    "outline": [
+      "节点昨天能看今天不行，这正常吗？",
+      "IP 被标记的过程：平台看的是哪几个信号？",
+      "为什么用的人越多、失效越快？",
+      "机场轮换 IP 的成本都花在哪里？",
+      "流媒体节点倍率高，钱到底付给了什么？",
+      "怎么区分「节点失效」和「你自己的配置变了」？",
+      "遇到失效时，比换机场更该先做的三件事"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一从供给侧（机场的 IP 成本与轮换机制）解释现象的文章，也是唯一说明倍率定价合理性的一篇。与 netflix-region-detection 的区别：那篇讲平台如何判定，本篇讲节点资源如何被消耗；与 how-to-test-unlock 的区别：那篇是操作方法，本篇是成因与预期管理，直接服务于「要不要换机场」的决策。",
+    "relatedSlugs": ["netflix-region-detection", "native-ip-unlock-truth", "ai-exit-ip-drift"],
+    "nextStep": {
+      "label": "按内容需求重新选一次节点地区",
+      "href": "/unlock/region-lock/streaming-region-picker/",
+      "reason": "理解失效是常态之后，正确策略是按需求选择地区并准备备选，而不是追着单个节点修"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "device-gap-same-node",
+    "slug": "device-gap-same-node",
+    "file": "src/content/posts/unlock/device-gap-same-node.md",
+    "url": "/unlock/region-lock/device-gap-same-node/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "同一节点电脑能看手机不能看：两端走的不是一条路",
+    "description": "同一个订阅、同一个节点，电脑正常而手机不行，通常不是节点问题。这篇解释系统代理与 TUN 模式、App 自带 DNS、蜂窝网络与 IPv6 这几处差异，如何让两端在同一节点下得到完全不同的结果。",
+    "primaryKeyword": "同一节点手机不能看",
+    "secondaryKeywords": [
+      "网页能看App不能看",
+      "Wi-Fi能用流量不能用",
+      "手机流量无法使用机场",
+      "IPv6导致节点异常",
+      "DNS污染"
+    ],
+    "intent": "problem",
+    "answer": "电脑通常走系统代理，几乎所有流量都被接管；手机 App 常常绕过系统代理直接使用自带 DNS，或者在蜂窝网络下启用 IPv6 直连。结果是两端的实际出口并不相同，判定自然不同。先确认手机是否开启 TUN/全局接管，再关掉 IPv6 复测，多数情况就能对齐。",
+    "outline": [
+      "先确认一件事：两端的实际出口 IP 是不是同一个？",
+      "系统代理和 TUN 模式的接管范围差在哪？",
+      "App 自带 DNS：为什么浏览器能看 App 不能看？",
+      "Wi-Fi 和蜂窝网络下表现不同，通常是哪一项在作怪？",
+      "IPv6 直连怎么悄悄绕过了你的节点？",
+      "iOS 与安卓各自最容易踩的一个坑",
+      "对齐两端之后仍不一致，说明什么？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一以「设备与客户端差异」为变量的文章，节点本身在这里是常量。与所有平台判定文章的区别：那些讨论平台看到了什么，本篇讨论你的流量到底有没有真的从节点出去；与 how-to-test-unlock 的区别：那篇要求跨端测试，本篇解释跨端不一致的技术成因。",
+    "relatedSlugs": ["netflix-region-detection", "streaming-node-failure"],
+    "nextStep": {
+      "label": "用统一流程把两端重测一遍",
+      "href": "/unlock/region-lock/how-to-test-unlock/",
+      "reason": "调整完设置之后必须用同一套方法在两端复测，否则无法确认问题是否真的解决"
+    }
+  },
+  {
+    "clusterKey": "unlock-region-lock",
+    "originalSlug": "ai-node-requirements",
+    "slug": "ai-node-requirements",
+    "file": "src/content/posts/unlock/ai-node-requirements.md",
+    "url": "/unlock/region-lock/ai-node-requirements/",
+    "category": "unlock",
+    "pillar": "region-lock",
+    "pillarUrl": "/unlock/region-lock/",
+    "title": "AI 工具节点要求清单：五项硬指标与两个常见误解",
+    "description": "把 AI 场景下真正影响体验的指标收敛成五项：IP 类型、出口稳定性、长连接存活、地区匹配、共享密度。同时说明「延迟越低越好」和「原生 IP 就够了」这两个流传最广的说法为什么不成立。",
+    "primaryKeyword": "AI工具节点要求",
+    "secondaryKeywords": [
+      "ChatGPT机场推荐怎么选",
+      "AI解锁机场",
+      "AI专线节点",
+      "ChatGPT原生IP节点",
+      "支持ChatGPT的机场"
+    ],
+    "intent": "comparison",
+    "answer": "AI 场景真正该看的是五项：IP 类型是否像真实用户、出口 IP 是否在会话期间保持不变、长连接能否撑住数分钟的流式输出、出口地区是否与账号匹配、单 IP 上的账号密度。延迟只影响首字响应，权重远低于稳定性；原生 IP 只满足其中一项，不能单独作为选购依据。",
+    "outline": [
+      "指标一：IP 类型——像不像一个真实用户？",
+      "指标二：出口稳定性——一次会话里会换几个 IP？",
+      "指标三：长连接存活——能撑住多久的流式输出？",
+      "指标四：地区匹配——和账号注册地对得上吗？",
+      "指标五：共享密度——这个 IP 后面挂着多少人？",
+      "误解一：延迟越低 AI 体验越好？",
+      "误解二：有原生 IP 就等于稳？",
+      "用这五项做一次横向对照该怎么记录？",
+      "确认需求之后，机场该怎么挑？"
+    ],
+    "brands": ["guangsuyun", "xingdaomeng", "lingmao"],
+    "differentiator": "全簇唯一把 AI 线的所有诊断结论收敛成选购标准的文章，是 AI 线的商业出口。与 native-ip-unlock-truth（只讲 IP 属性一项）、ai-exit-ip-drift（只讲出口稳定性一项）、openai-api-long-session（只讲长连接一项）的区别在于：那三篇各自深挖一个变量，本篇负责把五个变量放在同一张表里排优先级并纠正两个流行误解。",
+    "relatedSlugs": ["ai-exit-ip-drift", "openai-api-long-session", "native-ip-unlock-truth"],
+    "nextStep": {
+      "label": "查看 ChatGPT 场景的机场榜单",
+      "href": "/rankings/chatgpt/",
+      "reason": "五项指标构成了选购标准，读者带着标准进入场景榜单页可以直接对照筛选，不会被榜单牵着走"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "traffic-interception",
+    "slug": "traffic-interception",
+    "file": "src/content/posts/free-nodes/traffic-interception.md",
+    "url": "/free-nodes/safety/traffic-interception/",
+    "category": "free-nodes",
+    "pillar": "safety",
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "用免费节点时，对方能看到你的哪些流量",
+    "description": "逐层拆解代理节点在技术上可见的信息：目标域名、SNI、连接时间与流量体积，以及自定义证书被安装后加密正文可能被还原的条件。给出一条明确的止损线。",
+    "primaryKeyword": "免费节点会被监听吗",
+    "secondaryKeywords": [
+      "节点服务器能看到什么",
+      "代理会泄露隐私吗",
+      "免费节点安全隐患",
+      "机场会记录访问记录吗"
+    ],
+    "intent": "informational",
+    "answer": "任何代理节点的运营者都能看到连接目标域名、连接时间和流量体积；HTTPS 正文通常仍是加密的，但若客户端被要求安装自定义证书，连正文也可能被还原。免费节点真正的问题不在于技术上能看到多少，而在于你无法确认对方是否记录、保存和转手这些信息。",
+    "outline": [
+      "代理节点在技术上究竟能看到哪些信息？",
+      "HTTPS 加密之后还剩下什么会暴露？",
+      "什么情况下连加密正文也会被还原？",
+      "为什么“要求安装证书”是一条明确的止损线？",
+      "可核验的付费服务在这一点上差别在哪里？",
+      "哪些操作绝对不要在来路不明的节点上做？",
+      "怎样检查客户端有没有被装入额外证书？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一从网络层可见性展开的文章，只讨论流量本身（域名、SNI、证书、正文）。与 client-malware 的本机侧视角、account-risk 的平台侧视角构成三条互不重叠的风险线。",
+    "relatedSlugs": ["client-malware", "account-risk", "public-node-lists"],
+    "nextStep": {
+      "label": "再看一层：随节点分发的客户端风险更大",
+      "href": "/free-nodes/safety/client-malware/",
+      "reason": "证书能被装进系统，正是通过所谓“专用客户端”完成的，理解本机侧风险才算闭环。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "client-malware",
+    "slug": "client-malware",
+    "file": "src/content/posts/free-nodes/client-malware.md",
+    "url": "/free-nodes/safety/client-malware/",
+    "category": "free-nodes",
+    "pillar": "safety",
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "免费节点配套客户端，风险常常大过节点本身",
+    "description": "讲清所谓专用客户端与改包安装包的额外行为：高权限申请、自带证书、静默更新与捆绑模块，并给出代理客户端的正常权限清单和安装前的低成本核对方法。",
+    "primaryKeyword": "免费节点客户端安全吗",
+    "secondaryKeywords": [
+      "代理客户端有病毒吗",
+      "破解版客户端风险",
+      "来路不明的安装包",
+      "机场定制客户端安全吗"
+    ],
+    "intent": "informational",
+    "answer": "比节点本身更常出问题的，是随节点一起分发的“专用客户端”和改包安装包。这类程序往往申请高权限、自带证书、静默更新或捆绑其他模块，一旦装上，风险不会随着停用节点而结束。原则很简单：客户端只从官方仓库或官网获取，程序来源和节点信息要分开对待。",
+    "outline": [
+      "为什么专用客户端比节点本身更值得警惕？",
+      "改包安装包通常会多出哪些行为？",
+      "代理客户端正常需要哪些系统权限？",
+      "哪些权限请求属于明显越界？",
+      "从哪里获取客户端才算可核验的官方渠道？",
+      "安装前可以做哪些低成本核对？",
+      "已经装过来路不明的客户端该怎么办？"
+    ],
+    "brands": [],
+    "differentiator": "唯一聚焦本机侧的文章：安装包来源、系统权限、根证书与静默更新。与 traffic-interception 的网络侧、public-node-lists 的渠道侧互补，三者对象完全不同。",
+    "relatedSlugs": ["traffic-interception", "account-risk", "public-node-lists"],
+    "nextStep": {
+      "label": "如果已经装过：按清单做一次自查",
+      "href": "/free-nodes/safety/post-use-checkup/",
+      "reason": "本机侧风险不会自己消失，必须靠一份可执行的清理与账号自查流程封口。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "account-risk",
+    "slug": "account-risk",
+    "file": "src/content/posts/free-nodes/account-risk.md",
+    "url": "/free-nodes/safety/account-risk/",
+    "category": "free-nodes",
+    "pillar": "safety",
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "免费节点为什么容易让账号频繁验证甚至被封",
+    "description": "解释平台如何给出口 IP 打风险分，为什么共享密度比 IP 归属地更关键，以及频繁人机验证、异地登录提醒、限制发帖分别对应哪种风控信号和处理方式。",
+    "primaryKeyword": "免费节点会导致账号被封吗",
+    "secondaryKeywords": ["共享IP账号风控", "免费节点登录验证码", "节点IP信誉", "出口IP变化影响"],
+    "intent": "informational",
+    "answer": "免费节点通常是高密度共享的机房出口，同一个 IP 在短时间内被大量陌生人使用，平台侧会把它标记为高风险。结果往往不是打不开，而是频繁人机验证、异地登录提醒、限制发帖，严重时触发账号审查。这类损失比节点失效更难挽回。",
+    "outline": [
+      "平台是怎么给一个出口 IP 打风险分的？",
+      "为什么共享密度比 IP 归属地更关键？",
+      "哪些账号类别对出口 IP 最敏感？",
+      "频繁验证码和异地提醒分别是什么信号？",
+      "出口 IP 反复变化会带来什么额外问题？",
+      "已经触发风控之后应该怎么处理？",
+      "什么样的使用习惯能把账号风险降到最低？"
+    ],
+    "brands": [],
+    "differentiator": "唯一从平台风控与账号后果角度写的文章。其他文章讲你可能泄露什么数据，本篇讲你可能失去什么账号，并给出与 IP 共享密度相关的判断口径。",
+    "relatedSlugs": ["traffic-interception", "client-malware", "public-node-lists"],
+    "nextStep": {
+      "label": "想省钱又不想赌账号？看看别的做法",
+      "href": "/free-nodes/safety/what-to-do-instead/",
+      "reason": "账号成本一旦算进来，免费未必更省，需要一条按需求量级控制预算的正向路径。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "public-node-lists",
+    "slug": "public-node-lists",
+    "file": "src/content/posts/free-nodes/public-node-lists.md",
+    "url": "/free-nodes/safety/public-node-lists/",
+    "category": "free-nodes",
+    "pillar": "safety",
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "公开节点列表和群组分享，问题出在渠道本身",
+    "description": "分析公开分发渠道的三个结构性问题：节点在被你看到前已被大量使用、页面内容可随时替换而你无法察觉、聚合站有动机在中间插入自有入口，并说明本站不转载此类链接的原因。",
+    "primaryKeyword": "免费节点分享网站可信吗",
+    "secondaryKeywords": [
+      "GitHub免费节点可信吗",
+      "Telegram节点群组风险",
+      "公开订阅聚合",
+      "网上分享的节点安全吗"
+    ],
+    "intent": "informational",
+    "answer": "公开分发渠道有三个结构性问题：节点在被你看到之前已经被成千上万人用过、页面内容随时可被替换而你无法察觉、聚合站有动机在中间插入自己的入口。即便原始提供者没有恶意，经过公开渠道转手之后的内容已经无法追溯。本站不提供也不转载任何此类链接。",
+    "outline": [
+      "一条节点信息公开之后会经过哪些人的手？",
+      "为什么“已经被很多人用过”本身就是风险？",
+      "页面内容被悄悄替换时你能察觉吗？",
+      "聚合站在中间可以做哪些手脚？",
+      "为什么本站不转载任何节点或订阅链接？",
+      "遇到强烈推荐某个列表的内容该怎么看？",
+      "想评估一个来源，可以先问哪几个问题？"
+    ],
+    "brands": [],
+    "differentiator": "唯一讨论分发渠道的文章。where-they-come-from 讲原始提供者的动机，本篇讲信息经过公开渠道后发生的二次变形与不可追溯性，两者切面不同。",
+    "relatedSlugs": ["client-malware", "marketing-red-flags"],
+    "nextStep": {
+      "label": "同样的套路也用在付费服务上：识别宣传话术",
+      "href": "/risk/marketing-red-flags/",
+      "reason": "公开渠道的推荐文与付费服务的营销话术共用同一套证据造假手法，放在一起看更容易辨认。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "exit-scam-signs",
+    "slug": "exit-scam-signs",
+    "file": "src/content/posts/risk/exit-scam-signs.md",
+    "url": "/risk/exit-scam-signs/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "机场跑路前通常会露出哪些马脚",
+    "description": "整理跑路前的五类早期信号与判断阈值：公告工单同时变慢、突然推出远低于成本的长周期套餐、节点大面积下线无解释、频繁换域名却不走原渠道通知、社群转为限制发言。",
+    "primaryKeyword": "机场跑路征兆",
+    "secondaryKeywords": ["机场跑路前兆", "机场失联", "机场停止运营", "机场官网打不开是不是跑路"],
+    "intent": "informational",
+    "answer": "跑路极少毫无预兆。较可靠的早期信号有五个：公告与工单响应同时变慢、突然推出远低于成本的长周期套餐、节点大面积下线且无解释、频繁更换域名却不通过原有渠道通知、社群管理转为限制发言。单一信号不构成结论，三个以上同时出现就应当准备迁移。",
+    "outline": [
+      "哪些信号属于早期，哪些已经是末期？",
+      "客服与公告节奏的变化为什么最先出现？",
+      "突然大幅促销为什么反而值得警惕？",
+      "节点下线到什么程度才算异常？",
+      "换域名的正常做法和异常做法差在哪里？",
+      "社群被禁言或解散意味着什么？",
+      "观察到几个信号就应该开始迁移？",
+      "怎样避免在证据不足时误判一家机场？"
+    ],
+    "brands": [],
+    "differentiator": "只讲跑路发生之前的可观察运营信号与判断阈值。不含事后处置（after-exit-scam）、不含营销话术识别（marketing-red-flags）、不含性能层面的超售测量（oversold-signals）。",
+    "relatedSlugs": ["oversold-signals", "backup-plan", "after-exit-scam"],
+    "nextStep": {
+      "label": "识别之后：把备用方案先搭起来",
+      "href": "/risk/backup-plan/",
+      "reason": "看懂信号只解决判断问题，真正降低损失的是提前准备好十分钟内可切换的第二条路。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "oversold-signals",
+    "slug": "oversold-signals",
+    "file": "src/content/posts/risk/oversold-signals.md",
+    "url": "/risk/oversold-signals/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "怎么看出一家机场已经严重超售",
+    "description": "用可重复的测量方法定义超售：固定设备、固定节点、固定测法，连续三到五天记录晚高峰并与白天同条件对照，同时给出哪些现象其实属于本地网络问题。",
+    "primaryKeyword": "机场超售怎么判断",
+    "secondaryKeywords": [
+      "机场超售是什么意思",
+      "晚高峰卡顿原因",
+      "节点负载过高",
+      "晚高峰怎么测试机场"
+    ],
+    "intent": "informational",
+    "answer": "超售的典型特征是时间相关的性能塌陷：白天正常、晚高峰断崖式下降，且同一节点在不同日期重复出现同一时段的劣化。判断方法是固定设备、固定节点、固定测法，连续记录三到五天的晚高峰表现，再与白天同条件对照。单次测速无法证明超售。",
+    "outline": [
+      "超售在用户端会表现为什么样的现象？",
+      "为什么单次测速不能作为判断依据？",
+      "控制变量的最小测试方案怎么设计？",
+      "连续几天、覆盖哪几个时段才够用？",
+      "延迟、丢包和带宽三项各说明什么问题？",
+      "哪些现象其实是本地网络问题而不是超售？",
+      "确认超售之后应该先做什么？"
+    ],
+    "brands": [],
+    "differentiator": "全簇唯一用可重复测量方法来界定风险的文章，产出的是变量控制与观测周期方案。exit-scam-signs 看运营信号，本篇只看性能数据。",
+    "relatedSlugs": ["exit-scam-signs", "marketing-red-flags", "backup-plan"],
+    "nextStep": {
+      "label": "先排除本地问题：去故障排查栏目",
+      "href": "/troubleshooting/",
+      "reason": "把本地网络、DNS 和客户端因素逐项排除，测量结果才有资格用来指控服务端超售。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "marketing-red-flags",
+    "slug": "marketing-red-flags",
+    "file": "src/content/posts/risk/marketing-red-flags.md",
+    "url": "/risk/marketing-red-flags/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "哪些机场宣传话术一看就该扣分",
+    "description": "从表述与证据形态两个层面审查宣传：识别永久有效、绝对不跑路、100% 解锁、无限流量不限速这类无法验证的承诺，以及缺少测试条件的截图和没有日期的榜单。",
+    "primaryKeyword": "机场宣传话术怎么识别",
+    "secondaryKeywords": ["永久套餐靠谱吗", "100%解锁", "无限流量机场", "机场测速图造假"],
+    "intent": "informational",
+    "answer": "高风险话术有一个共同点：承诺了一个既无法被验证也无法被追责的结果。典型包括永久有效、绝对不跑路、100% 解锁、无限流量不限速、零日志。除了表述本身，还要看证据形态——只有成品截图而没有测试条件的测速图，和没有标注日期的榜单，可信度都接近于零。",
+    "outline": [
+      "什么样的承诺天然无法被验证？",
+      "“永久套餐”在商业模型上意味着什么？",
+      "“100% 解锁”为什么不可能成立？",
+      "一张测速截图可以怎样被制造出来？",
+      "一份可信的测试说明至少要写清哪几项？",
+      "没有标注日期的榜单为什么不能用？",
+      "遇到这些话术之后还值得继续考察吗？"
+    ],
+    "brands": [],
+    "differentiator": "唯一从话术表述与证据链形态入手的文章，审查的是对方怎么说、拿什么当证据，而不是服务的运营状态（exit-scam-signs）或实测性能（oversold-signals）。",
+    "relatedSlugs": ["exit-scam-signs", "annual-plan-risk", "oversold-signals"],
+    "nextStep": {
+      "label": "话术之外：付款节奏才是真正的防线",
+      "href": "/risk/annual-plan-risk/",
+      "reason": "再会识别话术也挡不住误判，把单次支出控制在可承受范围才是兜底手段。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "annual-plan-risk",
+    "slug": "annual-plan-risk",
+    "file": "src/content/posts/risk/annual-plan-risk.md",
+    "url": "/risk/annual-plan-risk/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "年付更便宜，但风险该怎么算",
+    "description": "把年付折扣还原成预付风险的定价，给出按阶段升级付款周期的做法、不限时与永久套餐风险更高的原因、支付方式对事后追索的影响，以及单次支出的合理上限思路。",
+    "primaryKeyword": "机场付款方式与退款追索",
+    "secondaryKeywords": ["机场年付值得买吗", "月付还是年付", "不限时套餐风险", "机场付款方式"],
+    "intent": "informational",
+    "answer": "年付的折扣本质上是用预付风险换来的。合理做法是把单次支出控制在可承受损失范围内：新服务先月付观察一到两个周期，确认公告、客服与晚高峰表现稳定后再考虑季付，年付只留给已经观察过足够长时间的服务，并且不要把全部需求押在同一家。",
+    "outline": [
+      "年付折扣到底在为什么风险定价？",
+      "一家新服务观察多久才谈得上可信？",
+      "月付、季付、年付各适合哪个阶段？",
+      "为什么不限时和永久套餐风险更高？",
+      "支付方式会影响事后追索能力吗？",
+      "单次支出控制在什么量级比较合理？",
+      "为什么不建议把全部需求押在一家？"
+    ],
+    "brands": [],
+    "differentiator": "唯一讨论付款周期与金额分配的文章，把风险量化成可承受损失。不重复跑路信号识别，也不涉及迁移与恢复操作。",
+    "relatedSlugs": ["marketing-red-flags", "exit-scam-signs", "backup-plan"],
+    "nextStep": {
+      "label": "分散风险的下一步：搭好备用方案",
+      "href": "/risk/backup-plan/",
+      "reason": "不把需求押在一家，前提是真的存在一条随时可用的第二条路，这需要提前配置和验证。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "backup-plan",
+    "slug": "backup-plan",
+    "file": "src/content/posts/risk/backup-plan.md",
+    "url": "/risk/backup-plan/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "给自己留一条退路：备用方案怎么搭",
+    "description": "一份可执行的备份流程：保留低成本第二来源、离线记录订阅地址与备用入口、在客户端预留可切换配置、每月验证备用链路，并指出哪些做法看似备份实则无效。",
+    "primaryKeyword": "机场备用方案怎么留",
+    "secondaryKeywords": ["备用机场怎么选", "订阅备份", "机场断供应急", "多机场并用"],
+    "intent": "tutorial",
+    "answer": "备用方案的目标是：主用失效时十分钟内恢复可用。做法是保留一个低成本的第二来源、把订阅地址与官网备用入口离线记录、在客户端里预留一份可随时切换的配置，并且每月验证一次备用链路确实能连。没有验证过的备份，等于没有备份。",
+    "outline": [
+      "什么情况下会突然失去可用性？",
+      "第二来源应该怎么挑才不会重复踩同一个坑？",
+      "订阅地址和备用入口该怎么离线保存？",
+      "客户端里怎么预留可快速切换的配置？",
+      "多久验证一次备用链路才算合格？",
+      "主用恢复之后要不要切回来？",
+      "哪些做法看起来像备份，其实完全无效？"
+    ],
+    "brands": [],
+    "differentiator": "唯一以操作步骤为主体的风险类文章，产出物是一份可执行的备份配置与定期验证流程；其余风险文章以判断和识别为主，不含配置动作。",
+    "relatedSlugs": ["exit-scam-signs", "after-exit-scam", "annual-plan-risk"],
+    "nextStep": {
+      "label": "去机场对比：挑一个和主用不重叠的备用来源",
+      "href": "/compare/",
+      "reason": "备用来源要在线路类型和运营方上尽量与主用不重叠，对比栏目按维度列出了这些差异。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "fake-official-site",
+    "slug": "fake-official-site",
+    "file": "src/content/posts/risk/fake-official-site.md",
+    "url": "/risk/fake-official-site/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "假官网和钓鱼页面，怎么在点进去之前认出来",
+    "description": "把辨别标准从“页面像不像”换成“入口从哪来”：只承认自己此前保存的地址、服务方在已登录渠道内的通知、旧域名跳转的官方公告三类来源，并给出误输入后的补救步骤。",
+    "primaryKeyword": "机场钓鱼网站",
+    "secondaryKeywords": [
+      "机场官网怎么辨别真假",
+      "机场备用域名验证",
+      "搜索广告假入口",
+      "机场换域名怎么找新官网"
+    ],
+    "intent": "informational",
+    "answer": "辨别的关键不是看页面做得像不像，而是看入口从哪里来。可核验的入口只有三类：你自己此前保存的地址、服务方在原有已登录渠道内发布的通知、以及从旧域名跳转过去的官方公告。搜索广告位、群组转发和第三方聚合页都不构成来源证明。",
+    "outline": [
+      "为什么“页面看起来正规”完全不能作为依据？",
+      "哪三类入口才算可核验来源？",
+      "搜索结果里的广告位问题出在哪？",
+      "换域名时正常的通知方式是什么样的？",
+      "怎样在登录之前验证新域名属于同一方？",
+      "已经在可疑页面输入过账号密码怎么办？",
+      "平时该怎么保存入口才不容易被替换？"
+    ],
+    "brands": [],
+    "differentiator": "唯一处理身份冒充问题的文章，对象是官网入口的真实性验证，而非运营方跑路（exit-scam-signs）或性能异常（oversold-signals）。与 public-node-lists 同属渠道风险但对象不同。",
+    "relatedSlugs": ["exit-scam-signs", "after-exit-scam", "backup-plan"],
+    "nextStep": {
+      "label": "如果确认是失联而不是钓鱼：按流程处置",
+      "href": "/risk/after-exit-scam/",
+      "reason": "入口验证不通过时有两种可能，排除钓鱼之后就要按失联处置流程止损和迁移。"
+    }
+  },
+  {
+    "clusterKey": "free-node-safety-and-risk-warning",
+    "originalSlug": "after-exit-scam",
+    "slug": "after-exit-scam",
+    "file": "src/content/posts/risk/after-exit-scam.md",
+    "url": "/risk/after-exit-scam/",
+    "category": "risk",
+    "pillar": null,
+    "pillarUrl": "/free-nodes/safety/",
+    "title": "机场突然失联之后，先做什么再做什么",
+    "description": "按时间顺序给出失联后的处置流程：先区分失联与临时故障，再停止付款与自动续费，然后清理订阅地址与复用密码，最后按备用方案迁移，并说明为何要回避代找回类渠道。",
+    "primaryKeyword": "机场跑路了怎么办",
+    "secondaryKeywords": [
+      "机场跑路后剩余流量",
+      "机场退款",
+      "机场失联怎么迁移",
+      "机场跑路后订阅还安全吗"
+    ],
+    "intent": "problem",
+    "answer": "顺序很重要：先确认是失联还是临时故障（查原有公告渠道、换网络与设备复测），再停止一切新的付款并取消自动续费，然后把订阅地址从客户端移除、修改复用过的密码，最后按已有的备用方案迁移。剩余流量通常无法追回，不要为挽回损失去接触陌生的代充、代找回渠道。",
+    "outline": [
+      "怎么区分真跑路和临时故障？",
+      "确认失联之后最先要停掉哪些事？",
+      "自动续费和支付授权应该怎么处理？",
+      "订阅地址和账号信息要做哪些清理？",
+      "剩余流量和退款还有可能追回吗？",
+      "迁移到新服务时哪些坑不要再踩一次？",
+      "为什么代找回、代充值渠道要一律回避？"
+    ],
+    "brands": [],
+    "differentiator": "唯一的事后处置流程文章，时间点位于失联之后；exit-scam-signs 在事前，backup-plan 在平时。并且是全簇唯一涉及二次诈骗（代找回、代充值）防范的文章。",
+    "relatedSlugs": ["exit-scam-signs", "backup-plan", "fake-official-site"],
+    "nextStep": {
+      "label": "去机场评测：按可核验口径挑下一家",
+      "href": "/reviews/",
+      "reason": "迁移的关键是换一个信息可核验、有售后记录的服务，评测栏目给出逐项核对标准和最近检查日期。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "verge-rev-getting-started",
+    "slug": "verge-rev-getting-started",
+    "file": "src/content/posts/guides/verge-rev-getting-started.md",
+    "url": "/guides/clash/verge-rev-getting-started/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash Verge Rev 首次启动:服务模式与界面速览",
+    "description": "面向刚装好客户端的用户,逐个说明 Clash Verge Rev 主界面四个页签各自负责什么、为什么必须先安装系统服务,以及开机自启、静默启动、外部控制端口这些设置项在什么场景下才需要改动。",
+    "primaryKeyword": "Clash Verge Rev使用教程",
+    "secondaryKeywords": [
+      "Clash Verge Rev服务模式",
+      "Clash Verge设置",
+      "Clash Verge界面说明",
+      "Clash Verge开机自启",
+      "Clash Verge安装服务失败"
+    ],
+    "intent": "tutorial",
+    "answer": "首次打开 Clash Verge Rev 不要急着点开关。先在设置里安装系统服务,否则 TUN 模式和部分端口无法启用;再确认代理端口没有和其他软件冲突;最后按需打开开机自启与静默启动。完成这三件事之后,界面上的代理、订阅、连接、日志四个页签才能各司其职。",
+    "outline": [
+      "打开后第一屏该点哪里,不该点哪里?",
+      "为什么安装系统服务是所有后续功能的前提?",
+      "代理、订阅、连接、日志四个页签各自解决什么问题?",
+      "开机自启与静默启动要不要开?",
+      "端口设置里哪几项新手不要动?",
+      "界面语言、主题与托盘图标怎么调?",
+      "首次启动最容易踩的三个坑是什么?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「客户端自身初始化与界面认知」这一维度:讲的是没有任何订阅时客户端该被设成什么样。与 download-and-install 以安装完成为分界;与 clash-verge-fails-to-start 的区别是本篇假设客户端能正常打开,后者处理根本打不开的情况。",
+    "relatedSlugs": ["clash-update-subscription", "proxy-mode-and-system-proxy", "tun-mode"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "update-subscription",
+    "slug": "clash-update-subscription",
+    "file": "src/content/posts/guides/clash-update-subscription.md",
+    "url": "/guides/clash/clash-update-subscription/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 订阅要多久更新一次?自动与手动的取舍",
+    "description": "解释 Clash 订阅更新到底更新了什么、自动更新间隔怎么设更合理,以及更新后节点增减、名称改变、手动修改被覆盖这几种现象哪些属于正常,帮助用户分清是机场在调整还是订阅出了问题。",
+    "primaryKeyword": "Clash更新订阅",
+    "secondaryKeywords": [
+      "Clash订阅自动更新间隔",
+      "Clash订阅更新后节点消失",
+      "Clash订阅多久更新一次",
+      "Clash订阅手动刷新",
+      "Clash重置订阅链接"
+    ],
+    "intent": "tutorial",
+    "answer": "机场节点有变动时才需要更新订阅,日常把自动更新间隔设为 12 到 24 小时就足够,几分钟刷一次只会增加订阅接口压力。更新的本质是重新拉取配置覆盖旧内容,因此手动改过的配置会被冲掉;更新后节点数量或名称变化属于正常现象,只有节点归零才需要排查。",
+    "outline": [
+      "点一次更新,客户端具体做了什么?",
+      "自动更新间隔设多久比较合理?",
+      "更新后节点变少、改名了,是机场出问题了吗?",
+      "手动改过的配置为什么一更新就没了?",
+      "多个订阅要不要设置不同的更新策略?",
+      "什么情况下该重置订阅链接而不是刷新?",
+      "更新完还要不要重新选一次节点?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「已导入之后的长期维护节奏」这一维度:讲正常更新的机制、频率与副作用。与 import-subscription 的分界是首次导入已完成;与 clash-subscription-update-failed 的分界是本篇不处理任何报错,只解释正常行为。",
+    "relatedSlugs": [
+      "node-selection-and-latency-test",
+      "verge-rev-getting-started",
+      "proxy-mode-and-system-proxy"
+    ],
+    "nextStep": {
+      "label": "如果更新一直失败:按四层顺序排查",
+      "href": "/guides/clash/clash-subscription-update-failed/",
+      "reason": "点更新后持续报错或转圈属于订阅侧故障,需要按链接、账号、系统、客户端四层逐项定位,不能靠反复点刷新解决。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "proxy-mode-and-system-proxy",
+    "slug": "proxy-mode-and-system-proxy",
+    "file": "src/content/posts/guides/proxy-mode-and-system-proxy.md",
+    "url": "/guides/clash/proxy-mode-and-system-proxy/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 系统代理到底代理了谁?端口与绕过规则",
+    "description": "从操作系统的代理机制讲起,说明系统代理、混合端口、绕过局域网这几项设置分别影响哪些程序,为什么部分软件天然不吃系统代理,以及端口冲突时应该改什么,而不是反复开关按钮。",
+    "primaryKeyword": "Clash系统代理",
+    "secondaryKeywords": [
+      "Clash混合端口",
+      "Clash系统代理不生效",
+      "Clash绕过局域网",
+      "Clash代理端口被占用",
+      "退出Clash后无法上网"
+    ],
+    "intent": "tutorial",
+    "answer": "打开系统代理只是把 Clash 的本地端口写进操作系统的代理设置,只有遵守这项设置的程序才会走代理。浏览器一般遵守,不少游戏、命令行工具和桌面软件不遵守,这正是开了代理但某个软件仍连不上的根本原因。想覆盖全部流量,需要改用 TUN 模式。",
+    "outline": [
+      "系统代理开关按下去,系统里发生了什么?",
+      "哪些程序会遵守系统代理,哪些天然不会?",
+      "混合端口、HTTP 端口、SOCKS 端口该用哪个?",
+      "绕过局域网这一项要不要勾?",
+      "端口被别的软件占用了该怎么改?",
+      "退出客户端后上不了网,是怎么回事?",
+      "什么时候必须从系统代理换成 TUN?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一从「操作系统层代理机制与端口」切入的文章,回答的是谁会被代理。TUN 的适用边界由 tun-mode 承接,流量走向由 rule-routing 承接;本篇不涉及节点质量与故障树。",
+    "relatedSlugs": ["tun-mode", "rule-routing"],
+    "nextStep": {
+      "label": "下一步:决定哪些流量走节点",
+      "href": "/guides/clash/rule-routing/",
+      "reason": "端口和作用范围搞清楚之后,下一个决定实际体验的变量是分流模式,它决定哪些流量走节点、哪些直连。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "tun-mode",
+    "slug": "tun-mode",
+    "file": "src/content/posts/guides/tun-mode.md",
+    "url": "/guides/clash/tun-mode/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash TUN 模式什么时候必须开,什么时候别开",
+    "description": "用哪些流量能被接管这一条主线区分 TUN 模式与系统代理,给出该开与不该开的具体场景清单,说明开启前必须满足的服务与权限条件,以及开启后在性能和兼容性上要付出的代价。",
+    "primaryKeyword": "Clash TUN模式",
+    "secondaryKeywords": [
+      "TUN模式是什么意思",
+      "Clash虚拟网卡",
+      "TUN模式和系统代理区别",
+      "TUN模式速度变慢",
+      "Clash TUN需要管理员权限"
+    ],
+    "intent": "tutorial",
+    "answer": "TUN 模式通过虚拟网卡接管全部网络流量,连不认系统代理的程序也会被纳入,适合游戏、命令行工具和部分桌面客户端;只用浏览器、设备性能偏弱或公司电脑受管控时不建议开。开启需要管理员权限并已装好系统服务,代价是额外的内存与性能开销,也更容易与虚拟机、企业安全软件冲突。",
+    "outline": [
+      "TUN 模式和系统代理的本质区别在哪?",
+      "哪些场景非开 TUN 不可?",
+      "哪些场景开了反而添乱?",
+      "开启前必须先满足哪两个条件?",
+      "开 TUN 之后速度变慢是正常的吗?",
+      "TUN 和虚拟机、企业安全软件为什么容易打架?",
+      "用完之后要不要主动关掉?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「TUN 的适用边界与代价评估」这一决策维度,回答该不该开。开启后的断网修复由 clash-tun-breaks-network 承接;与 proxy-mode-and-system-proxy 的分界是后者只讲应用层端口代理,本篇讲网络栈级接管。",
+    "relatedSlugs": ["proxy-mode-and-system-proxy", "rule-routing"],
+    "nextStep": {
+      "label": "如果开了 TUN 之后整机断网",
+      "href": "/guides/clash/clash-tun-breaks-network/",
+      "reason": "TUN 是最容易造成整机断网的设置项,一旦断网应直接按虚拟网卡与服务权限的顺序排查,而不是继续调其他设置。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "rule-routing",
+    "slug": "rule-routing",
+    "file": "src/content/posts/guides/rule-routing.md",
+    "url": "/guides/clash/rule-routing/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "规则、全局与直连:Clash 分流模式怎么选",
+    "description": "讲清规则、全局、直连三种模式各自把流量送去哪里,策略组和规则集是怎么配合工作的,以及在什么情况下应该手动补一条规则,而不是整体切到全局模式硬扛。",
+    "primaryKeyword": "Clash规则分流",
+    "secondaryKeywords": [
+      "Clash全局模式和规则模式区别",
+      "Clash直连模式",
+      "Clash策略组是什么",
+      "Clash规则集更新",
+      "开Clash后国内网站变慢"
+    ],
+    "intent": "tutorial",
+    "answer": "日常用规则模式:国内域名直连、国外域名走节点,既省流量也不拖慢国内网站。全局模式把所有流量塞进节点,只适合排查问题或规则没覆盖某个站点时临时使用。直连模式相当于关闭代理但保留客户端运行。开了 Clash 后国内网站变慢,多数是误用了全局模式或规则集过期。",
+    "outline": [
+      "三种模式分别把流量送去了哪里?",
+      "为什么日常应该一直待在规则模式?",
+      "策略组和规则集是什么关系?",
+      "某个网站没走代理,该怎么补一条规则?",
+      "开了 Clash 之后国内网站变慢,是谁的锅?",
+      "全局模式在什么时候才是正确选择?",
+      "机场自带规则和第三方规则集怎么取舍?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一讲「流量走向决策(策略组与规则集)」的文章,回答被代理的流量去哪。proxy-mode-and-system-proxy 回答谁被代理,tun-mode 回答接管范围,三者互不重叠;本篇不评估节点质量。",
+    "relatedSlugs": ["proxy-mode-and-system-proxy", "node-selection-and-latency-test"],
+    "nextStep": {
+      "label": "下一步:学会读懂节点延迟并挑对节点",
+      "href": "/guides/clash/node-selection-and-latency-test/",
+      "reason": "分流决定了流量走不走节点,而走哪个节点、节点好不好用,要靠延迟测试和策略组选择来判断。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "node-selection-and-latency-test",
+    "slug": "node-selection-and-latency-test",
+    "file": "src/content/posts/guides/node-selection-and-latency-test.md",
+    "url": "/guides/clash/node-selection-and-latency-test/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 节点延迟测试怎么看?别只挑数字最小的",
+    "description": "解释 Clash 延迟数字的真实含义与测试局限,给出按使用场景挑节点的判断顺序,说明自动选择、故障转移、负载均衡这几类策略组分别适合谁,以及为什么流量倍率也该纳入选择考量。",
+    "primaryKeyword": "Clash节点测速",
+    "secondaryKeywords": [
+      "Clash延迟测试不准",
+      "Clash节点怎么选",
+      "Clash自动选择节点",
+      "Clash故障转移策略组",
+      "Clash节点倍率"
+    ],
+    "intent": "tutorial",
+    "answer": "客户端显示的延迟只是到测试地址的握手耗时,代表连通性和响应快慢,不代表带宽与稳定性。选节点应看用途:看视频看带宽,AI 工具和远程连接看长连接稳定性,游戏才优先看延迟。自动选择与故障转移适合托管日常切换,但会掩盖某个节点长期不可用的事实。",
+    "outline": [
+      "客户端里的那个毫秒数,到底测的是什么?",
+      "延迟最低的节点为什么不一定最好用?",
+      "看视频、用 AI 工具、打游戏该分别看哪个指标?",
+      "自动选择、故障转移、负载均衡怎么挑?",
+      "节点倍率会怎样影响你的实际成本?",
+      "怎么自己做一次更接近真实体验的测试?",
+      "测速正常但网页打不开,问题出在哪一层?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「延迟指标解读与策略组选择」这一评估维度,给出的是判断标准而非操作步骤。全红超时的修复由 clash-nodes-all-timeout 承接,测速正常却打不开由 clash-connected-but-no-internet 承接;本篇不讲分流规则。",
+    "relatedSlugs": ["rule-routing", "clash-update-subscription"],
+    "nextStep": {
+      "label": "如果测出来一片红色超时",
+      "href": "/guides/clash/clash-nodes-all-timeout/",
+      "reason": "结果不是数字而是全部超时,说明问题已经不在选节点层面,应转入连通性分层排查而不是继续换节点。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "dns-and-leak-check",
+    "slug": "dns-and-leak-check",
+    "file": "src/content/posts/guides/dns-and-leak-check.md",
+    "url": "/guides/clash/dns-and-leak-check/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 的 DNS 怎么设:防污染、防泄漏与国内解析",
+    "description": "面向已经能正常连接但遇到解析异常的用户,说明 Clash DNS 在链路中的位置、fake-ip 与 redir-host 的差别、国内外域名如何分开解析,以及怎样自查 DNS 泄漏,避免盲目照抄网上的配置片段。",
+    "primaryKeyword": "Clash DNS设置",
+    "secondaryKeywords": [
+      "Clash DNS泄漏检测",
+      "fake-ip和redir-host区别",
+      "Clash DNS污染",
+      "Clash国内域名解析慢",
+      "Clash DNS怎么改"
+    ],
+    "intent": "tutorial",
+    "answer": "多数人并不需要手动改 DNS,机场下发的配置通常已经设好 fake-ip 与国内外分流解析。只有出现节点能连但网页打不开、国内网站被解析到国外 IP、开了代理仍被识别真实地区这三类现象时才值得动手。改之前先确认自己用的是 fake-ip 还是 redir-host,两者排查方式完全不同。",
+    "outline": [
+      "Clash 的 DNS 在整条链路的哪个位置起作用?",
+      "fake-ip 和 redir-host 有什么区别?我用的是哪种?",
+      "国内域名为什么要单独走国内 DNS?",
+      "出现哪些现象说明发生了 DNS 泄漏?",
+      "哪三种情况才真的需要手动改 DNS?",
+      "照抄网上的 DNS 配置片段有什么风险?",
+      "改完之后怎么验证确实生效了?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一从「域名解析层」切入的文章:rule-routing 讲流量走向,本篇讲名字如何被解析。与 clash-connected-but-no-internet 的分界是本篇是配置说明与自查方法,后者是面向症状的故障树。",
+    "relatedSlugs": ["rule-routing", "tun-mode"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "clash-subscription-update-failed",
+    "slug": "clash-subscription-update-failed",
+    "file": "src/content/posts/guides/clash-subscription-update-failed.md",
+    "url": "/guides/clash/clash-subscription-update-failed/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 更新订阅一直失败?按四层顺序逐项排查",
+    "description": "把 Clash 订阅更新失败拆成链接层、账号层、系统层、客户端层四类成因,给出每一层的验证动作与预期结果,并说明 403、404、超时、返回网页代码这几种典型报错各自指向什么问题。",
+    "primaryKeyword": "Clash订阅更新失败",
+    "secondaryKeywords": [
+      "Clash订阅链接打不开",
+      "Clash更新订阅超时",
+      "Clash订阅提示403",
+      "Clash订阅无法解析",
+      "Clash Verge更新订阅失败"
+    ],
+    "intent": "problem",
+    "answer": "先在浏览器里直接打开订阅链接:能下载到配置文件说明问题在客户端,打不开说明问题在链接或机场侧。随后依次检查套餐是否到期或流量耗尽、链接是否被重置、系统时间与证书是否正常、是否需要先连上代理才能拉取订阅。四层都走完仍失败,才有必要联系机场客服。",
+    "outline": [
+      "第一步:在浏览器里直接打开订阅链接会怎样?",
+      "报 403、404 和超时,分别说明什么?",
+      "套餐到期、流量耗尽会以什么形式表现出来?",
+      "订阅链接是不是被重置过?怎么确认?",
+      "系统时间和证书错误为什么会拖垮更新?",
+      "为什么有些机场必须先连上代理才能更新订阅?",
+      "什么时候该停止自查,直接开工单?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「客户端到机场服务器之间的订阅拉取环节」,故障发生在还没有节点数据的阶段。clash-nodes-all-timeout 处理订阅已成功但连不上,clash-connected-but-no-internet 处理已连通但访问异常,三者故障点位于链路的不同层级。",
+    "relatedSlugs": [
+      "clash-nodes-all-timeout",
+      "verge-rev-getting-started",
+      "clash-update-subscription"
+    ],
+    "nextStep": {
+      "label": "修好之后:设置合理的更新策略",
+      "href": "/guides/clash/clash-update-subscription/",
+      "reason": "故障排除后把自动更新间隔和更新策略调整到合理区间,可以显著减少同类问题再次发生。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "clash-nodes-all-timeout",
+    "slug": "clash-nodes-all-timeout",
+    "file": "src/content/posts/guides/clash-nodes-all-timeout.md",
+    "url": "/guides/clash/clash-nodes-all-timeout/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash 节点全红、全部超时的六种成因与排查顺序",
+    "description": "提供一棵可执行的判定树,依次排除本地网络、系统时间、防火墙与安全软件、端口冲突、订阅过期、机场侧故障六类成因,并说明每一步该看到什么结果才算通过,避免无意义地反复切换节点。",
+    "primaryKeyword": "Clash节点全部超时",
+    "secondaryKeywords": [
+      "Clash节点全红",
+      "Clash显示TIMEOUT",
+      "Clash延迟测试全部失败",
+      "Clash换节点还是超时",
+      "Clash无法连接"
+    ],
+    "intent": "problem",
+    "answer": "节点全部超时先分清是测试失败还是真的连不上:关掉代理确认本地网络正常,再换一条网络(比如手机热点)复测。换网络就好,说明是本地网络或运营商侧拦截;全网都超时而其他用户正常,多半是本机时间、防火墙或客户端配置问题;同机场用户普遍反馈,才是机场侧故障。",
+    "outline": [
+      "先确认:是延迟测不出来,还是真的连不上?",
+      "换一条网络复测,能说明什么?",
+      "系统时间偏差为什么会让所有节点握手失败?",
+      "防火墙、杀毒软件和企业管控会怎么表现?",
+      "端口冲突和残留代理设置怎么查?",
+      "怎么判断这是机场侧的大面积故障?",
+      "反复换节点为什么解决不了问题?"
+    ],
+    "brands": [],
+    "differentiator": "本篇的信息增量在「完全连不上」这一状态的判定树,核心手法是换网络与换设备的交叉验证。与 clash-connected-but-no-internet 的分界是后者已经连通;与 clash-tun-breaks-network 的分界是后者由 TUN 这一具体设置直接触发,本篇不假设任何单一诱因。",
+    "relatedSlugs": [
+      "clash-subscription-update-failed",
+      "verge-rev-getting-started",
+      "clash-update-subscription"
+    ],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "clash-tun-breaks-network",
+    "slug": "clash-tun-breaks-network",
+    "file": "src/content/posts/guides/clash-tun-breaks-network.md",
+    "url": "/guides/clash/clash-tun-breaks-network/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "开启 TUN 后整机断网:虚拟网卡与服务权限排查",
+    "description": "专门处理由 TUN 模式触发的断网,包含虚拟网卡创建失败、权限不足、路由被其他虚拟网络接管三类成因的识别方法,以及客户端异常退出后如何手工恢复网络,不必重装系统或重置网络栈。",
+    "primaryKeyword": "Clash开启TUN后断网",
+    "secondaryKeywords": [
+      "TUN网卡安装失败",
+      "Clash TUN没有管理员权限",
+      "关闭Clash后无法上网",
+      "Clash虚拟网卡残留",
+      "TUN模式和虚拟机冲突"
+    ],
+    "intent": "problem",
+    "answer": "开 TUN 之后断网,常见来源有三处:系统服务没装好导致虚拟网卡创建失败、客户端未以管理员权限运行、或虚拟网卡与虚拟机软件、企业安全软件争抢路由。应急做法是先关闭 TUN 并退出客户端;若仍没有网络,手动重置系统代理设置,并检查是否留下了残余虚拟网卡。",
+    "outline": [
+      "断网发生在开启 TUN 的瞬间,还是运行一段时间后?",
+      "系统服务没装成功会有哪些迹象?",
+      "管理员权限和 TUN 到底是什么关系?",
+      "虚拟机和企业安全软件为什么会抢路由?",
+      "客户端崩溃退出后,怎么手工恢复上网?",
+      "残留的虚拟网卡要不要删?怎么删才安全?",
+      "修好之后还要不要继续用 TUN?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一由某一项具体设置直接引发的故障篇,问题出在操作系统网络栈与虚拟网卡层面,而非代理链路。tun-mode 回答该不该开,本篇回答开了出事怎么办;与 clash-connected-but-no-internet 的分界是本篇连国内网站都不通。",
+    "relatedSlugs": [
+      "clash-verge-fails-to-start",
+      "verge-rev-getting-started",
+      "clash-update-subscription"
+    ],
+    "nextStep": {
+      "label": "恢复网络后:重新评估自己是否需要 TUN",
+      "href": "/guides/clash/tun-mode/",
+      "reason": "网络恢复后应重新确认使用场景是否真的需要 TUN,以及开启前必须满足哪些前置条件,避免同样的问题再犯。"
+    }
+  },
+  {
+    "clusterKey": "clash-client-full-journey",
+    "originalSlug": "clash-verge-fails-to-start",
+    "slug": "clash-verge-fails-to-start",
+    "file": "src/content/posts/guides/clash-verge-fails-to-start.md",
+    "url": "/guides/clash/clash-verge-fails-to-start/",
+    "category": "guides",
+    "pillar": "clash",
+    "pillarUrl": "/guides/clash/",
+    "title": "Clash Verge Rev 打不开或闪退时,先修这三处",
+    "description": "覆盖 Clash Verge Rev 无法启动、闪退、界面白屏三类症状,给出进程、端口、配置文件、系统服务四个检查点的先后顺序,并说明重装前应保留哪些目录,避免把订阅和自定义规则一起丢掉。",
+    "primaryKeyword": "Clash Verge无法启动",
+    "secondaryKeywords": [
+      "Clash Verge闪退",
+      "Clash Verge配置文件损坏",
+      "Clash Verge端口被占用",
+      "Clash Verge服务安装失败",
+      "Clash Verge界面白屏"
+    ],
+    "intent": "problem",
+    "answer": "客户端起不来,先分清是进程根本没启动,还是启动了但界面白屏。前者多为端口被占用或系统服务异常,后者多为配置文件损坏或渲染组件问题。通用修复顺序是:结束残留进程,再把当前配置改名或删除,重装系统服务,以管理员身份重启;仍无效再考虑备份配置目录后重装客户端。",
+    "outline": [
+      "是进程没起来,还是界面白屏?",
+      "残留进程和端口占用怎么确认?",
+      "配置文件损坏会有哪些典型表现?",
+      "系统服务异常时该怎么重装?",
+      "日志文件在哪里?该重点看哪几行?",
+      "重装之前哪些目录必须先备份?",
+      "修好之后如何避免同样的问题复发?"
+    ],
+    "brands": [],
+    "differentiator": "本篇是全簇唯一处理「客户端自身无法运行」的文章,故障发生在联网动作之前,其余排查篇均以客户端能正常启动为前提。与 verge-rev-getting-started 的分界是后者讲能打开之后如何初始化。",
+    "relatedSlugs": ["clash-tun-breaks-network", "clash-nodes-all-timeout"],
+    "nextStep": {
+      "label": "按需求筛选支持该客户端的机场",
+      "href": "/compare/",
+      "reason": "教程解决了怎么配,但还需要一个订阅源。对照表里的协议列可以确认兼容性。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "nodes-all-timeout",
+    "slug": "nodes-all-timeout",
+    "file": "src/content/posts/troubleshooting/nodes-all-timeout.md",
+    "url": "/troubleshooting/connection-failed/nodes-all-timeout/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "节点全部超时怎么办?先看是全体失效还是本机失效",
+    "description": "节点列表整片变红、全部显示 TIMEOUT 时,真正要先回答的不是「换哪个节点」,而是「是不是所有人都这样」。本文用三步判据把服务端故障、订阅层故障和本机拦截彻底分开。",
+    "primaryKeyword": "节点全部超时怎么办",
+    "secondaryKeywords": ["机场节点全红", "机场节点timeout", "机场节点全部失效", "机场节点不可用"],
+    "intent": "problem",
+    "answer": "节点全部超时的关键判据是「全体还是个体」:如果换客户端、换设备、换网络后仍然全红,基本可以排除本机设置,故障在订阅层或机场服务端;如果只有当前这台设备全红,通常是系统代理残留、防火墙拦截或时间不同步。先做这个判断,再决定是改配置还是等公告。",
+    "outline": [
+      "全部节点超时和部分节点超时,为什么排查方向完全相反?",
+      "三十秒判据:换客户端、换设备、换网络,哪一个能复现?",
+      "确认是服务端问题时,从哪里看机场公告与状态说明?",
+      "订阅能更新但节点全红,和订阅根本拉不到有什么不同?",
+      "本机侧最常见的四个元凶:系统代理残留、防火墙、时间不同步、端口占用",
+      "为什么「换一个节点再试」在这种症状下几乎没有意义?",
+      "全部节点长期失效持续多久,才需要考虑机场自身出了状况?",
+      "常见追问:延迟测试显示超时但实际能上网,算不算故障?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一处理「全部节点同时失效」这一全局性症状的文章,主线是「全体 vs 个体」的对照判据。与 connected-but-no-internet 的区别在于本篇节点是红的、握手就没成功;与 subscription-update-failed 的区别在于本篇假设订阅已经成功拉到节点列表;与 only-one-device-fails 的区别在于本篇要先证明故障不是单机现象。",
+    "relatedSlugs": [
+      "subscription-update-failed",
+      "dns-certificate-time-errors",
+      "works-on-wifi-not-cellular"
+    ],
+    "nextStep": {
+      "label": "了解机场经营异常的识别方法",
+      "href": "/risk/",
+      "reason": "本机与订阅都排查完仍然全部节点长期失效时,下一步要判断的是机场自身是否出现经营异常,而不是继续改本地配置。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "subscription-update-failed",
+    "slug": "subscription-update-failed",
+    "file": "src/content/posts/troubleshooting/subscription-update-failed.md",
+    "url": "/troubleshooting/connection-failed/subscription-update-failed/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场订阅更新失败:按返回码分辨过期、限流与拦截",
+    "description": "订阅更新失败往往在拿配置这一步就断了,节点还没被创建出来。本文以订阅接口返回的状态码和响应体为线索,区分套餐过期、流量耗尽、链接被重置、频率限制与本地拦截五类原因。",
+    "primaryKeyword": "机场订阅更新失败",
+    "secondaryKeywords": [
+      "机场订阅链接打不开",
+      "机场订阅失效",
+      "订阅地址无效",
+      "机场订阅没有节点",
+      "订阅更新后节点消失"
+    ],
+    "intent": "problem",
+    "answer": "订阅更新失败是「拿配置」阶段的故障,不是「连节点」阶段的故障。把订阅链接直接粘进浏览器打开,看返回的是 401/403(链接失效或被重置)、404(地址写错或域名换了)、纯文本乱码(正常,说明服务端没问题)、还是空白与套餐提示页,就能把责任方分清,再决定重置链接还是换客户端。",
+    "outline": [
+      "订阅更新失败和节点连不上,为什么是两个完全不同的阶段?",
+      "把订阅链接粘进浏览器:你应该看到什么,不应该看到什么?",
+      "返回 401、403、404 分别对应哪种账户状态?",
+      "提示流量不足或套餐过期时,重置链接有用吗?",
+      "订阅更新成功却一个节点都没有,问题出在哪一层?",
+      "更新频率过高被限流:多久拉一次订阅才算正常?",
+      "本地这一侧也会拦截订阅:DNS、证书与客户端 UA 的影响",
+      "订阅链接被重置后,旧链接为什么会立刻失效?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一以订阅接口的返回码与响应体为主线的文章,故障点全部落在「客户端还没拿到节点配置」这一阶段。与 nodes-all-timeout 的区别是那篇已经有节点列表只是连不通;与 subscription-and-node 的区别是那篇讲订阅的工作原理不讲任何报错处置。",
+    "relatedSlugs": [
+      "nodes-all-timeout",
+      "dns-certificate-time-errors",
+      "works-on-wifi-not-cellular"
+    ],
+    "nextStep": {
+      "label": "搞懂订阅链接到底是什么",
+      "href": "/basics/subscription-and-node/",
+      "reason": "修好之后理解订阅链接为什么会变化、为什么不能分享,才能避免同一个问题反复出现。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "dns-certificate-time-errors",
+    "slug": "dns-certificate-time-errors",
+    "file": "src/content/posts/troubleshooting/dns-certificate-time-errors.md",
+    "url": "/troubleshooting/connection-failed/dns-certificate-time-errors/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场证书错误、时间不同步与 DNS 异常怎么分辨",
+    "description": "客户端弹出的报错文本其实是最便宜的线索。本文把 TLS 握手失败、证书已过期、DNS 解析失败三类常见报错拆开,说明它们各自对应的前置条件,以及为什么系统时间会让整条连接直接崩掉。",
+    "primaryKeyword": "机场证书错误",
+    "secondaryKeywords": [
+      "机场TLS错误怎么办",
+      "系统时间错误导致证书失败",
+      "DNS污染无法连接",
+      "机场握手失败"
+    ],
+    "intent": "problem",
+    "answer": "这三类报错都有明确文本,可以直接反查根因:证书错误和握手失败优先检查系统时间与时区是否同步、根证书是否被安全软件替换;DNS 解析失败检查客户端的 DNS 设置与是否启用了防污染解析。它们的共同点是问题出在连接建立之前,和节点质量无关。",
+    "outline": [
+      "为什么带报错文本的故障反而最好修?",
+      "系统时间差几分钟,为什么会让证书直接失效?",
+      "证书被安全软件替换:如何确认是不是本机在做中间人?",
+      "DNS 解析失败和 DNS 被污染,现象上怎么区分?",
+      "客户端里的 DNS 设置项分别管什么?",
+      "握手失败提示里哪几个关键词值得记住?",
+      "改完之后怎么验证:哪一步能确认前置条件已经修好?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一以「客户端报错文案」为索引的文章,把系统时间、根证书、DNS 三个连接建立前的前置条件讲透。与 connected-but-no-internet 的区别是那篇完全没有报错、属于静默失败;与 nodes-all-timeout 的区别是那篇的超时不提供任何可读的错误原因。",
+    "relatedSlugs": [
+      "nodes-all-timeout",
+      "subscription-update-failed",
+      "works-on-wifi-not-cellular"
+    ],
+    "nextStep": {
+      "label": "报错消失后仍打不开网页怎么办",
+      "href": "/troubleshooting/connection-failed/connected-but-no-internet/",
+      "reason": "前置条件修复后如果连接建立成功但页面依旧打不开,故障就转移到了分流与 DNS 落点这一层,需要换一套排查框架。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "works-on-wifi-not-cellular",
+    "slug": "works-on-wifi-not-cellular",
+    "file": "src/content/posts/troubleshooting/works-on-wifi-not-cellular.md",
+    "url": "/troubleshooting/connection-failed/works-on-wifi-not-cellular/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "手机流量连不上机场,Wi-Fi 却正常是什么原因",
+    "description": "同一台手机、同一个订阅,换到蜂窝网络就断,说明变量在网络环境而不在设备。本文用可复现的网络对照实验,解释运营商差异、MTU、端口封锁和企业校园网限制分别会造成什么现象。",
+    "primaryKeyword": "手机流量连不上机场",
+    "secondaryKeywords": [
+      "wifi能用流量不能用",
+      "换网络后机场断开",
+      "公司网络屏蔽代理",
+      "校园网连不上机场",
+      "MTU影响机场速度"
+    ],
+    "intent": "problem",
+    "answer": "判据很简单:同一台设备、同一个订阅,只换网络就复现,变量就在网络环境这一层。常见原因是不同运营商对某些端口或协议的处理方式不同、蜂窝网络的 MTU 更小导致大包被丢弃、以及公司网、校园网、酒店网对长连接与非常规端口的限制。换节点通常无效,换协议或换入口才有效。",
+    "outline": [
+      "怎样设计一次能复现的网络对照实验?",
+      "宽带、蜂窝、公司网、校园网、酒店网各自的限制特点是什么?",
+      "MTU 太小会造成什么现象:能握手却传不动数据",
+      "为什么同一个机场在移动、电信、联通下表现不同?",
+      "端口和协议被针对时,换节点为什么没用?",
+      "哪些症状说明应该换协议而不是换机场?",
+      "出差和公共网络下,提前准备哪些备用方案更省事?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一把「网络环境」当作单一变量做对照实验的文章,涵盖 MTU、运营商差异与机构网络限制这些只在换网络时才暴露的因素。与 only-one-device-fails 的区别在于那篇控制的变量是设备;与 nodes-all-timeout 的区别在于本篇故障有明确的复现条件而非全面失效。",
+    "relatedSlugs": ["only-one-device-fails", "nodes-all-timeout", "subscription-update-failed"],
+    "nextStep": {
+      "label": "换网络无法复现时,把变量锁回设备",
+      "href": "/troubleshooting/connection-failed/only-one-device-fails/",
+      "reason": "如果换网络之后故障消失不了或者根本无法复现,说明变量不在网络这一层,应该改用设备对照法继续缩小范围。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "only-one-device-fails",
+    "slug": "only-one-device-fails",
+    "file": "src/content/posts/troubleshooting/only-one-device-fails.md",
+    "url": "/troubleshooting/connection-failed/only-one-device-fails/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "只有一台设备连不上机场?用对照法三步锁定变量",
+    "description": "别人正常、自己不行,或者手机能用电脑不能用,这类故障的答案几乎从来不在机场那边。本文给出同订阅换设备、同设备换客户端、同客户端换账号三组对照,把范围压到一个具体开关上。",
+    "primaryKeyword": "只有一台设备连不上机场",
+    "secondaryKeywords": [
+      "手机能用电脑不能用",
+      "其他人正常只有自己不能用",
+      "机场设备数量限制",
+      "杀毒软件拦截代理客户端",
+      "代理端口被占用"
+    ],
+    "intent": "problem",
+    "answer": "只有一台设备失效时,故障几乎一定在这台设备上。按三组对照缩小范围:同一订阅换到另一台设备是否正常、同一设备换一个客户端是否正常、同一客户端换一个账号是否正常。三组结果的组合可以直接指向设备数上限、安全软件拦截、端口占用或残留代理配置。",
+    "outline": [
+      "为什么「别人能用」是排查中最有价值的一条信息?",
+      "三组对照实验怎么做,每组分别能排除什么?",
+      "在线设备数超限时,客户端会给出什么样的表现?",
+      "防火墙、杀毒软件与系统安全策略拦截代理的典型迹象",
+      "代理端口被其他程序占用,怎么快速确认?",
+      "重装系统或换设备后失效,通常漏掉了哪一步?",
+      "确认是协议兼容性问题时,还有哪些补救办法?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一以「设备」为受控变量、以对照组为方法论的文章,覆盖设备数上限、安全软件拦截、端口占用这些只在单机上出现的因素。与 works-on-wifi-not-cellular 的区别是那篇的变量是网络;与 nodes-all-timeout 的区别是本篇一开始就已经确认故障不是全局性的。",
+    "relatedSlugs": ["works-on-wifi-not-cellular", "dns-certificate-time-errors"],
+    "nextStep": {
+      "label": "对比不同机场的协议与客户端支持",
+      "href": "/compare/",
+      "reason": "如果三组对照最终指向机场侧的协议或客户端兼容性不足,再横向对比各家的协议与客户端支持范围,才是有依据的更换决定。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "speed-slow-at-peak-hours",
+    "slug": "speed-slow-at-peak-hours",
+    "file": "src/content/posts/troubleshooting/speed-slow-at-peak-hours.md",
+    "url": "/troubleshooting/connection-failed/speed-slow-at-peak-hours/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场速度慢怎么办:先分清线路拥堵与本地瓶颈",
+    "description": "「慢」是吞吐问题,不是连通问题,处理方式和连不上完全不同。本文教你用多线程测速、白天与晚高峰对照、倍率与限速核对三组数据,判断慢的责任在机场线路还是自己的宽带与设备。",
+    "primaryKeyword": "机场晚高峰变慢怎么办",
+    "secondaryKeywords": [
+      "机场晚高峰很慢",
+      "机场节点速度慢",
+      "机场超售怎么判断",
+      "为什么测速快看视频卡"
+    ],
+    "intent": "problem",
+    "answer": "先确定慢是不是真的:用多线程下载而不是单次浏览器测速,再在白天和晚高峰各测一轮同一个节点。如果只有晚高峰慢,是线路拥堵或超售;如果全天都慢,先查套餐限速与节点倍率,再查自己的宽带上限和设备无线信号,不要用一次峰值下结论。",
+    "outline": [
+      "「慢」到底指什么:带宽、加载等待还是视频卡顿?",
+      "单线程和多线程测速为什么差别这么大?",
+      "白天正常晚上慢:怎样用对照数据证明是拥堵?",
+      "套餐限速和节点倍率会不会直接压住速度?",
+      "怎样判断一个机场是否存在明显超售?",
+      "测速数字很好看却依然卡顿,问题在哪一环?",
+      "本地瓶颈自查:宽带上限、无线信号、设备性能与后台占用",
+      "换节点、换协议、换机场,三个选项分别在什么条件下才成立?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一处理「能用但慢」的吞吐类问题,主线是多线程测速与时段对照。与 latency-high-and-packet-loss 的区别是本篇只看下载带宽、不看往返时延;与 connected-but-no-internet 的区别是本篇网页是打得开的;与 traffic-used-up 的区别是本篇的慢不是套餐耗尽造成的。",
+    "relatedSlugs": ["latency-high-and-packet-loss", "traffic-used-up"],
+    "nextStep": {
+      "label": "横向对比各家的晚高峰表现",
+      "href": "/compare/",
+      "reason": "确认慢的原因是线路拥堵而非本地瓶颈后,再按晚高峰表现做横向对比,才有依据决定是否更换服务。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "latency-high-and-packet-loss",
+    "slug": "latency-high-and-packet-loss",
+    "file": "src/content/posts/troubleshooting/latency-high-and-packet-loss.md",
+    "url": "/troubleshooting/connection-failed/latency-high-and-packet-loss/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场延迟高怎么解决:延迟、抖动、丢包要分开测",
+    "description": "很多人把延迟高、卡顿和掉线混成一件事,结果换了一堆节点还是没改善。本文把延迟、抖动、丢包当作三个独立指标分别给出正常区间与测量方法,并说明线路类型对它们的影响权重。",
+    "primaryKeyword": "机场延迟高怎么解决",
+    "secondaryKeywords": [
+      "节点延迟多少算正常",
+      "机场节点丢包",
+      "机场抖动高",
+      "游戏低延迟节点怎么选",
+      "延迟低但速度慢"
+    ],
+    "intent": "problem",
+    "answer": "延迟、抖动、丢包是三件事:延迟决定操作跟手程度,抖动决定通话和游戏是否忽快忽慢,丢包决定连接会不会中断。分别测量后再判断,香港与日本节点的延迟区间和美国节点完全不同,拿同一把尺子衡量必然得出错误结论。延迟主要由线路和入口决定,换节点地区往往比换机场更有效。",
+    "outline": [
+      "延迟、抖动、丢包分别影响哪些实际体验?",
+      "不同地区节点的延迟区间,各自到什么数值算正常?",
+      "客户端里的延迟测试测的到底是什么?",
+      "怎样测抖动和丢包,而不是只看一个延迟数字?",
+      "线路类型对时延的影响:中转、直连与专线的差别在哪里?",
+      "为什么延迟很低但下载速度依然上不去?",
+      "协议选择会不会改变时延表现?",
+      "什么情况下应该换地区,什么情况下才需要换服务?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一把延迟、抖动、丢包拆成三个独立指标并分别给出正常区间与测量方法的文章。与 speed-slow-at-peak-hours 的区别是那篇只谈带宽吞吐、本篇只谈时延质量;与 how-to-choose-nodes 的区别是那篇是选之前的判断标准,本篇是用出问题之后的测量方法。",
+    "relatedSlugs": ["speed-slow-at-peak-hours", "works-on-wifi-not-cellular"],
+    "nextStep": {
+      "label": "排查完仍然不行?看看是不是线路本身的问题",
+      "href": "/risk/",
+      "reason": "客户端、系统代理、订阅都排查过还不行,问题可能出在服务方。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "traffic-used-up",
+    "slug": "traffic-used-up",
+    "file": "src/content/posts/troubleshooting/traffic-used-up.md",
+    "url": "/troubleshooting/connection-failed/traffic-used-up/",
+    "category": "troubleshooting",
+    "pillar": "connection-failed",
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场流量用完了怎么办:重置周期、倍率与省流做法",
+    "description": "流量耗尽时客户端的表现常常和故障一模一样,但它其实是计费问题不是技术问题。本文讲清倍率怎么换算、重置什么时候发生、上传为什么也计费,以及哪些后台行为在悄悄吃流量。",
+    "primaryKeyword": "机场流量用完了怎么办",
+    "secondaryKeywords": [
+      "机场流量什么时候重置",
+      "机场倍率怎么算",
+      "机场流量消耗很快",
+      "机场流量能不能结转",
+      "上传流量算不算"
+    ],
+    "intent": "problem",
+    "answer": "流量耗尽后订阅通常仍能更新,但节点会被限速或直接不可用,看起来很像故障。先在用户中心确认剩余流量与重置日期,再决定是等重置、买加油包还是升级套餐。要注意倍率节点会成倍扣量、上传同样计费,这两点是流量掉得比预期快的主要原因。",
+    "outline": [
+      "流量耗尽和节点故障,在客户端上怎么区分?",
+      "倍率是怎么换算的:0.5 倍、1 倍、2 倍分别意味着什么?",
+      "为什么专线和流媒体节点的倍率通常更高?",
+      "流量什么时候重置,重置是按自然月还是按购买日?",
+      "年付套餐是每月重置还是一次给全年?",
+      "上传也计费:哪些日常行为在悄悄消耗流量?",
+      "后台自动更新、云同步与视频预加载的影响有多大?",
+      "加油包、提前重置和升级套餐,分别在什么情况下更划算?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一讲计费而非连通的文章,「故障」的本质是套餐用尽。倍率换算、重置周期、上传计费三个知识点在其他任何一篇里都不展开。与 speed-slow-at-peak-hours 的区别是那篇的慢来自线路拥堵,本篇的慢来自超量后的限速策略。",
+    "relatedSlugs": ["speed-slow-at-peak-hours", "latency-high-and-packet-loss"],
+    "nextStep": {
+      "label": "学会读节点名里的倍率标记",
+      "href": "/basics/how-to-choose-nodes/",
+      "reason": "流量消耗速度主要由所选节点的倍率决定,学会在选节点时避开高倍率线路,比事后买加油包更省钱。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "subscription-and-node",
+    "slug": "subscription-and-node",
+    "file": "src/content/posts/basics/subscription-and-node.md",
+    "url": "/basics/subscription-and-node/",
+    "category": "basics",
+    "pillar": null,
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场订阅是什么:订阅、节点与客户端各管一段",
+    "description": "订阅链接、节点和客户端是三个不同的东西,把它们的职责分清楚,后面九成的报错都能自己看懂。本文讲清数据是怎么从订阅链接流到客户端再流到节点的,以及订阅为什么会变化。",
+    "primaryKeyword": "机场订阅是什么",
+    "secondaryKeywords": [
+      "机场订阅链接是什么",
+      "节点是什么",
+      "订阅可以分享吗",
+      "订阅多久更新一次",
+      "订阅转换是什么"
+    ],
+    "intent": "informational",
+    "answer": "订阅链接是一份会持续更新的节点清单,客户端定期去这个地址取回清单并解析成可选的节点列表,真正承载流量的是节点服务器。三者各管一段:订阅负责「有哪些节点」,客户端负责「怎么连」,节点负责「流量从哪里出去」。",
+    "outline": [
+      "一条订阅链接里究竟装了什么?",
+      "客户端更新订阅的时候在做什么动作?",
+      "为什么节点列表会自己变多变少?",
+      "订阅链接等于账号凭证:泄露之后会发生什么?",
+      "订阅需要每天更新吗,多久拉一次比较合理?",
+      "同一条订阅在不同客户端里表现不同,是什么原因?",
+      "订阅转换是在解决什么问题?",
+      "重置订阅链接之后,旧链接为什么立刻作废?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一拆解订阅链接、节点、客户端三者职责边界与数据流向的文章。与 what-is-an-airport 的区别是本篇不解释商业形态、只解释技术对象;与 subscription-update-failed 的区别是本篇讲原理不讲任何报错处置;与 how-to-choose-nodes 的区别是那篇只聚焦节点这一层的挑选标准。",
+    "relatedSlugs": ["how-to-choose-nodes", "how-to-buy-an-airport", "is-it-safe"],
+    "nextStep": {
+      "label": "订阅拉不出节点时怎么排查",
+      "href": "/troubleshooting/connection-failed/subscription-update-failed/",
+      "reason": "理解订阅的工作方式之后,最常遇到的第一个实际问题就是它更新不出来,那篇按返回码给出定位方法。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "how-to-buy-an-airport",
+    "slug": "how-to-buy-an-airport",
+    "file": "src/content/posts/basics/how-to-buy-an-airport.md",
+    "url": "/basics/how-to-buy-an-airport/",
+    "category": "basics",
+    "pillar": null,
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场怎么买:下单前七项确认与付款后验收清单",
+    "description": "购买环节本身就有一整套坑:辨认官网、读懂套餐字段、看清退款与设备限制、付款后多久开通。本文只讲交易流程与验收动作,不做品牌推荐也不排价格榜。",
+    "primaryKeyword": "机场怎么买",
+    "secondaryKeywords": [
+      "机场怎么注册",
+      "机场购买注意事项",
+      "机场付款后不能用怎么办",
+      "机场退款",
+      "怎么避免进入假官网"
+    ],
+    "intent": "tutorial",
+    "answer": "下单前确认七项:官网地址是否可核验、套餐的流量与倍率规则、设备数上限、是否限速、支持哪些客户端、退款与试用政策、客服响应渠道。付款后不要马上离开页面,十分钟内完成订阅可拉取、节点可连通、目标网站可访问三项验收,有问题立刻走工单而不是等到几天后。",
+    "outline": [
+      "为什么先学会辨认官网,比先比价更重要?",
+      "套餐页上哪些字段决定了你实际能用到多少?",
+      "流量、倍率、设备数、限速:四个数字怎么一起看?",
+      "试用和退款政策要看清哪几句话?",
+      "付款方式与订单状态异常时,先做什么?",
+      "付款后十分钟内必须完成的三项验收",
+      "开通失败或订单显示未支付,正确的处理顺序是什么?",
+      "第一次购买,为什么建议先买短周期?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一覆盖交易环节本身的文章:官网辨认、套餐字段解读、付款异常处置与付款后验收清单。与 how-to-use-an-airport 的区别是本篇的终点是「拿到一条可用订阅」,那篇的起点才是这里;与 is-it-safe 的区别是本篇处理交易风险,那篇处理使用风险。",
+    "relatedSlugs": ["is-it-safe", "subscription-and-node", "how-to-choose-nodes"],
+    "nextStep": {
+      "label": "看逐家实测评测再决定买哪一家",
+      "href": "/reviews/",
+      "reason": "学会读套餐字段之后,再对照各家的实测评测,才能把预算花在与自己使用场景匹配的服务上。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "is-it-safe",
+    "slug": "is-it-safe",
+    "file": "src/content/posts/basics/is-it-safe.md",
+    "url": "/basics/is-it-safe/",
+    "category": "basics",
+    "pillar": null,
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场安全吗:服务商看得到什么,你能控制什么",
+    "description": "与其问机场安不安全,不如先问清楚在这套结构里谁能看到什么。本文用威胁模型的角度拆解服务商可见的元数据范围、日志承诺为什么无法验证,以及订阅链接为何等同于账号凭证。",
+    "primaryKeyword": "机场安全吗",
+    "secondaryKeywords": [
+      "机场会记录访问记录吗",
+      "机场会泄露隐私吗",
+      "无日志机场可信吗",
+      "机场订阅链接泄露怎么办",
+      "机场客户端安全吗"
+    ],
+    "intent": "informational",
+    "answer": "安全与否取决于你把什么交给了谁。服务商必然能看到你的连接元数据,HTTPS 内容本身看不到但访问的域名可见;任何「零日志」承诺在技术上都无法由用户单方验证。你能控制的部分是:只从官方渠道下载客户端、不共享订阅链接、发现异常立即重置,以及不把高敏感操作放在共享节点上。",
+    "outline": [
+      "先划清楚:哪些是服务商能看到的,哪些看不到?",
+      "为什么「零日志」是一句无法被用户验证的承诺?",
+      "订阅链接等于账号凭证:泄露后会发生什么?",
+      "共享账号和多人共用,会带来哪些连带风险?",
+      "定制客户端要的权限,哪些是合理的?",
+      "从非官方渠道下载客户端,风险集中在哪里?",
+      "哪些操作不适合放在共享出口上?",
+      "用户侧能做到的五个降低风险的动作"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一从威胁模型角度作答的文章,核心是「谁能看到什么」而非「靠不靠谱」。与风险预警栏目的跑路内容的区别是本篇不讨论商家经营风险、只讨论使用与隐私风险;与 how-to-buy-an-airport 的区别是那篇处理交易与退款风险。全篇不做任何绝对安全承诺,也不涉及任何节点分发。",
+    "relatedSlugs": ["how-to-buy-an-airport", "subscription-and-node", "how-to-choose-nodes"],
+    "nextStep": {
+      "label": "了解来路不明的免费节点风险",
+      "href": "/free-nodes/",
+      "reason": "使用风险最集中的一类来自来路不明的免费节点,该栏目只做安全说明与风险识别,不提供任何节点或订阅。"
+    }
+  },
+  {
+    "clusterKey": "problem-answers-and-troubleshooting",
+    "originalSlug": "how-to-choose-nodes",
+    "slug": "how-to-choose-nodes",
+    "file": "src/content/posts/basics/how-to-choose-nodes.md",
+    "url": "/basics/how-to-choose-nodes/",
+    "category": "basics",
+    "pillar": null,
+    "pillarUrl": "/troubleshooting/connection-failed/",
+    "title": "机场节点怎么选:读懂节点名里的地区、倍率与标签",
+    "description": "节点名不是随便起的,地区、编号、倍率和 IEPL、家宽、流媒体、AI 这些标签都在告诉你它适合做什么。本文教你在连接之前就用名字判断,而不是把所有节点挨个试一遍。",
+    "primaryKeyword": "机场节点怎么选",
+    "secondaryKeywords": [
+      "节点名称怎么看",
+      "节点倍率是什么意思",
+      "香港节点和日本节点怎么选",
+      "原生IP节点是什么",
+      "流媒体节点是什么意思"
+    ],
+    "intent": "informational",
+    "answer": "先读名字再连接:地区决定基础延迟,倍率决定扣多少流量,标签决定它被优化过什么。日常浏览优先选低倍率的近距离节点,看流媒体和用 AI 工具才去找带对应标签的节点。挨个点开测一遍不但慢,还会在高倍率节点上白白消耗流量。",
+    "outline": [
+      "节点名里那一串信息分别代表什么?",
+      "地区怎么选:近的一定更好吗?",
+      "倍率标记在哪里看,选错会有多贵?",
+      "IEPL、家宽、原生 IP 这些标签各自意味着什么?",
+      "流媒体标签和 AI 标签的节点,和普通节点差在哪里?",
+      "按用途对照:日常浏览、看视频、AI 工具、下载各选什么?",
+      "为什么节点数量多不等于好用?",
+      "选好之后,用哪两个指标验证这次选择是对的?"
+    ],
+    "brands": [],
+    "differentiator": "本簇唯一教「读节点名」并给出按用途选地区对照表的文章,判断动作发生在连接之前。与 latency-high-and-packet-loss 的区别是那篇是出问题之后的测量方法,本篇是选之前的先验判断;与 subscription-and-node 的区别是那篇讲订阅与节点的关系,本篇只聚焦节点这一层的挑选标准;与 traffic-used-up 的区别是本篇把倍率当作选择依据而非事后核算。",
+    "relatedSlugs": ["subscription-and-node", "how-to-buy-an-airport", "is-it-safe"],
+    "nextStep": {
+      "label": "选完之后延迟仍不理想怎么测",
+      "href": "/troubleshooting/connection-failed/latency-high-and-packet-loss/",
+      "reason": "按名字选完节点后如果实际延迟仍不理想,需要把延迟、抖动、丢包分开测量,才能判断是该换地区还是换服务。"
+    }
+  }
+]

@@ -1,0 +1,75 @@
+---
+/**
+ * 首页背景拓扑图:三条流动路径 + 脉冲节点,表达「线路 / 中转 / 落地」。
+ * 纯 SVG + CSS 动画,零 JS;prefers-reduced-motion 下由全局样式停掉动画。
+ * aria-hidden 因为它是纯装饰,不承载信息。
+ */
+---
+
+<svg
+  class="hero-topo"
+  viewBox="0 0 1200 520"
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+>
+  <defs>
+    <linearGradient id="topo-a" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="var(--accent-line)" stop-opacity="0"></stop>
+      <stop offset=".45" stop-color="var(--accent-line)" stop-opacity=".75"></stop>
+      <stop offset="1" stop-color="var(--route-iepl)" stop-opacity=".2"></stop>
+    </linearGradient>
+    <linearGradient id="topo-b" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="var(--route-iepl)" stop-opacity="0"></stop>
+      <stop offset=".5" stop-color="var(--route-iepl)" stop-opacity=".6"></stop>
+      <stop offset="1" stop-color="var(--accent-line)" stop-opacity=".15"></stop>
+    </linearGradient>
+    <radialGradient id="topo-glow">
+      <stop offset="0" stop-color="var(--accent-line)" stop-opacity=".28"></stop>
+      <stop offset="1" stop-color="var(--accent-line)" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+
+  <circle cx="960" cy="140" r="260" fill="url(#topo-glow)"></circle>
+
+  <g fill="none" stroke-width="1.4" stroke-linecap="round">
+    <path
+      class="flow"
+      d="M-20 430 C 260 430, 300 250, 560 250 S 900 120, 1230 120"
+      stroke="url(#topo-a)"></path>
+    <path
+      class="flow f2"
+      d="M-20 480 C 300 480, 420 360, 700 350 S 980 300, 1230 250"
+      stroke="url(#topo-b)"></path>
+    <path
+      class="flow f3"
+      d="M-20 380 C 220 380, 240 180, 520 170 S 880 60, 1230 40"
+      stroke="url(#topo-a)"></path>
+    <path
+      d="M-20 300 C 240 300, 320 460, 640 460 S 960 420, 1230 400"
+      stroke="var(--border)"
+      stroke-opacity=".9"></path>
+  </g>
+
+  <g>
+    <circle class="pulse-node" cx="560" cy="250" r="4" fill="var(--accent-line)"></circle>
+    <circle
+      class="pulse-node"
+      cx="560"
+      cy="250"
+      r="12"
+      fill="none"
+      stroke="var(--accent-line)"
+      stroke-opacity=".35"></circle>
+    <circle class="pulse-node p2" cx="700" cy="350" r="3.5" fill="var(--route-iepl)"></circle>
+    <circle
+      class="pulse-node p2"
+      cx="700"
+      cy="350"
+      r="10"
+      fill="none"
+      stroke="var(--route-iepl)"
+      stroke-opacity=".35"></circle>
+    <circle class="pulse-node p3" cx="520" cy="170" r="3" fill="var(--accent-line)"></circle>
+    <circle class="pulse-node p3" cx="1040" cy="180" r="3.5" fill="var(--route-iepl)"></circle>
+  </g>
+</svg>

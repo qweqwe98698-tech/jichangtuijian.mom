@@ -1,0 +1,55 @@
+---
+/**
+ * 配色方案切换。全站仅有的 4 个允许水合的交互之一。
+ * 未执行 JS 时按钮仍可见且语义完整,页面按系统配色渲染,不影响阅读。
+ */
+---
+
+<div class="seg" role="radiogroup" aria-label="配色方案" data-theme-toggle>
+  <button type="button" role="radio" aria-checked="true" data-theme-value="auto">跟随系统</button>
+  <button type="button" role="radio" aria-checked="false" data-theme-value="light">浅色</button>
+  <button type="button" role="radio" aria-checked="false" data-theme-value="dark">深色</button>
+</div>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-theme-toggle]');
+  if (group) {
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('button[data-theme-value]')];
+
+    const paint = (value: string) => {
+      for (const b of buttons) {
+        b.setAttribute('aria-checked', String(b.dataset.themeValue === value));
+      }
+    };
+
+    const apply = (value: string) => {
+      if (value === 'auto') {
+        delete document.documentElement.dataset.theme;
+        localStorage.removeItem('theme');
+      } else {
+        document.documentElement.dataset.theme = value;
+        localStorage.setItem('theme', value);
+      }
+      paint(value);
+    };
+
+    paint(localStorage.getItem('theme') ?? 'auto');
+
+    group.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-theme-value]');
+      if (btn?.dataset.themeValue) apply(btn.dataset.themeValue);
+    });
+
+    // 方向键在 radiogroup 内移动焦点,满足键盘可达性
+    group.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      if (i === -1) return;
+      const next =
+        buttons[(i + (e.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length];
+      next.focus();
+      apply(next.dataset.themeValue!);
+    });
+  }
+</script>

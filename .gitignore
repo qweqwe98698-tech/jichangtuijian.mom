@@ -1,0 +1,27 @@
+# 构建产物
+dist/
+.astro/
+
+# 依赖
+node_modules/
+
+# 环境变量:分析工具的 token 走这里,不进版本库
+.env
+.env.local
+.env.*.local
+
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# 日志
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 临时文件
+scores.txt
+*.tmp

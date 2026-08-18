@@ -1,0 +1,126 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { NAV } from '@config/site';
+
+/**
+ * 站内搜索。索引由 Pagefind 在构建后扫描 dist 生成,零后端。
+ * 本页 noindex:搜索结果页对搜索引擎没有索引价值,且容易产生大量低质 URL(内链规则 R15)。
+ */
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '站内搜索', href: '/search/' },
+];
+---
+
+<BaseLayout
+  title="站内搜索"
+  description="在机场实测室站内搜索:16 家机场的评测与对比、Clash / Shadowrocket / v2rayN 客户端教程、代理协议与线路知识、常见故障的排查方法。"
+  crumbs={crumbs}
+  noindex
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">Search</span>
+          <h1>站内搜索</h1>
+          <p class="post-meta">搜索机场评测、客户端教程、协议知识与故障排查内容</p>
+        </header>
+
+        <div id="search" class="search-mount"></div>
+
+        <noscript>
+          <p class="ns-note">
+            站内搜索需要 JavaScript。你也可以直接从下面的栏目进入,每个栏目都有完整的文章列表:
+          </p>
+          <ul class="ns-links">
+            {
+              NAV.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </noscript>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Pagefind 的产物只有在 build 后才存在,dev 环境下静默降级,避免控制台报错吓到开发者
+  async function mount() {
+    const el = document.querySelector('#search');
+    if (!el) return;
+    try {
+      const { PagefindUI } = await import('@pagefind/default-ui');
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        translations: {
+          placeholder: '搜索机场评测、教程、协议知识…',
+          clear_search: '清除',
+          load_more: '加载更多结果',
+          search_label: '站内搜索',
+          filters_label: '筛选',
+          zero_results: '没有找到与「[SEARCH_TERM]」相关的内容',
+          many_results: '找到 [COUNT] 条与「[SEARCH_TERM]」相关的内容',
+          one_result: '找到 1 条与「[SEARCH_TERM]」相关的内容',
+          searching: '正在搜索「[SEARCH_TERM]」…',
+        },
+      });
+    } catch {
+      el.innerHTML =
+        '<p class="search-fallback">搜索索引尚未生成(开发环境下需要先执行一次构建)。你可以从顶部导航进入各个栏目浏览。</p>';
+    }
+  }
+  mount();
+</script>
+
+<style is:global>
+  .search-mount {
+    margin: var(--s5) 0;
+    min-height: 240px;
+  }
+  /* 让 Pagefind 默认 UI 套用本站设计 token,而不是它自带的配色 */
+  .search-mount {
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: var(--text);
+    --pagefind-ui-background: var(--surface);
+    --pagefind-ui-border: var(--border);
+    --pagefind-ui-tag: var(--surface-2);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: var(--r-field);
+    --pagefind-ui-font: var(--font-sans);
+  }
+  .search-fallback,
+  .ns-note {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.85;
+    padding: 14px 16px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-panel);
+  }
+  .ns-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    margin-top: 12px;
+  }
+</style>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .post-meta {
+    font-size: 13.5px;
+    color: var(--text-faint);
+  }
+</style>

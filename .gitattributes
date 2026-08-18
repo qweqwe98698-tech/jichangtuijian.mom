@@ -1,0 +1,19 @@
+# 统一用 LF 入库。Windows 上开发但部署在 Linux,
+# 让 git 在两端做转换比让每个人配编辑器可靠。
+* text=auto eol=lf
+
+# 证据原图必须逐字节保持原样。
+# 它们的 SHA-256 写在登记表里,每次发布验收都会重算比对——
+# 任何形式的换行符转换都会让哈希对不上,而那看起来会像"有人改了证据"。
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+
+# lockfile 冲突交给 pnpm 自己解决,不做行级合并
+pnpm-lock.yaml -diff linguist-generated=true

@@ -1,0 +1,124 @@
+---
+import { SITE } from '@config/site';
+import { graph, organizationSchema, websiteSchema, breadcrumbSchema, abs } from '@lib/schema';
+import type { Crumb } from '@lib/schema';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 是否使用首页标题(不套用 %s 模板) */
+  isHome?: boolean;
+  /** 面包屑;首页传空数组 */
+  crumbs?: Crumb[];
+  /** 页面专属的 JSON-LD 节点,会与全站 Organization/WebSite/BreadcrumbList 合并进同一个 @graph */
+  schemas?: Record<string, unknown>[];
+  /** 薄内容或分页页面可关闭索引,避免低质量索引 */
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  /** 文章页传入,用于 og:article 时间信息 */
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  /** 主内容区是否套用正文排版样式 */
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  isHome = false,
+  crumbs = [],
+  schemas = [],
+  noindex = false,
+  ogType = 'website',
+  ogImage = SITE.ogImage,
+  publishedTime,
+  modifiedTime,
+  bodyClass = '',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const fullTitle = isHome ? SITE.titleDefault : SITE.titleTemplate.replace('%s', title);
+
+const jsonLd = graph(
+  organizationSchema(),
+  websiteSchema(),
+  crumbs.length > 1 ? breadcrumbSchema(crumbs) : null,
+  ...schemas
+);
+---
+
+<!doctype html>
+<html lang={SITE.lang} class={bodyClass}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {
+      !noindex && (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+      )
+    }
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={abs(ogImage)} />
+    {
+      publishedTime && (
+        <meta property="article:published_time" content={publishedTime.toISOString()} />
+      )
+    }
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={abs(ogImage)} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} 更新订阅`}
+      href="/rss.xml"
+    />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1f5f9" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070c14" />
+
+    <script is:inline>
+      // 首帧前套用主题,避免深色用户看到白色闪烁。三态:未设置=跟随系统
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+      } catch {
+        // 隐私模式下 localStorage 会抛错,此时按系统配色渲染即可
+      }
+    </script>
+
+    <script type="application/ld+json" set:html={jsonLd} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <Header crumbs={crumbs} />
+    {
+      /* data-pagefind-body 把站内搜索的索引范围限定在正文,
+        避免导航与页脚的重复文本淹没真正的内容匹配 */
+    }
+    <main id="main" data-pagefind-body data-pagefind-meta={`title:${title}`}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

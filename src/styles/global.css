@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './components.css';
+
+/* 把设计 token 暴露给 Tailwind 工具类,使 text-accent / bg-surface 等与手写组件共用同一套变量 */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-panel: var(--r-panel);
+  --radius-card: var(--r-card);
+  --radius-chip: var(--r-chip);
+  --radius-field: var(--r-field);
+}
+
+/* 尊重系统的减少动效偏好,关闭所有装饰性动画 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Markdown 表格的滚动容器,由 rehype-wrap-tables 生成。
+   全局 table 规则有 min-width:760px(横向对比表需要),正文容器只有 72ch,
+   不包一层就会让整页在手机上横向滚动 */
+.md-table-scroll {
+  overflow-x: auto;
+  margin: var(--s5) 0;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-panel);
+  background: var(--surface);
+  /* 右侧渐隐,暗示还有内容可以滑 */
+  background-image: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--surface-2) 70%, transparent),
+    transparent 40px
+  );
+}
+.md-table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.md-table-scroll > table {
+  margin: 0;
+  border: 0;
+}
+
+/* 跳转到主内容,键盘与读屏用户的第一个可聚焦元素 */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-radius: var(--r-field);
+  font-size: 14px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* 标题锚点:rehype-autolink-headings 生成,悬停时才显形,不干扰阅读 */
+.heading-anchor {
+  margin-left: 0.4em;
+  color: var(--text-faint);
+  opacity: 0;
+  font-weight: 400;
+  text-decoration: none;
+  transition: opacity 0.18s ease;
+}
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+.heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+/* 锚点跳转时留出吸顶导航的高度,避免标题被遮住 */
+:target {
+  scroll-margin-top: 84px;
+}
+html {
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,82 @@
+---
+import type { LineType } from '@data/brands';
+
+/** 线路类型的图形化标记:专线走高架直连折线,中转走多段跳跃,直连走平直线 */
+interface Props {
+  lines: readonly LineType[];
+  size?: number;
+}
+const { lines, size = 18 } = Astro.props;
+
+const kind: 'iepl' | 'iplc' | 'relay' | 'direct' = lines.includes('IEPL')
+  ? 'iepl'
+  : lines.includes('IPLC')
+    ? 'iplc'
+    : lines.includes('中转') || lines.includes('内网专线')
+      ? 'relay'
+      : 'direct';
+
+const stroke = `var(--route-${kind})`;
+---
+
+<span class="node-mark" aria-hidden="true">
+  <svg width={size} height={size} viewBox="0 0 20 20">
+    {
+      kind === 'iepl' && (
+        <>
+          <path
+            d="M2 15 C 6 15, 6 5, 10 5 S 14 15, 18 15"
+            fill="none"
+            stroke={stroke}
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <circle cx="10" cy="5" r="2.2" fill={stroke} />
+        </>
+      )
+    }
+    {
+      kind === 'iplc' && (
+        <>
+          <path
+            d="M2 14 L7 14 L10 7 L13 14 L18 14"
+            fill="none"
+            stroke={stroke}
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="10" cy="7" r="2.2" fill={stroke} />
+        </>
+      )
+    }
+    {
+      kind === 'relay' && (
+        <>
+          <path
+            d="M2 15 L6 9 L10 13 L14 6 L18 10"
+            fill="none"
+            stroke={stroke}
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="14" cy="6" r="2" fill={stroke} />
+        </>
+      )
+    }
+    {
+      kind === 'direct' && (
+        <>
+          <path
+            d="M2 6 H 18 M2 10 H 14 M2 14 H 18"
+            stroke={stroke}
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <circle cx="17" cy="10" r="2.2" fill={stroke} />
+        </>
+      )
+    }
+  </svg>
+</span>

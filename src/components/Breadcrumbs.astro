@@ -1,0 +1,55 @@
+---
+import type { Crumb } from '@lib/schema';
+
+interface Props {
+  crumbs: Crumb[];
+}
+const { crumbs } = Astro.props;
+const last = crumbs.length - 1;
+---
+
+<nav class="crumbs" aria-label="面包屑导航">
+  <div class="wrap">
+    <ol>
+      {
+        crumbs.map((c, i) => (
+          <li>
+            {i === last ? <span aria-current="page">{c.name}</span> : <a href={c.href}>{c.name}</a>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</nav>
+
+<style>
+  .crumbs {
+    border-top: 1px solid var(--hairline);
+    background: color-mix(in srgb, var(--surface) 50%, transparent);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 6px;
+    color: var(--border-strong);
+  }
+  .crumbs a {
+    color: var(--text-muted);
+  }
+  .crumbs a:hover {
+    color: var(--accent);
+  }
+  .crumbs [aria-current='page'] {
+    color: var(--text);
+  }
+</style>

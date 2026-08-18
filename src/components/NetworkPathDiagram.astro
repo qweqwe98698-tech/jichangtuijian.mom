@@ -1,0 +1,255 @@
+---
+import type { Brand } from '@data/brands';
+import StatusBadge from './StatusBadge.astro';
+
+/**
+ * 线路路径示意(第三阶段 T6 第 3 类组件)。
+ *
+ * 红线第 3 条明确禁止「仅凭品牌资料或测速图绘制确定性 IEPL/IPLC/原生 IP 拓扑」。
+ * 所以这个组件画的**不是这家机场的真实拓扑**——本站没有任何线路溯源能力,
+ * 画出来的每一条都会是编造。
+ *
+ * 它画的是「厂商声明的这类线路,在结构上意味着什么」——一张概念示意图,
+ * 用来解释 IEPL / 内网专线 / 中转 各自的路径差别。整图标注 Vendor Data,
+ * 并明确写出本站无法验证哪一段。
+ *
+ * 红线第 4 条禁用的那些标签(不经公网 GFW / 隐藏真实 IP / 防 QoS / 抗封锁)
+ * 一个都不出现——它们需要独立技术证据,本站没有。
+ */
+interface Props {
+  brand: Brand;
+}
+const { brand } = Astro.props;
+
+const lines = brand.vendor.lines;
+const hasLine = lines.length > 0;
+
+const kind = lines.includes('IEPL')
+  ? 'iepl'
+  : lines.includes('IPLC')
+    ? 'iplc'
+    : lines.includes('内网专线')
+      ? 'private'
+      : lines.includes('中转')
+        ? 'relay'
+        : 'unstated';
+
+const DESC: Record<string, { name: string; mid: string; note: string }> = {
+  iepl: {
+    name: 'IEPL 企业内网专线',
+    mid: '运营商内网段',
+    note: '厂商标注的 IEPL 指跨境段走运营商内网而非公网出口。这是线路采购形态的描述,本站无法验证某个节点是否真的跑在这类线路上。',
+  },
+  iplc: {
+    name: 'IPLC 点对点专线',
+    mid: '点对点专线段',
+    note: 'IPLC 是端到端的专用电路。同样属于采购形态描述,本站无验证手段。',
+  },
+  private: {
+    name: '企业级内网专线',
+    mid: '内网专线段',
+    note: '厂商用的是「内网专线」这一表述,未进一步区分 IEPL 或 IPLC。本站按原文呈现,不代为归类。',
+  },
+  relay: {
+    name: '中转线路',
+    mid: '中转节点',
+    note: '中转指流量先到一个中间节点再转发到落地。成本低于专线,高峰时段更容易受公网状况影响。',
+  },
+  unstated: {
+    name: '未标明线路类型',
+    mid: '未标明',
+    note: '厂商公开资料没有说明线路类型。未标明是信息缺口,不代表线路更差,但也意味着你无法据此判断。',
+  },
+};
+
+const d = DESC[kind];
+---
+
+<section class="npath" aria-labelledby="npath-heading">
+  <h2 id="npath-heading">线路结构示意</h2>
+
+  <div class="npath-head">
+    <span class="npath-kind">{d.name}</span>
+    {hasLine ? <StatusBadge status="vendor" compact /> : <StatusBadge status="unstated" compact />}
+  </div>
+
+  <div class="npath-figure panel notch">
+    <div class="panel-in">
+      <svg
+        viewBox="0 0 640 132"
+        role="img"
+        aria-label={`${d.name}的路径结构示意:用户设备经入口到${d.mid},再到海外落地`}
+      >
+        <defs>
+          <marker
+            id="np-arrow"
+            viewBox="0 0 8 8"
+            refX="7"
+            refY="4"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto"
+          >
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--border-strong)"></path>
+          </marker>
+        </defs>
+
+        {/* 三个节点 */}
+        <g class="np-node">
+          <rect x="12" y="44" width="120" height="44" rx="4"></rect>
+          <text x="72" y="62">用户设备</text>
+          <text x="72" y="78" class="np-sub">手机 / 电脑</text>
+        </g>
+
+        <g class="np-node">
+          <rect x="260" y="44" width="120" height="44" rx="4"></rect>
+          <text x="320" y="62">{d.mid}</text>
+          <text x="320" y="78" class="np-sub">本站无法验证</text>
+        </g>
+
+        <g class="np-node">
+          <rect x="508" y="44" width="120" height="44" rx="4"></rect>
+          <text x="568" y="62">海外落地</text>
+          <text x="568" y="78" class="np-sub">目标服务</text>
+        </g>
+
+        {/* 连接线:专线用粗实线,中转/未标明用虚线 */}
+        <line
+          x1="132"
+          y1="66"
+          x2="252"
+          y2="66"
+          class={kind === 'unstated' ? 'np-link is-dashed' : 'np-link'}
+          marker-end="url(#np-arrow)"></line>
+        <line
+          x1="380"
+          y1="66"
+          x2="500"
+          y2="66"
+          class={kind === 'iepl' || kind === 'iplc' || kind === 'private'
+            ? 'np-link is-strong'
+            : 'np-link is-dashed'}
+          marker-end="url(#np-arrow)"></line>
+
+        <text x="192" y="34" class="np-label">加密传输</text>
+        <text x="440" y="34" class="np-label">
+          {kind === 'relay' ? '公网转发' : kind === 'unstated' ? '方式未标明' : '专线段(厂商声明)'}
+        </text>
+      </svg>
+    </div>
+  </div>
+
+  <p class="npath-note">{d.note}</p>
+
+  <div class="npath-cannot">
+    <p class="nc-title">这张图不能告诉你什么</p>
+    <ul>
+      <li>不是这家机场的真实拓扑。本站没有线路溯源能力,画具体路径只会是编造。</li>
+      <li>不能证明某个节点当前跑在标注的线路类型上;线路可能随时调整。</li>
+      <li>不能证明速度、稳定性或抗干扰能力——线路形态只是影响因素之一,不是结论。</li>
+      <li>不涉及原生 IP、住宅 IP 或 IP 归属判定,那属于另一套需要独立测试的问题。</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .npath {
+    margin: var(--s7) 0;
+  }
+  .npath-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: var(--s4);
+  }
+  .npath-kind {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .npath-figure .panel-in {
+    padding: 14px 10px;
+  }
+  .npath-figure svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .np-node rect {
+    fill: var(--surface-2);
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .np-node text {
+    text-anchor: middle;
+    font-size: 13px;
+    fill: var(--text);
+    font-family: var(--font-sans);
+  }
+  .np-node .np-sub {
+    font-size: 10.5px;
+    fill: var(--text-faint);
+  }
+  .np-link {
+    stroke: var(--border-strong);
+    stroke-width: 1.4;
+  }
+  .np-link.is-strong {
+    stroke: var(--route-iepl);
+    stroke-width: 3;
+  }
+  .np-link.is-dashed {
+    stroke-dasharray: 5 5;
+  }
+  .np-label {
+    text-anchor: middle;
+    font: 500 10.5px var(--font-mono);
+    letter-spacing: 0.06em;
+    fill: var(--text-faint);
+  }
+
+  .npath-note {
+    margin-top: var(--s4);
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+
+  .npath-cannot {
+    margin-top: var(--s4);
+    padding: 14px 16px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-panel);
+  }
+  .nc-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 9px;
+  }
+  .npath-cannot ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+  .npath-cannot li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .npath-cannot li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    background: var(--danger);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+</style>

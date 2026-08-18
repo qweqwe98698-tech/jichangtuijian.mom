@@ -1,0 +1,122 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { NAV } from '@config/site';
+
+/** 404 页也必须提供出路,不能成为死胡同(内链规则 R16) */
+---
+
+<BaseLayout
+  title="页面不存在"
+  description="你访问的页面不存在或地址已经变更。这里列出了机场推荐总榜、对照表、客户端教程与故障排查等主要入口,可以从这里继续。"
+  noindex
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section">
+        <header class="post-head">
+          <span class="tag-en">404 · Route Not Found</span>
+          <h1>这条路径不通</h1>
+          <p class="lede">你访问的页面不存在,或者它的地址变过。下面是几个可能是你想找的入口。</p>
+        </header>
+
+        <ul class="exit-list">
+          <li>
+            <a href="/">2026 机场推荐总榜</a>
+            <span>16 家机场的价格、流量与线路对照,以及按需求分档的推荐</span>
+          </li>
+          <li>
+            <a href="/compare/">机场对照表</a>
+            <span>可排序的横向对比表,支持按价格、流量、单位成本重排</span>
+          </li>
+          <li>
+            <a href="/guides/">客户端教程</a>
+            <span>Clash、Shadowrocket、v2rayN 的完整配置流程</span>
+          </li>
+          <li>
+            <a href="/troubleshooting/">故障排查</a>
+            <span>连不上、节点超时、订阅失效的分层排查方法</span>
+          </li>
+          <li>
+            <a href="/search/">站内搜索</a>
+            <span>直接搜索你要找的内容</span>
+          </li>
+        </ul>
+
+        <nav class="all-nav" aria-label="全部栏目">
+          <p class="tag-en">All Sections</p>
+          <ul>
+            {
+              NAV.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(28px, 4.6vw, 42px);
+    line-height: 1.25;
+    margin: 12px 0;
+  }
+  .lede {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.9;
+    max-width: 56ch;
+  }
+  .exit-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin: var(--s6) 0;
+  }
+  .exit-list li {
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--r-panel) var(--r-panel) 0;
+    background: var(--surface);
+  }
+  .exit-list a {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .exit-list a:hover {
+    color: var(--accent);
+  }
+  .exit-list span {
+    display: block;
+    margin-top: 5px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .all-nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .all-nav a {
+    display: inline-block;
+    padding: 7px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-chip);
+    font-size: 14px;
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+  .all-nav a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>

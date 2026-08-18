@@ -1,0 +1,284 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AnswerBox from '@components/AnswerBox.astro';
+import NextStep from '@components/NextStep.astro';
+import { CATEGORY_META, CATEGORIES } from '../../content.config';
+import type { Category } from '../../content.config';
+import {
+  postsByCategory,
+  pillarsByCategory,
+  postUrl,
+  pillarUrl,
+  orderedPillarPosts,
+} from '@lib/content';
+import { itemListSchema } from '@lib/schema';
+
+/**
+ * 栏目索引页。reviews 与 compare 有各自的专用页面(静态路由优先级更高),
+ * 因此这里只生成其余 7 个内容栏目。
+ *
+ * 白名单必须写在函数体内:Astro 会把 getStaticPaths 提升到模块顶部执行,
+ * 引用同文件的模块级常量会命中 TDZ 报错。
+ */
+export const getStaticPaths: GetStaticPaths = () => {
+  const ownPage: Category[] = ['reviews', 'compare', 'airports'];
+  return CATEGORIES.filter((c) => !ownPage.includes(c)).map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+};
+
+interface Props {
+  category: Category;
+}
+
+const { category } = Astro.props;
+const meta = CATEGORY_META[category];
+
+const [pillars, posts] = await Promise.all([
+  pillarsByCategory(category),
+  postsByCategory(category),
+]);
+
+/** 每个专题带上它的文章数,让读者知道点进去有多少内容 */
+const pillarCards = await Promise.all(
+  pillars.map(async (p) => ({ pillar: p, count: (await orderedPillarPosts(p)).length }))
+);
+
+/** 不属于任何专题的独立文章 */
+const standalone = posts.filter((p) => !p.data.pillar);
+const recent = posts.slice(0, 12);
+
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: meta.name, href: `/${category}/` },
+];
+
+const listSchema = itemListSchema(meta.title, [
+  ...pillars.map((p) => ({
+    name: p.data.title,
+    href: pillarUrl(p),
+    description: p.data.description,
+  })),
+  ...recent.map((p) => ({ name: p.data.title, href: postUrl(p), description: p.data.description })),
+]);
+
+const nextStepByCategory: Record<string, { label: string; href: string; reason: string }> = {
+  guides: {
+    label: '看看哪些机场支持你正在用的客户端',
+    href: '/compare/',
+    reason:
+      '教程能解决"怎么配置",但配置完还需要一个订阅源。对照表里的协议与客户端支持列可以帮你确认兼容性。',
+  },
+  protocols: {
+    label: '把协议知识用到实际选购上',
+    href: '/compare/',
+    reason: '搞懂协议与线路的差别之后,对照表里的"线路"和"协议"两列才真正读得懂,选择也会快很多。',
+  },
+  troubleshooting: {
+    label: '排查完仍然不行?看看是不是线路本身的问题',
+    href: '/risk/',
+    reason:
+      '如果客户端、系统代理、订阅都排查过了还是不行,问题可能出在服务方。风险预警栏目讲了怎么判断。',
+  },
+  'free-nodes': {
+    label: '了解免费与付费的实际差别',
+    href: '/basics/',
+    reason: '看完风险之后,下一个问题通常是"那付费的到底好在哪"。新手入门栏目用具体数字做了对比。',
+  },
+  unlock: {
+    label: '按解锁需求筛选机场',
+    href: '/compare/',
+    reason: '知道自己需要什么样的网络条件之后,就可以把这些条件翻译成对照表里的具体规格来筛选。',
+  },
+  risk: {
+    label: '用这些标准重新审视候选机场',
+    href: '/reviews/',
+    reason: '知道有哪些坑之后,再回头看评测页会有不同的关注点——尤其是运营年限和价格口径这两项。',
+  },
+  basics: {
+    label: '把学到的标准用起来',
+    href: '/compare/',
+    reason: '概念搞清楚之后,最有效的下一步是拿一张真实的规格表练手,把刚学的标准套上去看看。',
+  },
+};
+
+const ns = nextStepByCategory[category] ?? {
+  label: '回到机场推荐总榜',
+  href: '/',
+  reason: '看完这个栏目,可以回到总榜按自己的需求挑一家。',
+};
+---
+
+<BaseLayout
+  title={meta.title}
+  description={meta.description}
+  crumbs={crumbs}
+  schemas={[listSchema]}
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="rail-section is-live">
+        <header class="post-head">
+          <span class="tag-en">{category.toUpperCase()}</span>
+          <h1>{meta.name}</h1>
+        </header>
+
+        <AnswerBox title="这个栏目讲什么">
+          <p>{meta.description}</p>
+        </AnswerBox>
+
+        {
+          pillarCards.length > 0 && (
+            <section>
+              <h2 id="topics">专题</h2>
+              <p>每个专题是一条完整的学习路径,里面的文章按递进关系排列,不是零散的知识点堆积。</p>
+              <div class="topic-grid">
+                {pillarCards.map(({ pillar, count }) => (
+                  <a class="topic-card panel notch" href={pillarUrl(pillar)}>
+                    <span class="panel-in">
+                      <span class="tc-count">{count} 篇</span>
+                      <span class="tc-title">{pillar.data.title}</span>
+                      <span class="tc-desc">{pillar.data.description}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          recent.length > 0 && (
+            <section>
+              <h2 id="articles">最近更新</h2>
+              <ul class="article-list">
+                {recent.map((p) => (
+                  <li>
+                    <a href={postUrl(p)}>{p.data.title}</a>
+                    <span class="al-desc">{p.data.description}</span>
+                    <span class="al-meta">
+                      更新于 {p.data.updatedDate.toISOString().slice(0, 10)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          posts.length === 0 && (
+            <p class="empty-note">
+              这个栏目的文章正在撰写中。在此期间,你可以先看
+              <a href="/compare/">机场对照表</a>或<a href="/reviews/">品牌评测</a>。
+            </p>
+          )
+        }
+
+        {
+          standalone.length > 0 && recent.length > standalone.length && (
+            <p class="standalone-note">
+              其中 {standalone.length}{' '}
+              篇是不属于任何专题的独立文章,通常针对某个具体问题,可以单独阅读。
+            </p>
+          )
+        }
+
+        <NextStep label={ns.label} href={ns.href} reason={ns.reason} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-head h1 {
+    font-size: clamp(28px, 4.4vw, 40px);
+    line-height: 1.3;
+    margin: 12px 0;
+  }
+  .topic-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    margin: var(--s4) 0;
+  }
+  .topic-card {
+    color: inherit;
+    display: block;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .topic-card:hover {
+    transform: translateY(-2px);
+  }
+  .topic-card .panel-in {
+    display: block;
+    padding: 18px 20px;
+  }
+  .tc-count {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    display: block;
+  }
+  .tc-title {
+    display: block;
+    margin: 10px 0 8px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .topic-card:hover .tc-title {
+    color: var(--accent);
+  }
+  .tc-desc {
+    display: block;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .article-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin: var(--s4) 0;
+  }
+  .article-list li {
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+  }
+  .article-list a {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .article-list a:hover {
+    color: var(--accent);
+  }
+  .al-desc {
+    display: block;
+    margin: 6px 0;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .al-meta {
+    font-size: 12px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .empty-note,
+  .standalone-note {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    padding: 14px 16px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-panel);
+    line-height: 1.85;
+  }
+</style>
