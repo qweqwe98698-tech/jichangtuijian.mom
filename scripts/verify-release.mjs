@@ -149,11 +149,14 @@ const pages = await collectPages();
     /* 下方按 0 条处理并失败 */
   }
   const set = new Set(urls.map((u) => u.replace(SITE, '')));
-  const absent = pages.filter((p) => !set.has(p.url) && !/^\/404/.test(p.url)).map((p) => p.url);
+  // /404 与 /search/ 是刻意排除的:两者都带 noindex,把它们放进 sitemap
+  // 等于一边说"别收录"一边说"请收录",详见 astro.config.mjs 的 sitemap filter
+  const EXCLUDED = /^\/404|^\/search\//;
+  const absent = pages.filter((p) => !set.has(p.url) && !EXCLUDED.test(p.url)).map((p) => p.url);
   record(
     'BLOCK',
     'T7-02b',
-    'sitemap 覆盖全部页面',
+    'sitemap 覆盖全部可索引页面',
     absent.length === 0 && urls.length > 0,
     absent.length ? absent.slice(0, 12) : `sitemap 收录 ${set.size} 条`
   );

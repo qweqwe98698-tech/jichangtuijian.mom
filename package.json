@@ -26,11 +26,16 @@
     "gen:brand-maps": "node --experimental-strip-types scripts/gen-brand-maps.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:content": "node scripts/check-content.mjs",
-    "check:all": "pnpm format:check && pnpm check:model && pnpm check:profiles && pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:links && pnpm check:content && pnpm check:topics && pnpm check:outlines && pnpm check:manifest && pnpm verify:release",
+    "check:all": "pnpm format:check && pnpm check:model && pnpm check:profiles && pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:links && pnpm check:content && pnpm check:topics && pnpm check:outlines && pnpm check:manifest && pnpm verify:release && pnpm seo:check",
     "verify:release": "node scripts/verify-release.mjs",
     "check:outlines": "node scripts/audit-outline-uniqueness.mjs docs/brand-outlines/OUTLINES.json",
     "fix:frontmatter": "node scripts/normalize-frontmatter.mjs",
-    "gen:og": "node scripts/gen-og-image.mjs"
+    "gen:og": "node scripts/gen-og-image.mjs",
+    "seo:check": "node --experimental-strip-types scripts/seo-check.mjs",
+    "seo:accept": "node --experimental-strip-types scripts/seo-check.mjs --accept",
+    "indexnow": "node --experimental-strip-types scripts/indexnow.mjs",
+    "indexnow:dry": "node --experimental-strip-types scripts/indexnow.mjs --dry",
+    "indexnow:key": "node --experimental-strip-types scripts/indexnow.mjs --write-key"
   },
   "engines": {
     "node": ">=20.11.0"

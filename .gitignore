@@ -25,3 +25,8 @@ pnpm-debug.log*
 # 临时文件
 scores.txt
 *.tmp
+
+# IndexNow 提交基线与密钥文件:每台机器/每次部署环境各自维护
+.indexnow-state.json
+public/*.txt
+!public/_headers

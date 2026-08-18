@@ -54,7 +54,17 @@ export default defineConfig({
     sitemap({
       changefreq: 'weekly',
       lastmod: new Date(),
-      filter: (page) => !page.includes('/404'),
+      /*
+       * sitemap 只能收录「希望被索引」的页面。
+       *
+       * /search/ 之前同时出现在三个地方,信号互相打架:
+       *   robots.txt  Disallow: /search/   → 禁止抓取
+       *   页面自身    noindex              → 禁止索引
+       *   sitemap     收录                 → 邀请索引
+       * robots 挡住抓取后搜索引擎根本读不到那个 noindex,却又被 sitemap 反复邀请,
+       * 这类自相矛盾的信号会消耗抓取预算,也会在站长平台里持续报"已提交但被 robots 阻止"。
+       */
+      filter: (page) => !page.includes('/404') && !page.includes('/search'),
       serialize(item) {
         // 商业与枢纽页面优先级更高,便于搜索引擎优先抓取
         const path = new URL(item.url).pathname;
