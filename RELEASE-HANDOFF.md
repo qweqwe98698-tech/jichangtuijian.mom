@@ -1,6 +1,6 @@
 # 发布交接:jichangtuijian.mom
 
-**交接日期**:2026-08-18
+**交接日期**:2026-08-19
 **状态**:验收通过,可发布
 **验收报告**:[docs/THIRD-STAGE-QA-REPORT.md](docs/THIRD-STAGE-QA-REPORT.md)
 **设计与数据决策**:[docs/THIRD-STAGE-HANDOFF.md](docs/THIRD-STAGE-HANDOFF.md)
@@ -98,13 +98,13 @@ pnpm preview
 pnpm check:all
 ```
 
-发布前的完整门禁,13 道检查串联。**任何一道红就不要发。**
+发布前的完整门禁,15 道检查串联。**任何一道红就不要发。**
 
 ```bash
 pnpm verify:release
 ```
 
-只跑产物层的 13 项发布验收(需要先 build)。改完内容想快速确认没踩红线时用这个。
+只跑产物层的 15 项发布验收(需要先 build)。改完内容想快速确认没踩红线时用这个。
 
 ---
 
@@ -115,9 +115,9 @@ pnpm verify:release
 1. **提交 sitemap** 到 Google Search Console 与 Bing Webmaster
 2. **抽查 10 个 URL 的结构化数据** —— 用 Google 富媒体结果测试。全站 JSON-LD 语法已验证可解析,但富媒体资格需要 Google 自己判定
 3. **跑一次 Lighthouse** —— 这一项验收时**没跑**(环境无 headless Chrome),所以目前**不宣称达到 ≥90**。产物体积与 CLS 结构前提都做了,但实测分数是空白,需要补
-   3.5. **确认埋点在线上真的收到数据** —— 打开任意页面看 Cloudflare Web Analytics 是否有浏览量;点一次推广链接,看 Plausible/Umami 里有没有 `affiliate_click` 事件。埋点最常见的失败方式是「配好了但没生效」,而这种失败是静默的
-4. **确认 16 条推广链接全部可跳转且带正确的推广参数** —— 尤其是 SOGO 云那条 Hash 路径链接(见下)
-5. **观察搜索表现**,确认 206 个标题没有互相争抢(全站标题已验证唯一,但实际排名要看数据)
+4. **确认埋点在线上真的收到数据** —— 打开任意页面看 Cloudflare Web Analytics 是否有浏览量;点一次推广链接,看 Plausible/Umami 里有没有 `affiliate_click` 事件。埋点最常见的失败方式是「配好了但没生效」,而这种失败是静默的
+5. **确认 16 条推广链接全部可跳转且带正确的推广参数** —— 尤其是 SOGO 云那条 Hash 路径链接(见下)
+6. **观察搜索表现**,确认 206 个标题没有互相争抢(全站标题已验证唯一,但实际排名要看数据)
 
 ---
 
