@@ -300,6 +300,45 @@ const pages = await collectPages();
   );
 }
 
+// ── 10b. 结构化数据里的价格必须带计费周期 ────────────────────
+{
+  // 可见内容里年付折算价被强制标注周期,但 Schema 是另一条通道:
+  // 一个裸的 price: 7.5 进了富媒体结果就成了"¥7.5",标注根本没跟过去。
+  const src = await readFile('src/data/brands.ts', 'utf8');
+  const annualPrices = new Set(
+    all(src, /entryPriceCNY: ([\d.]+),\s*\n?\s*basis: 'annual-equivalent'/g).map((m) =>
+      Number(m[1])
+    )
+  );
+  const bad = [];
+  for (const p of pages) {
+    for (const m of all(p.html, /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      let parsed;
+      try {
+        parsed = JSON.parse(m[1]);
+      } catch {
+        continue;
+      }
+      const nodes = parsed['@graph'] ?? [parsed];
+      for (const n of nodes) {
+        const offer = n?.offers;
+        if (!offer || offer.price === undefined) continue;
+        if (!offer.priceSpecification)
+          bad.push(`${p.url} → Offer 价格 ${offer.price} 未声明计费周期`);
+        else if (annualPrices.has(Number(offer.price)))
+          bad.push(`${p.url} → Offer 直接使用了年付折算价 ${offer.price},应上报年度总价`);
+      }
+    }
+  }
+  record(
+    'BLOCK',
+    'T7-10c',
+    'Schema 中的价格均带计费周期且未使用折算价',
+    bad.length === 0,
+    bad.length ? bad.slice(0, 10) : '全部 Offer 均声明 billingDuration,年付品牌上报年度总价'
+  );
+}
+
 // ── 11. SOGO 云 Hash 链接逐字未改 ───────────────────────────────
 {
   const EXPECT = 'https://guangs.sogoyunaff.cc/#/?code=327Vs0w7';

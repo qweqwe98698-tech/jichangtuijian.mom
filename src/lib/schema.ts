@@ -201,15 +201,35 @@ export function howToSchema(input: HowToInput): Json {
 }
 
 /** 品牌评测页使用。刻意不输出 aggregateRating —— 没有真实用户评分数据,不得伪造 */
+/**
+ * 品牌评测的 Product + Review 结构化数据。
+ *
+ * 价格这一段必须带计费周期,否则会把全站最重要的一条口径规则丢在门外。
+ *
+ * 站上有 3 家的标价是**年付折算价**(要一次性付一整年)。可见内容里,
+ * 这三个数字每次出现都强制带"年付折算"标注,由产物层扫描守着。
+ * 但结构化数据是另一条通道:一个裸的 `price: 7.5` 进了富媒体结果,
+ * 就变成"光速云 ¥7.5",读者看到的是月付价的错觉,而那个标注根本没跟过去。
+ *
+ * 所以年付折算的品牌上报**年度总价**并注明 P1Y,月付品牌上报月价并注明 P1M。
+ * 两者都用 UnitPriceSpecification 显式声明周期,让搜索引擎拿到的口径
+ * 和页面上写的完全一致 —— 这也是防掉索引总指令第十四条的要求。
+ */
 export function brandReviewSchema(input: {
   brandName: string;
   path: string;
   description: string;
   priceCNY: number;
+  /** 计价基准。annual-equivalent 表示 priceCNY 是年付摊到每月的数字 */
+  billingBasis: 'monthly' | 'annual-equivalent';
   authorName: string;
   updatedDate: Date;
 }): Json {
   const url = abs(input.path);
+  const annual = input.billingBasis === 'annual-equivalent';
+  // 年付折算价乘回 12 才是读者真正要付的那笔钱
+  const payable = annual ? Math.round(input.priceCNY * 12 * 100) / 100 : input.priceCNY;
+
   return {
     '@type': 'Product',
     '@id': `${url}#product`,
@@ -219,10 +239,27 @@ export function brandReviewSchema(input: {
     brand: { '@type': 'Brand', name: input.brandName },
     offers: {
       '@type': 'Offer',
-      price: input.priceCNY,
+      price: payable,
       priceCurrency: 'CNY',
       availability: 'https://schema.org/InStock',
       url,
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: payable,
+        priceCurrency: 'CNY',
+        // P1Y = 一次性支付一年;P1M = 按月支付
+        billingDuration: annual ? 12 : 1,
+        billingIncrement: 1,
+        unitCode: 'MON',
+        referenceQuantity: {
+          '@type': 'QuantitativeValue',
+          value: annual ? 12 : 1,
+          unitCode: 'MON',
+        },
+        description: annual
+          ? `年付套餐总价,需一次性支付一整年,折算每月约 ${input.priceCNY} 元`
+          : '月付价格',
+      },
     },
     subjectOf: {
       '@type': 'Review',
