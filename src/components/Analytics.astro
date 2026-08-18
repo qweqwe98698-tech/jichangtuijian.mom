@@ -1,0 +1,76 @@
+---
+import {
+  CF_BEACON_TOKEN,
+  EVENT_PROVIDER,
+  EVENT_HOST,
+  EVENT_SITE_ID,
+  hasEventProvider,
+} from '@config/analytics';
+
+/**
+ * 分析埋点。
+ *
+ * 两件事分开做,因为没有一个免费方案能同时做好:
+ *
+ *   浏览量 / 来源 / Core Web Vitals → Cloudflare Web Analytics
+ *   推广链接点击(转化的最后一跳)   → Plausible 或 Umami 的自定义事件
+ *
+ * Cloudflare 的方案不支持自定义事件,所以单靠它能知道「有多少人来」,
+ * 但不知道「有几个人点了注册链接」。而后者才是这个站真正要优化的数字。
+ *
+ * 点击追踪只记录品牌 slug 与来源路径,不记录任何能识别到个人的东西。
+ * 用 sendBeacon 而不是 fetch:用户点完就跳走了,fetch 会被导航打断。
+ */
+const trackClicks = hasEventProvider;
+
+/*
+ * 推广链接点击追踪。所有品牌外链都带 data-brand,由 BrandLink 组件统一产出,
+ * 因此一个事件委托就能覆盖全站,不需要在每个链接上挂监听。
+ *
+ * 写成字符串再用 set:html 注入,而不是当作 JSX 子元素——
+ * 后者会被 ESLint 判成「无用表达式」,而且 Astro 也不保证原样输出。
+ */
+const CLICK_TRACKER = `
+document.addEventListener('click', function (e) {
+  var a = e.target && e.target.closest ? e.target.closest('a[data-brand]') : null;
+  if (!a) return;
+  var payload = {
+    brand: a.dataset.brand,
+    from: location.pathname,
+    // 区分主推位与正文,用来判断哪个位置真的带来转化
+    slot: a.closest('#featured') ? 'featured' : a.closest('main') ? 'content' : 'other'
+  };
+  try {
+    if (window.plausible) window.plausible('affiliate_click', { props: payload });
+    else if (window.umami) window.umami.track('affiliate_click', payload);
+  } catch (err) {
+    // 追踪失败绝不能影响跳转 —— 这是一条商业链接,断了就是真金白银的损失
+  }
+}, { passive: true });
+`.trim();
+---
+
+{
+  CF_BEACON_TOKEN && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`}
+    />
+  )
+}
+
+{
+  EVENT_PROVIDER === 'plausible' && hasEventProvider && (
+    <script is:inline defer data-domain={EVENT_SITE_ID} src={`${EVENT_HOST}/js/script.js`} />
+  )
+}
+
+{
+  EVENT_PROVIDER === 'umami' && hasEventProvider && (
+    <script is:inline defer data-website-id={EVENT_SITE_ID} src={`${EVENT_HOST}/script.js`} />
+  )
+}
+
+{trackClicks && <script is:inline set:html={CLICK_TRACKER} />}

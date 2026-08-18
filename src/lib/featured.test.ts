@@ -101,17 +101,23 @@ describe('主推位不得影响任何排序', () => {
     }
   });
 
-  it('除主推位组件外,没有任何页面或组件读取 featured', () => {
+  it('除主推位组件外,没有任何页面或组件读取 featured 数据字段', () => {
     const sources = [
       ...readAll(path.resolve('src/components'), '.astro'),
       ...readAll(path.resolve('src/pages'), '.astro'),
       ...readAll(path.resolve('src/lib'), '.ts'),
     ];
+    /*
+     * 只匹配对**数据字段**的访问,不匹配 `#featured` 这种 DOM 选择器 ——
+     * 埋点组件需要靠它区分点击来自主推位还是正文,那读的是页面结构,不是品牌数据,
+     * 不可能影响排序。规则要挡的是「有人拿 featured 去 sort」,不是这个词本身。
+     */
+    const READS_DATA = /commercial\.featured|featuredBrands\s*\(|\bfeatured\s*[:?]/;
     const offenders = sources
       .filter(({ file }) => !ALLOWED.some((a) => file.endsWith(a)))
-      .filter(({ src }) => /\bfeatured\b|featuredBrands/.test(src))
+      .filter(({ src }) => READS_DATA.test(src))
       .map(({ file }) => path.basename(file));
-    expect(offenders, '只有 FeaturedBrands.astro 可以读取主推字段').toEqual([]);
+    expect(offenders, '只有 FeaturedBrands.astro 可以读取主推数据字段').toEqual([]);
   });
 
   it('品牌库排序字段里不含 featured', () => {

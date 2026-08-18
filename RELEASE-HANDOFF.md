@@ -48,11 +48,29 @@ Cloudflare Pages(静态)。
 - **`robots.txt`** —— 允许 GPTBot / OAI-SearchBot / ClaudeBot / Claude-SearchBot / PerplexityBot / Google-Extended / Bingbot 抓取(GEO 策略:希望被生成式搜索理解与引用),屏蔽 `/search/` 与 `/_astro/`。
 - **`sitemap-index.xml`** —— 206 条,与产物页面集合完全一致。
 
+### 环境变量(全部可选,不填就不渲染)
+
+在 Cloudflare Pages 的项目设置里配置,或本地复制 `.env.example` 为 `.env`:
+
+| 变量                        | 用途                                                                               |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| `PUBLIC_CF_BEACON_TOKEN`    | Cloudflare Web Analytics 的 beacon token。统计浏览量、来源、国家与 Core Web Vitals |
+| `PUBLIC_ANALYTICS_PROVIDER` | `plausible` 或 `umami`,用于统计推广链接点击                                        |
+| `PUBLIC_ANALYTICS_HOST`     | 分析服务地址(官方或自托管)                                                         |
+| `PUBLIC_ANALYTICS_SITE_ID`  | Plausible 填域名,Umami 填 website-id                                               |
+
+**为什么要两套**:Cloudflare Web Analytics 不支持自定义事件,它能告诉你「有多少人来」,但不知道「有几个人点了注册链接」。而后者才是这个站真正要优化的数字。后三个变量要一起填齐才生效,半配状态会被 `hasEventProvider` 挡住。
+
+两套方案都不使用 Cookie、不做跨站跟踪、不采集个人身份信息,因此站上不需要同意横幅。这不只是省事——一个讲「不要把厂商声明当实测」的站,自己在读者身上装第三方追踪器会很难看。
+
+点击事件只上报三个字段:品牌 slug、来源路径、位置(`featured` 还是 `content`)。最后一项用来判断主推位到底有没有带来转化。
+
 ### 发布前必须确认
 
 1. 域名 `jichangtuijian.mom` 已解析,且 `src/config/site.ts` 里的 `SITE_URL` 与之一致(canonical 全站自指依赖它)
 2. HSTS 已启用一年 —— 一旦上线就**不要回退到 HTTP**,浏览器会记住
 3. 首次部署后跑一次真实 URL 的死链检查
+4. 分享一次链接到微信或 Telegram,确认预览图正常(`og:image` 曾经指向一个不存在的文件,现由 `pnpm gen:og` 生成并有 T7-11c 检查兜住)
 
 ---
 
@@ -97,6 +115,7 @@ pnpm verify:release
 1. **提交 sitemap** 到 Google Search Console 与 Bing Webmaster
 2. **抽查 10 个 URL 的结构化数据** —— 用 Google 富媒体结果测试。全站 JSON-LD 语法已验证可解析,但富媒体资格需要 Google 自己判定
 3. **跑一次 Lighthouse** —— 这一项验收时**没跑**(环境无 headless Chrome),所以目前**不宣称达到 ≥90**。产物体积与 CLS 结构前提都做了,但实测分数是空白,需要补
+   3.5. **确认埋点在线上真的收到数据** —— 打开任意页面看 Cloudflare Web Analytics 是否有浏览量;点一次推广链接,看 Plausible/Umami 里有没有 `affiliate_click` 事件。埋点最常见的失败方式是「配好了但没生效」,而这种失败是静默的
 4. **确认 16 条推广链接全部可跳转且带正确的推广参数** —— 尤其是 SOGO 云那条 Hash 路径链接(见下)
 5. **观察搜索表现**,确认 206 个标题没有互相争抢(全站标题已验证唯一,但实际排名要看数据)
 
