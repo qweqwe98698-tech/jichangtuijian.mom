@@ -13,9 +13,9 @@ const monthlyRanked = rankedBrands({ basis: 'monthly' });
 
 /** 三张代表卡:分别覆盖低预算、专线稳定、大流量三种典型需求,而不是简单取总分前三 */
 const picks = [
-  { brand: getBrand('yuzhouyun')!, badge: '15 元档月付', dims: ['value', 'line'] as const },
+  { brand: getBrand('feimaoyun')!, badge: '7 元档年付', dims: ['value', 'line'] as const },
   { brand: getBrand('guangsuyun')!, badge: '老牌 · 年付低价', dims: ['track', 'line'] as const },
-  { brand: getBrand('yifanyun')!, badge: '月付大流量', dims: ['value', 'line'] as const },
+  { brand: getBrand('xingdaomeng')!, badge: '8 元档 · 不限时', dims: ['value', 'line'] as const },
 ];
 
 const cheapestAnnual = annualEquivalentBrands().reduce((min, b) =>

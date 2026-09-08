@@ -31,6 +31,7 @@
     "check:outlines": "node scripts/audit-outline-uniqueness.mjs docs/brand-outlines/OUTLINES.json",
     "fix:frontmatter": "node scripts/normalize-frontmatter.mjs",
     "gen:og": "node scripts/gen-og-image.mjs",
+    "gen:article": "node scripts/generate-weekly-article.mjs",
     "seo:check": "node --experimental-strip-types scripts/seo-check.mjs",
     "seo:accept": "node --experimental-strip-types scripts/seo-check.mjs --accept",
     "indexnow": "node --experimental-strip-types scripts/indexnow.mjs",

@@ -1,0 +1,90 @@
+name: Auto Publish SEO & GEO Articles
+
+on:
+  schedule:
+    # 每周一上午 10:00 (北京时间 UTC+8，即 UTC 02:00) 自动执行
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      brand:
+        description: '指定机场品牌 Slug (例如: feimaoyun, xingdaomeng, yuzhouyun)'
+        required: false
+        default: ''
+      slug:
+        description: '指定选题 Slug (从 scripts/editorial-topics.json 中选择)'
+        required: false
+        default: ''
+      dry_run:
+        description: '仅执行生成与预览测试，不推送到 Git'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate SEO & GEO Article via Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: 'gemini-2.5-pro'
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.brand }}" ]; then
+            ARGS="$ARGS --brand ${{ github.event.inputs.brand }}"
+          fi
+          if [ -n "${{ github.event.inputs.slug }}" ]; then
+            ARGS="$ARGS --slug ${{ github.event.inputs.slug }}"
+          fi
+          node scripts/generate-weekly-article.mjs $ARGS
+
+      - name: Run verification and quality gates
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          pnpm typecheck
+          pnpm test
+          pnpm build
+          pnpm check:links
+          pnpm check:content
+          pnpm seo:accept
+
+      - name: Commit and push changes
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 检查是否有新文章产生
+          if [ -n "$(git status --porcelain src/content/posts scripts/editorial-topics.json .seo-baseline.json)" ]; then
+            git add src/content/posts/ scripts/editorial-topics.json .seo-baseline.json
+            git commit -m "content: 自动发布每周 SEO/GEO 深度长文 [skip ci]"
+            git push origin main
+            echo "✓ 新文章已成功提交并推送到 main 分支！"
+          else
+            echo "没有产生新的内容改动，无需推送。"
+          fi
